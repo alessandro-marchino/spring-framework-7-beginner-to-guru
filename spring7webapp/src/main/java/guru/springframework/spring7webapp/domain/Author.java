@@ -1,9 +1,12 @@
 package guru.springframework.spring7webapp.domain;
 
+import java.util.Set;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 
 @Entity
 public class Author {
@@ -13,6 +16,9 @@ public class Author {
 	private Long id;
 	private String firstName;
 	private String lastName;
+
+	@ManyToMany(mappedBy = "authors")
+	private Set<Book> books;
 	/**
 	 * @return the id
 	 */
@@ -48,6 +54,18 @@ public class Author {
 	 */
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
+	}
+	/**
+	 * @return the books
+	 */
+	public Set<Book> getBooks() {
+		return books;
+	}
+	/**
+	 * @param books the books to set
+	 */
+	public void setBooks(Set<Book> books) {
+		this.books = books;
 	}
 
 }
