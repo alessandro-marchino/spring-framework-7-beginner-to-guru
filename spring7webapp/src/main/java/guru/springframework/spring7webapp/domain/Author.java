@@ -1,5 +1,6 @@
 package guru.springframework.spring7webapp.domain;
 
+import java.util.Objects;
 import java.util.Set;
 
 import jakarta.persistence.Entity;
@@ -67,5 +68,28 @@ public class Author {
 	public void setBooks(Set<Book> books) {
 		this.books = books;
 	}
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof Author other)) {
+			return false;
+		}
+		return Objects.equals(id, other.id);
+	}
+	@Override
+	public String toString() {
+		return new StringBuilder()
+				.append("Author [id=").append(id).append(", firstName=").append(firstName).append(", lastName=")
+				.append(lastName).append(", books=").append(books).append("]")
+				.toString();
+	}
+
+
 
 }
