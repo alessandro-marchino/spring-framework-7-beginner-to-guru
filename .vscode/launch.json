@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-Spring7webappApplication<spring7webapp>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "guru.springframework.spring7webapp.Spring7webappApplication",
+            "projectName": "spring7webapp",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
