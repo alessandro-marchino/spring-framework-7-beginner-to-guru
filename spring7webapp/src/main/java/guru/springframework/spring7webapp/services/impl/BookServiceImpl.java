@@ -1,9 +1,10 @@
-package guru.springframework.spring7webapp.services;
+package guru.springframework.spring7webapp.services.impl;
 
 import org.springframework.stereotype.Service;
 
 import guru.springframework.spring7webapp.domain.Book;
 import guru.springframework.spring7webapp.repositories.BookRepository;
+import guru.springframework.spring7webapp.services.BookService;
 
 @Service
 public class BookServiceImpl implements BookService {
