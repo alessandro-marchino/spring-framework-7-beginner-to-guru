@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Book {
@@ -24,6 +25,9 @@ public class Book {
 	@ManyToMany
 	@JoinTable(name = "author_book", joinColumns = @JoinColumn(name = "book_id"), inverseJoinColumns = @JoinColumn(name = "author_id"))
 	private Set<Author> authors = new HashSet<>();
+
+	@ManyToOne
+	private Publisher publisher;
 	/**
 	 * @return the id
 	 */
@@ -92,6 +96,18 @@ public class Book {
 				.append("Book [id=").append(id).append(", title=").append(title).append(", isbn=").append(isbn)
 				.append(", authors=").append(authors).append("]")
 				.toString();
+	}
+	/**
+	 * @return the publisher
+	 */
+	public Publisher getPublisher() {
+		return publisher;
+	}
+	/**
+	 * @param publisher the publisher to set
+	 */
+	public void setPublisher(Publisher publisher) {
+		this.publisher = publisher;
 	}
 
 

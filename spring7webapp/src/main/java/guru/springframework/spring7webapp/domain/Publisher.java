@@ -1,11 +1,14 @@
 package guru.springframework.spring7webapp.domain;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class Publisher {
@@ -18,6 +21,21 @@ public class Publisher {
 	private String city;
 	private String state;
 	private String zipCode;
+
+	@OneToMany(mappedBy = "publisher")
+	private Set<Book> books = new HashSet<>();
+	/**
+	 * @return the books
+	 */
+	public Set<Book> getBooks() {
+		return books;
+	}
+	/**
+	 * @param books the books to set
+	 */
+	public void setBooks(Set<Book> books) {
+		this.books = books;
+	}
 	/**
 	 * @return the id
 	 */
