@@ -9,6 +9,16 @@
             "projectName": "spring7webapp",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-Spring7diApplication<spring7di>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "guru.springframework.spring7di.Spring7diApplication",
+            "projectName": "spring7di",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }
