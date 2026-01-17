@@ -19,6 +19,16 @@
             "projectName": "spring7di",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-Spring7restmvcApplication<spring7restmvc>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "guru.springframework.spring7restmvc.Spring7restmvcApplication",
+            "projectName": "spring7restmvc",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }
