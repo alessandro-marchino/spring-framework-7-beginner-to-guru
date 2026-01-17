@@ -1,13 +1,11 @@
 package guru.springframework.spring7di.controllers.i18n;
 
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Controller;
 
 import guru.springframework.spring7di.services.GreetingService;
 
 @Controller
-@Profile({ "EN", "ES" })
 public class MyI18NController {
 
 	private final GreetingService greetingService;
