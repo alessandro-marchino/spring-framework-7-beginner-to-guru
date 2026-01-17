@@ -14,16 +14,9 @@
           "item": [
             {
               "name": "/",
-              "protocolProfileBehavior": {
-                "disableBodyPruning": true
-              },
               "request": {
                 "method": "GET",
                 "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\r\n    \"question\": \"What is the stock price per the ticker AAPL?\"\r\n}"
-                },
                 "url": {
                   "raw": "{{baseUrl}}/api/v1/beer",
                   "host": [
@@ -68,16 +61,9 @@
             },
             {
               "name": "/:id",
-              "protocolProfileBehavior": {
-                "disableBodyPruning": true
-              },
               "request": {
                 "method": "GET",
                 "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\r\n    \"question\": \"What is the stock price per the ticker AAPL?\"\r\n}"
-                },
                 "url": {
                   "raw": "{{baseUrl}}/api/v1/beer/:id",
                   "host": [
@@ -106,15 +92,36 @@
           "item": [
             {
               "name": "/",
-              "protocolProfileBehavior": {
-                "disableBodyPruning": true
-              },
               "request": {
                 "method": "GET",
                 "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/customer",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "customer"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "/",
+              "request": {
+                "method": "POST",
+                "header": [],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\r\n    \"question\": \"What is the stock price per the ticker AAPL?\"\r\n}"
+                  "raw": "{\r\n    \"customerName\": \"Han\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
                 },
                 "url": {
                   "raw": "{{baseUrl}}/api/v1/customer",
@@ -132,16 +139,9 @@
             },
             {
               "name": "/:id",
-              "protocolProfileBehavior": {
-                "disableBodyPruning": true
-              },
               "request": {
                 "method": "GET",
                 "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\r\n    \"question\": \"What is the stock price per the ticker AAPL?\"\r\n}"
-                },
                 "url": {
                   "raw": "{{baseUrl}}/api/v1/customer/:id",
                   "host": [
@@ -156,7 +156,7 @@
                   "variable": [
                     {
                       "key": "id",
-                      "value": "251c657c-de81-479b-bd69-32b67a3fc00f"
+                      "value": "0c84d88e-8897-42d1-bf61-bee775725b0b"
                     }
                   ]
                 }

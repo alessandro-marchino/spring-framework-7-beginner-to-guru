@@ -1,8 +1,10 @@
 package guru.springframework.spring7restmvc.controller;
 
+import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +14,9 @@ import guru.springframework.spring7restmvc.model.Customer;
 import guru.springframework.spring7restmvc.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 @RestController
 @RequestMapping("/api/v1/customer")
@@ -31,4 +36,14 @@ public class CustomerController {
 		log.debug("Get Customer Id in controller is called with id {}", id);
 		return customerService.getCustomerById(id);
 	}
+
+	@PostMapping
+	public ResponseEntity<Void> handlePost(@RequestBody Customer customer) {
+		Customer savedCustomer = customerService.saveNewCustomer(customer);
+		log.debug("Saved customer with id {}", savedCustomer.getId());
+		return ResponseEntity
+			.created(URI.create("/api/v1/customer/" + savedCustomer.getId()))
+			.build();
+	}
+
 }

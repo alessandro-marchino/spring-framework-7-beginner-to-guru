@@ -35,7 +35,7 @@ public class BeerServiceImpl implements BeerService {
 			.build();
 		Beer beer2 = Beer.builder()
 			.id(UUID.randomUUID())
-			.version(2)
+			.version(1)
 			.beerName("Crank")
 			.beerStyle(BeerStyle.PALE_ALE)
 			.upc("123456222")
@@ -46,7 +46,7 @@ public class BeerServiceImpl implements BeerService {
 			.build();
 		Beer beer3 = Beer.builder()
 			.id(UUID.randomUUID())
-			.version(3)
+			.version(1)
 			.beerName("Sunshine City")
 			.beerStyle(BeerStyle.IPA)
 			.upc("12356")
