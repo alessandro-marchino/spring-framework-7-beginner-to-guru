@@ -1,5 +1,6 @@
 package guru.springframework.spring7di.controllers;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 
 import guru.springframework.spring7di.services.GreetingService;
@@ -12,7 +13,7 @@ public class ConstructorInjectedController {
 	/**
 	 * @param greetingService
 	 */
-	public ConstructorInjectedController(GreetingService greetingService) {
+	public ConstructorInjectedController(@Qualifier("greetingServiceImpl") GreetingService greetingService) {
 		this.greetingService = greetingService;
 	}
 
