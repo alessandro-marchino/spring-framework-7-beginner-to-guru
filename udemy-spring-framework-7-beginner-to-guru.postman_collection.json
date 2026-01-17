@@ -39,6 +39,34 @@
               "response": []
             },
             {
+              "name": "/",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"beerName\": \"Mango Bobs - JTs 5\",\r\n    \"beerStyle\": \"ALE\",\r\n    \"price\": 27.16,\r\n    \"quantityOnHand\": 250,\r\n    \"upc\": \"063123420003633\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/beer",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "beer"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
               "name": "/:id",
               "protocolProfileBehavior": {
                 "disableBodyPruning": true
@@ -64,7 +92,7 @@
                   "variable": [
                     {
                       "key": "id",
-                      "value": "eb10722f-0be2-4026-811e-1cc0b1e9303d"
+                      "value": "c9f1331e-1c8c-416e-a918-2720a2ba4e2b"
                     }
                   ]
                 }

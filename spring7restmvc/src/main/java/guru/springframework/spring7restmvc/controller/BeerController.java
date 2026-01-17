@@ -1,5 +1,6 @@
 package guru.springframework.spring7restmvc.controller;
 
+import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 
@@ -39,6 +40,8 @@ public class BeerController {
 	public ResponseEntity<Void> handlePost(@RequestBody Beer beer) {
 		Beer savedBeer = beerService.saveNewBeer(beer);
 		log.debug("Saved beer with id {}", savedBeer.getId());
-		return new ResponseEntity<>(HttpStatus.CREATED);
+		return ResponseEntity
+			.created(URI.create("/api/v1/beer/" + savedBeer.getId()))
+			.build();
 	}
 }
