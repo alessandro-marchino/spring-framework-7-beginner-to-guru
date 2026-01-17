@@ -72,6 +72,70 @@
               "response": []
             }
           ]
+        },
+        {
+          "name": "/api/v1/customer",
+          "item": [
+            {
+              "name": "/",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"question\": \"What is the stock price per the ticker AAPL?\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/customer",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "customer"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "/:id",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"question\": \"What is the stock price per the ticker AAPL?\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/customer/:id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "customer",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "251c657c-de81-479b-bd69-32b67a3fc00f"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
         }
       ]
     }
