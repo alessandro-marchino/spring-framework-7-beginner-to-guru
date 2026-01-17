@@ -4,14 +4,20 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import org.springframework.stereotype.Service;
+
 import guru.springframework.spring7restmvc.model.Beer;
 import guru.springframework.spring7restmvc.model.BeerStyle;
 import guru.springframework.spring7restmvc.service.BeerService;
+import lombok.extern.slf4j.Slf4j;
 
+@Service
+@Slf4j
 public class BeerServiceImpl implements BeerService {
 
 	@Override
 	public Beer getBeerById(UUID id) {
+		log.debug("Get Beer Id in service is called with id {}", id);
 			return Beer.builder()
 				.id(id)
 				.version(1)
