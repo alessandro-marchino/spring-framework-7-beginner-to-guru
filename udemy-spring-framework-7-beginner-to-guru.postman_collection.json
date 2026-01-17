@@ -1,0 +1,109 @@
+{
+  "info": {
+    "_postman_id": "e6bb5865-9f95-45b0-af14-b28fd1c8cd1b",
+    "name": "udemy/spring-framework-7-beginner-to-guru",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "13687650"
+  },
+  "item": [
+    {
+      "name": "spring7restmvc",
+      "item": [
+        {
+          "name": "/api/v1/beer",
+          "item": [
+            {
+              "name": "/",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"question\": \"What is the stock price per the ticker AAPL?\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/beer",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "beer"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "/:id",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"question\": \"What is the stock price per the ticker AAPL?\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/beer/:id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "beer",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "eb10722f-0be2-4026-811e-1cc0b1e9303d"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": ""
+    }
+  ]
+}
