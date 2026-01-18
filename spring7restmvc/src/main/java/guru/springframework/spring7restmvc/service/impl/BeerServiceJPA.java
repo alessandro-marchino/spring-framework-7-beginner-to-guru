@@ -38,8 +38,7 @@ public class BeerServiceJPA implements BeerService {
 
 	@Override
 	public BeerDTO saveNewBeer(BeerDTO beer) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'saveNewBeer'");
+		return beerMapper.beerToBeerDto(beerRepository.save(beerMapper.beerDtoToBeer(beer)));
 	}
 
 	@Override

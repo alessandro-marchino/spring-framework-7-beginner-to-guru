@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -63,8 +65,22 @@ public class BeerControllerIT {
     }
 
     @Test
-	@Disabled
+	@Transactional
+	@Rollback
     void testSaveBeer() {
+		BeerDTO dto = BeerDTO.builder()
+			.beerName("New Beer")
+			.build();
+		ResponseEntity<Void> responseEntity = controller.saveBeer(dto);
+		assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(201));
+		assertThat(responseEntity.getHeaders().getLocation()).isNotNull();
+		String[] locationUUID = responseEntity.getHeaders().getLocation().getPath().split("/");
+		UUID savedUUID = UUID.fromString(locationUUID[4]);
+
+		Beer beer = repository.findById(savedUUID).get();
+		assertThat(beer).isNotNull();
+		assertThat(beer.getBeerName()).isEqualTo("New Beer");
+		assertThat(beer.getVersion()).isEqualTo(0);
 
     }
 
