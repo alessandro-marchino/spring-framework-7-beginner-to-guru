@@ -18,7 +18,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.List;
 import java.util.UUID;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,7 +32,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import guru.springframework.spring7restmvc.model.Customer;
 import guru.springframework.spring7restmvc.service.CustomerService;
-import guru.springframework.spring7restmvc.service.impl.CustomerServiceImpl;
 import tools.jackson.databind.json.JsonMapper;
 
 @WebMvcTest(CustomerController.class)
@@ -43,12 +41,6 @@ public class CustomerControllerTest {
 	@Autowired JsonMapper jsonMapper;
 	@MockitoBean CustomerService customerService;
 	@Captor ArgumentCaptor<UUID> uuidArgumentCaptor;
-	private CustomerServiceImpl customerServiceImpl;
-
-	@BeforeEach
-	void setUp() {
-		customerServiceImpl = new CustomerServiceImpl();
-	}
 
     @Test
     void testDeleteCustomer() throws Exception {
@@ -62,21 +54,32 @@ public class CustomerControllerTest {
 
     @Test
     void testGetCustomerById() throws Exception {
-		Customer customer = customerServiceImpl.listCustomers().get(0);
-		given(customerService.getCustomerById(customer.getId())).willReturn(customer);
+		UUID uuid = UUID.randomUUID();
+		Customer result = Customer.builder()
+			.id(uuid)
+			.customerName("Test customer")
+			.version(1)
+			.build();
 
-		mockMvc.perform(get("/api/v1/customer/{customerId}", customer.getId())
+		given(customerService.getCustomerById(uuid)).willReturn(result);
+
+		mockMvc.perform(get("/api/v1/customer/{customerId}", uuid)
 				.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
-			.andExpect(jsonPath("$.id", is(customer.getId().toString())))
-			.andExpect(jsonPath("$.customerName", is(customer.getCustomerName())));
+			.andExpect(jsonPath("$.id", is(uuid.toString())))
+			.andExpect(jsonPath("$.customerName", is("Test customer")))
+			.andExpect(jsonPath("$.version", is(1)));
     }
 
     @Test
     void testListCustomers() throws Exception {
-		List<Customer> customers = customerServiceImpl.listCustomers();
-		given(customerService.listCustomers()).willReturn(customers);
+		List<Customer> result = List.of(
+			Customer.builder().customerName("Customer 1").id(UUID.randomUUID()).build(),
+			Customer.builder().customerName("Customer 2").id(UUID.randomUUID()).build(),
+			Customer.builder().customerName("Customer 3").id(UUID.randomUUID()).build()
+		);
+		given(customerService.listCustomers()).willReturn(result);
 
 		mockMvc.perform(get("/api/v1/customer")
 				.accept(MediaType.APPLICATION_JSON))
@@ -93,29 +96,35 @@ public class CustomerControllerTest {
 
     @Test
     void testSaveCustomer() throws Exception {
-		Customer result = customerServiceImpl.listCustomers().get(0);
-		Customer customer = Customer.builder()
-			.customerName(result.getCustomerName())
+		UUID uuid = UUID.randomUUID();
+		Customer requestCustomer = Customer.builder()
+			.customerName("Test customer")
+			.build();
+		Customer result = Customer.builder()
+			.id(uuid)
 			.build();
 
 		given(customerService.saveNewCustomer(any(Customer.class))).willReturn(result);
 		mockMvc.perform(post("/api/v1/customer")
 				.accept(MediaType.APPLICATION_JSON)
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(jsonMapper.writeValueAsString(customer)))
+				.content(jsonMapper.writeValueAsString(requestCustomer)))
 			.andExpect(status().isCreated())
-			.andExpect(header().string("Location", "/api/v1/customer/" + result.getId()));
+			.andExpect(header().string("Location", "/api/v1/customer/" + uuid));
     }
 
     @Test
     void testUpdateCustomer() throws Exception {
-		Customer customer = customerServiceImpl.listCustomers().get(0);
+		UUID uuid = UUID.randomUUID();
+		Customer customer = Customer.builder()
+			.customerName("Test customer")
+			.build();
 
-		mockMvc.perform(put("/api/v1/customer/{customerId}", customer.getId())
+		mockMvc.perform(put("/api/v1/customer/{customerId}", uuid)
 				.accept(MediaType.APPLICATION_JSON)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(jsonMapper.writeValueAsString(customer)))
 			.andExpect(status().isNoContent());
-		verify(customerService).updateCustomerById(eq(customer.getId()), any(Customer.class));
+		verify(customerService).updateCustomerById(eq(uuid), any(Customer.class));
     }
 }
