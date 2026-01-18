@@ -23,25 +23,27 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 
 @RestController
-@RequestMapping("/api/v1/customer")
+@RequestMapping
 @RequiredArgsConstructor
 @Slf4j
 public class CustomerController {
 
+	public static final String PATH = "/api/v1/customer";
+	public static final String PATH_ID = PATH + "/{customerId}";
 	private final CustomerService customerService;
 
-	@GetMapping
+	@GetMapping(PATH)
 	public List<Customer> listCustomers() {
 		return customerService.listCustomers();
 	}
 
-	@GetMapping("/{customerId}")
+	@GetMapping(PATH_ID)
 	public Customer getCustomerById(@PathVariable("customerId") UUID id) {
 		log.debug("Get Customer Id in controller is called with id {}", id);
 		return customerService.getCustomerById(id);
 	}
 
-	@PostMapping
+	@PostMapping(PATH)
 	public ResponseEntity<Void> saveCustomer(@RequestBody Customer customer) {
 		Customer savedCustomer = customerService.saveNewCustomer(customer);
 		log.debug("Saved customer with id {}", savedCustomer.getId());
@@ -50,20 +52,20 @@ public class CustomerController {
 			.build();
 	}
 
-	@PutMapping("/{customerId}")
+	@PutMapping(PATH_ID)
 	public ResponseEntity<Void> updateCustomer(@PathVariable("customerId") UUID id, @RequestBody Customer customer) {
 		customerService.updateCustomerById(id, customer);
 		log.debug("Updated customer with id {}", id);
 		return ResponseEntity.noContent().build();
 	}
 
-	@DeleteMapping("/{customerId}")
+	@DeleteMapping(PATH_ID)
 	public ResponseEntity<Void> deleteCustomer(@PathVariable("customerId") UUID id) {
 		customerService.deleteById(id);
 		return ResponseEntity.noContent().build();
 	}
 
-	@PatchMapping("/{customerId}")
+	@PatchMapping(PATH_ID)
 	public ResponseEntity<Void> patchCustomer(@PathVariable("customerId") UUID id, @RequestBody Customer customer) {
 		customerService.patchCustomerById(id, customer);
 		return ResponseEntity.noContent().build();

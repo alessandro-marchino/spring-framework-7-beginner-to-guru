@@ -60,7 +60,7 @@ public class BeerControllerTest {
 		Beer testBeer = beerServiceImpl.listBeers().get(0);
 		given(beerService.getBeerById(testBeer.getId())).willReturn(testBeer);
 
-		mockMvc.perform(get("/api/v1/beer/{beerId}", testBeer.getId())
+		mockMvc.perform(get(BeerController.PATH_ID, testBeer.getId())
 				.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -73,7 +73,7 @@ public class BeerControllerTest {
 		List<Beer> beers = beerServiceImpl.listBeers();
 		given(beerService.listBeers()).willReturn(beers);
 
-		mockMvc.perform(get("/api/v1/beer")
+		mockMvc.perform(get(BeerController.PATH)
 				.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -92,7 +92,7 @@ public class BeerControllerTest {
 			.build();
 
 		given(beerService.saveNewBeer(any(Beer.class))).willReturn(resultBeer);
-		mockMvc.perform(post("/api/v1/beer")
+		mockMvc.perform(post(BeerController.PATH)
 				.accept(MediaType.APPLICATION_JSON)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(jsonMapper.writeValueAsString(testBeer)))
@@ -104,7 +104,7 @@ public class BeerControllerTest {
 	void testUpdateBeer() throws Exception {
 		Beer beer = beerServiceImpl.listBeers().get(0);
 
-		mockMvc.perform(put("/api/v1/beer/{beerId}", beer.getId())
+		mockMvc.perform(put(BeerController.PATH_ID, beer.getId())
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(jsonMapper.writeValueAsString(beer)))
 			.andExpect(status().isNoContent());
@@ -115,7 +115,7 @@ public class BeerControllerTest {
 	void testDeleteBeer() throws Exception {
 		Beer beer = beerServiceImpl.listBeers().get(0);
 
-		mockMvc.perform(delete("/api/v1/beer/{beerId}", beer.getId()))
+		mockMvc.perform(delete(BeerController.PATH_ID, beer.getId()))
 			.andExpect(status().isNoContent());
 		verify(beerService).deleteById(uuidArgumentCaptor.capture());
 		assertThat(uuidArgumentCaptor.getValue()).isEqualTo(beer.getId());
@@ -126,7 +126,7 @@ public class BeerControllerTest {
 		Beer beer = beerServiceImpl.listBeers().get(0);
 		Map<String, Object> beerMap = Map.of("beerName", "New Name");
 
-		mockMvc.perform(patch("/api/v1/beer/{beerId}", beer.getId())
+		mockMvc.perform(patch(BeerController.PATH_ID, beer.getId())
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(jsonMapper.writeValueAsString(beerMap)))
 			.andExpect(status().isNoContent());

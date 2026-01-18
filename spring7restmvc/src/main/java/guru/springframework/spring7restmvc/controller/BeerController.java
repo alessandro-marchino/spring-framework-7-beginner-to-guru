@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import guru.springframework.spring7restmvc.model.Beer;
@@ -23,22 +22,23 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("/api/v1/beer")
 public class BeerController {
+	public static final String PATH = "/api/v1/beer";
+	public static final String PATH_ID = PATH + "/{beerId}";
 	private final BeerService beerService;
 
-	@GetMapping
+	@GetMapping(PATH)
 	public List<Beer> listBeers() {
 		return beerService.listBeers();
 	}
 
-	@GetMapping("/{beerId}")
+	@GetMapping(PATH_ID)
 	public Beer getBeerById(@PathVariable("beerId") UUID id) {
 		log.debug("Get Beer Id in controller is called with id {}", id);
 		return beerService.getBeerById(id);
 	}
 
-	@PostMapping
+	@PostMapping(PATH)
 	public ResponseEntity<Void> saveBeer(@RequestBody Beer beer) {
 		Beer savedBeer = beerService.saveNewBeer(beer);
 		log.debug("Saved beer with id {}", savedBeer.getId());
@@ -47,20 +47,20 @@ public class BeerController {
 			.build();
 	}
 
-	@PutMapping("/{beerId}")
+	@PutMapping(PATH_ID)
 	public ResponseEntity<Void> updateBeer(@PathVariable("beerId") UUID id, @RequestBody Beer beer) {
 		beerService.updateBeerById(id, beer);
 		log.debug("Updated beer with id {}", id);
 		return ResponseEntity.noContent().build();
 	}
 
-	@DeleteMapping("/{beerId}")
+	@DeleteMapping(PATH_ID)
 	public ResponseEntity<Void> deleteBeer(@PathVariable("beerId") UUID id) {
 		beerService.deleteById(id);
 		return ResponseEntity.noContent().build();
 	}
 
-	@PatchMapping("/{beerId}")
+	@PatchMapping(PATH_ID)
 	public ResponseEntity<Void> patchBeer(@PathVariable("beerId") UUID id, @RequestBody Beer beer) {
 		beerService.patchBeerById(id, beer);
 		return ResponseEntity.noContent().build();
