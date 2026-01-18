@@ -4,8 +4,13 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import guru.springframework.spring7restmvc.model.BeerStyle;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -22,6 +27,7 @@ import lombok.Setter;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class Beer {
 
 	@Id
@@ -34,6 +40,8 @@ public class Beer {
 	private String upc;
 	private Integer quantityOnHand;
 	private BigDecimal price;
+	@CreatedDate
 	private LocalDateTime createdDate;
+	@LastModifiedDate
 	private LocalDateTime updatedDate;
 }
