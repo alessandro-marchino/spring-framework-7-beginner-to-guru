@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -49,6 +50,12 @@ public class BeerController {
 	public ResponseEntity<Void> updateBeer(@PathVariable("beerId") UUID id, @RequestBody Beer beer) {
 		beerService.updateBeerById(id, beer);
 		log.debug("Updated beer with id {}", id);
+		return ResponseEntity.noContent().build();
+	}
+
+	@DeleteMapping("/{beerId}")
+	public ResponseEntity<Void> deleteBeer(@PathVariable("beerId") UUID id) {
+		beerService.deleteById(id);
 		return ResponseEntity.noContent().build();
 	}
 }
