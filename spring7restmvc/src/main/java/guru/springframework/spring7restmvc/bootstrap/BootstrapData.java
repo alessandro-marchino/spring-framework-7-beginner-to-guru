@@ -11,9 +11,11 @@ import guru.springframework.spring7restmvc.model.BeerStyle;
 import guru.springframework.spring7restmvc.repositories.BeerRepository;
 import guru.springframework.spring7restmvc.repositories.CustomerRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class BootstrapData implements CommandLineRunner {
 	private final BeerRepository beerRepository;
 	private final CustomerRepository customerRepository;
@@ -26,8 +28,10 @@ public class BootstrapData implements CommandLineRunner {
 
 	private void loadBeerData() {
 		if(beerRepository.count() > 0) {
+			log.info("Beer data already loaded");
 			return;
 		}
+		log.info("Loading Beer data...");
 		beerRepository.save(Beer.builder()
 			.beerName("Galaxy Cat")
 			.beerStyle(BeerStyle.PALE_ALE)
@@ -53,8 +57,10 @@ public class BootstrapData implements CommandLineRunner {
 	}
 	private void loadCustomerData() {
 		if(customerRepository.count() > 0) {
+			log.info("Customer data already loaded");
 			return;
 		}
+		log.info("Loading Customer data...");
 		customerRepository.save(Customer.builder()
 			.customerName("Customer 1")
 			.build());
