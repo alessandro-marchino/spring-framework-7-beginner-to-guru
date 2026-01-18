@@ -41,7 +41,7 @@ import tools.jackson.databind.json.JsonMapper;
 
 @WebMvcTest(BeerController.class)
 @ExtendWith(MockitoExtension.class)
-public class BeerControllerTest {
+class BeerControllerTest {
 	@Autowired MockMvc mockMvc;
 	@Autowired JsonMapper jsonMapper;
 	@MockitoBean BeerService beerService;
