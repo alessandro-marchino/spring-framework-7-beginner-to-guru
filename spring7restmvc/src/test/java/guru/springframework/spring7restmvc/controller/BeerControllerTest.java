@@ -137,11 +137,23 @@ class BeerControllerTest {
 	@Test
 	void testDeleteBeer() throws Exception {
 		BeerDTO beer = beerServiceImpl.listBeers().get(0);
+		given(beerService.deleteById(eq(beer.getId()))).willReturn(true);
 
 		mockMvc.perform(delete(BeerController.PATH_ID, beer.getId()))
 			.andExpect(status().isNoContent());
 		verify(beerService).deleteById(uuidArgumentCaptor.capture());
 		assertThat(uuidArgumentCaptor.getValue()).isEqualTo(beer.getId());
+	}
+
+	@Test
+	void testDeleteBeerNotFound() throws Exception {
+		UUID uuid = UUID.randomUUID();
+		given(beerService.deleteById(any(UUID.class))).willReturn(false);
+
+		mockMvc.perform(delete(BeerController.PATH_ID, uuid))
+			.andExpect(status().isNotFound());
+		verify(beerService).deleteById(uuidArgumentCaptor.capture());
+		assertThat(uuidArgumentCaptor.getValue()).isEqualTo(uuid);
 	}
 
 	@Test

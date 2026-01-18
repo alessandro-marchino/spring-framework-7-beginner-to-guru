@@ -40,6 +40,11 @@ public class BeerControllerIT {
 		assertThat(foundBeer).isEmpty();
     }
 
+	@Test
+    void testDeleteBeerNotFound() {
+		assertThrows(NotFoundException.class, () -> controller.deleteBeer(UUID.randomUUID()));
+    }
+
     @Test
     void testGetBeerById() {
 		Beer beer = repository.findAll().getFirst();
