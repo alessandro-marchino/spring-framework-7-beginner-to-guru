@@ -1,9 +1,12 @@
 package guru.springframework.spring7restmvc.controller;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -82,5 +85,17 @@ public class BeerControllerTest {
 				.content(jsonMapper.writeValueAsString(testBeer)))
 			.andExpect(status().isCreated())
 			.andExpect(header().string("Location", "/api/v1/beer/" + resultBeer.getId()));
+	}
+
+	@Test
+	void testUpdateBeer() throws Exception {
+		Beer beer = beerServiceImpl.listBeers().get(0);
+
+		mockMvc.perform(put("/api/v1/beer/{beerId}", beer.getId())
+				.accept(MediaType.APPLICATION_JSON)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(jsonMapper.writeValueAsString(beer)))
+			.andExpect(status().isNoContent());
+		verify(beerService).updateBeerById(eq(beer.getId()), any(Beer.class));
 	}
 }
