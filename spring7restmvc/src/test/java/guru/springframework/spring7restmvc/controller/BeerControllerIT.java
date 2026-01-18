@@ -10,12 +10,14 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import guru.springframework.spring7restmvc.entities.Beer;
+import guru.springframework.spring7restmvc.mappers.BeerMapper;
 import guru.springframework.spring7restmvc.model.BeerDTO;
 import guru.springframework.spring7restmvc.repositories.BeerRepository;
 
@@ -23,6 +25,7 @@ import guru.springframework.spring7restmvc.repositories.BeerRepository;
 public class BeerControllerIT {
 	@Autowired BeerController controller;
 	@Autowired BeerRepository repository;
+	@Autowired BeerMapper mapper;
 
     @Test
 	@Disabled
@@ -72,7 +75,7 @@ public class BeerControllerIT {
 			.beerName("New Beer")
 			.build();
 		ResponseEntity<Void> responseEntity = controller.saveBeer(dto);
-		assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(201));
+		assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(HttpStatus.CREATED.value()));
 		assertThat(responseEntity.getHeaders().getLocation()).isNotNull();
 		String[] locationUUID = responseEntity.getHeaders().getLocation().getPath().split("/");
 		UUID savedUUID = UUID.fromString(locationUUID[4]);
@@ -85,8 +88,21 @@ public class BeerControllerIT {
     }
 
     @Test
-	@Disabled
+	@Transactional
+	@Rollback
     void testUpdateBeer() {
+		Beer beer = repository.findAll().getFirst();
+		BeerDTO dto = mapper.beerToBeerDto(beer);
+		final String beerName = "UPDATED";
+		dto.setBeerName(beerName);
 
+		ResponseEntity<Void> responseEntity = controller.updateBeer(beer.getId(), dto);
+		assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(HttpStatus.NO_CONTENT.value()));
+		repository.flush();
+
+		Beer updatedBeer = repository.findById(beer.getId()).get();
+		assertThat(updatedBeer).isNotNull();
+		assertThat(updatedBeer.getBeerName()).isEqualTo(beerName);
+		assertThat(updatedBeer.getVersion()).isEqualTo(1);
     }
 }

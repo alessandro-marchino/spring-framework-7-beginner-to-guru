@@ -42,9 +42,14 @@ public class BeerServiceJPA implements BeerService {
 	}
 
 	@Override
-	public void updateBeerById(UUID beerId, BeerDTO beer) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'updateBeerById'");
+	public void updateBeerById(UUID beerId, BeerDTO dto) {
+		beerRepository.findById(beerId).ifPresent(beer -> {
+			beer.setBeerName(dto.getBeerName());
+			beer.setBeerStyle(dto.getBeerStyle());
+			beer.setUpc(dto.getUpc());
+			beer.setPrice(dto.getPrice());
+			beerRepository.save(beer);
+		});
 	}
 
 	@Override

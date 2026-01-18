@@ -50,6 +50,8 @@ public class BeerController {
 
 	@PutMapping(PATH_ID)
 	public ResponseEntity<Void> updateBeer(@PathVariable("beerId") UUID id, @RequestBody BeerDTO beer) {
+		beer.setId(null);
+		beer.setVersion(null);
 		beerService.updateBeerById(id, beer);
 		log.debug("Updated beer with id {}", id);
 		return ResponseEntity.noContent().build();
