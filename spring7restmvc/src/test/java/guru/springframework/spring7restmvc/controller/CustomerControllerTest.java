@@ -74,6 +74,15 @@ public class CustomerControllerTest {
 			.andExpect(jsonPath("$.version", is(1)));
     }
 
+	@Test
+	void testGetCustomerByIdNotFound() throws Exception {
+		given(customerService.getCustomerById(any(UUID.class))).willThrow(NotFoundException.class);
+
+		mockMvc.perform(get(CustomerController.PATH_ID, UUID.randomUUID())
+				.accept(MediaType.APPLICATION_JSON))
+			.andExpect(status().isNotFound());
+	}
+
     @Test
     void testListCustomers() throws Exception {
 		List<Customer> result = List.of(
