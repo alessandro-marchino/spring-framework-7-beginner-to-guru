@@ -62,7 +62,7 @@ public class BeerServiceImpl implements BeerService {
 
 	@Override
 	public List<Beer> listBeers() {
-			return List.copyOf(beerMap.values());
+		return List.copyOf(beerMap.values());
 	}
 
 	@Override
@@ -86,5 +86,21 @@ public class BeerServiceImpl implements BeerService {
 			.build();
 		beerMap.put(savedBeer.getId(), savedBeer);
 		return savedBeer;
+	}
+
+	@Override
+	public void updateBeerById(UUID beerId, Beer beer) {
+		Beer existing = beerMap.get(beerId);
+		if(existing == null) {
+			throw new RuntimeException();
+		}
+		existing.setBeerName(beer.getBeerName());
+		existing.setBeerStyle(beer.getBeerStyle());
+		existing.setQuantityOnHand(beer.getQuantityOnHand());
+		existing.setUpc(beer.getUpc());
+		existing.setPrice(beer.getPrice());
+		existing.setUpdatedDate(LocalDateTime.now());
+		existing.setVersion(existing.getVersion() + 1);
+		beerMap.put(beerId, existing);
 	}
 }

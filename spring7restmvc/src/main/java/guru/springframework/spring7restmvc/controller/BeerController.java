@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,11 +37,18 @@ public class BeerController {
 	}
 
 	@PostMapping
-	public ResponseEntity<Void> handlePost(@RequestBody Beer beer) {
+	public ResponseEntity<Void> saveBeer(@RequestBody Beer beer) {
 		Beer savedBeer = beerService.saveNewBeer(beer);
 		log.debug("Saved beer with id {}", savedBeer.getId());
 		return ResponseEntity
 			.created(URI.create("/api/v1/beer/" + savedBeer.getId()))
 			.build();
+	}
+
+	@PutMapping("/{beerId}")
+	public ResponseEntity<Void> updateBeer(@PathVariable("beerId") UUID id, @RequestBody Beer beer) {
+		beerService.updateBeerById(id, beer);
+		log.debug("Updated beer with id {}", id);
+		return ResponseEntity.noContent().build();
 	}
 }
