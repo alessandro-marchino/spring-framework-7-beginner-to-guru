@@ -1,8 +1,10 @@
 package guru.springframework.spring7restmvc.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -11,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
+import guru.springframework.spring7restmvc.entities.Beer;
 import guru.springframework.spring7restmvc.model.BeerDTO;
 import guru.springframework.spring7restmvc.repositories.BeerRepository;
 
@@ -26,9 +29,16 @@ public class BeerControllerIT {
     }
 
     @Test
-	@Disabled
     void testGetBeerById() {
+		Beer beer = repository.findAll().getFirst();
+		BeerDTO dto = controller.getBeerById(beer.getId());
 
+		assertThat(dto).isNotNull();
+    }
+
+	@Test
+    void testGetBeerByIdNotFound() {
+		assertThrows(NotFoundException.class, () -> controller.getBeerById(UUID.randomUUID()));
     }
 
     @Test
