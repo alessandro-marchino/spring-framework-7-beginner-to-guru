@@ -92,7 +92,7 @@ public class BeerServiceImpl implements BeerService {
 	public void updateBeerById(UUID beerId, Beer beer) {
 		Beer existing = beerMap.get(beerId);
 		if(existing == null) {
-			throw new RuntimeException();
+			throw new RuntimeException("Beer with id " + beerId + " not found");
 		}
 		existing.setBeerName(beer.getBeerName());
 		existing.setBeerStyle(beer.getBeerStyle());

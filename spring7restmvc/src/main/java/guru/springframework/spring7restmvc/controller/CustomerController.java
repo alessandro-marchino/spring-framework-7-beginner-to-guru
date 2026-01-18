@@ -16,6 +16,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
+
 
 
 @RestController
@@ -38,7 +40,7 @@ public class CustomerController {
 	}
 
 	@PostMapping
-	public ResponseEntity<Void> handlePost(@RequestBody Customer customer) {
+	public ResponseEntity<Void> saveCustomer(@RequestBody Customer customer) {
 		Customer savedCustomer = customerService.saveNewCustomer(customer);
 		log.debug("Saved customer with id {}", savedCustomer.getId());
 		return ResponseEntity
@@ -46,4 +48,10 @@ public class CustomerController {
 			.build();
 	}
 
+	@PutMapping("/{customerId}")
+	public ResponseEntity<Void> updateCustomer(@PathVariable("customerId") UUID id, @RequestBody Customer customer) {
+		customerService.updateCustomerById(id, customer);
+		log.debug("Updated customer with id {}", id);
+		return ResponseEntity.noContent().build();
+	}
 }

@@ -84,6 +84,41 @@
                 }
               },
               "response": []
+            },
+            {
+              "name": "/:id",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"beerName\": \"Mango Bobs - JTs 5\",\r\n    \"beerStyle\": \"ALE\",\r\n    \"price\": 17.16,\r\n    \"quantityOnHand\": 150,\r\n    \"upc\": \"063123420003634\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/beer/:id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "beer",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "698fe638-250b-4fa1-baf0-6e8b5712ff26"
+                    }
+                  ]
+                }
+              },
+              "response": []
             }
           ]
         },
@@ -157,6 +192,41 @@
                     {
                       "key": "id",
                       "value": "0c84d88e-8897-42d1-bf61-bee775725b0b"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "/:id",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"customerName\": \"Han Solo\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/customer/:id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "customer",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "71116779-6c95-491c-9e24-4ce905566ec0"
                     }
                   ]
                 }
