@@ -30,8 +30,10 @@ public class BeerServiceJPA implements BeerService {
 
 	@Override
 	public List<BeerDTO> listBeers() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'listBeers'");
+		return beerRepository.findAll()
+			.stream()
+			.map(beerMapper::beerToBeerDto)
+			.toList();
 	}
 
 	@Override

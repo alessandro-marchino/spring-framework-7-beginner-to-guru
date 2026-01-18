@@ -30,8 +30,10 @@ public class CustomerServiceJPA implements CustomerService {
 
 	@Override
 	public List<CustomerDTO> listCustomers() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'listCustomers'");
+		return customerRepository.findAll()
+			.stream()
+			.map(customerMapper::customerToCustomerDto)
+			.toList();
 	}
 
 	@Override
