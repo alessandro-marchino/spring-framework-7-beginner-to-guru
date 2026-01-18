@@ -1,14 +1,18 @@
 package guru.springframework.spring7restmvc.controller;
 
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +24,19 @@ import org.springframework.test.web.servlet.MockMvc;
 import guru.springframework.spring7restmvc.model.Customer;
 import guru.springframework.spring7restmvc.service.CustomerService;
 import guru.springframework.spring7restmvc.service.impl.CustomerServiceImpl;
+import tools.jackson.databind.json.JsonMapper;
 
 @WebMvcTest(CustomerController.class)
 public class CustomerControllerTest {
 	@Autowired MockMvc mockMvc;
+	@Autowired JsonMapper jsonMapper;
 	@MockitoBean CustomerService customerService;
+	private CustomerServiceImpl customerServiceImpl;
+
+	@BeforeEach
+	void setUp() {
+		customerServiceImpl = new CustomerServiceImpl();
+	}
 
     @Test
 	@Disabled
@@ -34,7 +46,7 @@ public class CustomerControllerTest {
 
     @Test
     void testGetCustomerById() throws Exception {
-		Customer customer = new CustomerServiceImpl().listCustomers().get(0);
+		Customer customer = customerServiceImpl.listCustomers().get(0);
 		given(customerService.getCustomerById(customer.getId())).willReturn(customer);
 
 		mockMvc.perform(get("/api/v1/customer/{customerId}", customer.getId())
@@ -47,7 +59,7 @@ public class CustomerControllerTest {
 
     @Test
     void testListCustomers() throws Exception {
-		List<Customer> customers = new CustomerServiceImpl().listCustomers();
+		List<Customer> customers = customerServiceImpl.listCustomers();
 		given(customerService.listCustomers()).willReturn(customers);
 
 		mockMvc.perform(get("/api/v1/customer")
@@ -64,9 +76,19 @@ public class CustomerControllerTest {
     }
 
     @Test
-	@Disabled
-    void testSaveCustomer() {
+    void testSaveCustomer() throws Exception {
+		Customer result = customerServiceImpl.listCustomers().get(0);
+		Customer customer = Customer.builder()
+			.customerName(result.getCustomerName())
+			.build();
 
+		given(customerService.saveNewCustomer(any(Customer.class))).willReturn(result);
+		mockMvc.perform(post("/api/v1/customer")
+				.accept(MediaType.APPLICATION_JSON)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(jsonMapper.writeValueAsString(customer)))
+			.andExpect(status().isCreated())
+			.andExpect(header().string("Location", "/api/v1/customer/" + result.getId()));
     }
 
     @Test

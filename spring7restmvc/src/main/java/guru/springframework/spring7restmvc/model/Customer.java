@@ -3,15 +3,13 @@ package guru.springframework.spring7restmvc.model;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import tools.jackson.databind.annotation.JsonDeserialize;
 
+@JsonDeserialize(builder = Customer.CustomerBuilder.class)
 @Data
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class Customer {
 
 	private UUID id;
