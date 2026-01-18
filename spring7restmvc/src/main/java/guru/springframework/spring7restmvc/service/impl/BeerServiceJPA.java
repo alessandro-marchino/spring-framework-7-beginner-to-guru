@@ -62,8 +62,7 @@ public class BeerServiceJPA implements BeerService {
 
 	@Override
 	public void deleteById(UUID beerId) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'deleteById'");
+		beerRepository.deleteById(beerId);
 	}
 
 	@Override

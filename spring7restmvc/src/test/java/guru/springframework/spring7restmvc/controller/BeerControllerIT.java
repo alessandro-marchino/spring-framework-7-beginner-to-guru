@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.junit.jupiter.api.Disabled;
@@ -28,9 +29,15 @@ public class BeerControllerIT {
 	@Autowired BeerMapper mapper;
 
     @Test
-	@Disabled
+	@Transactional
+	@Rollback
     void testDeleteBeer() {
+		Beer beer = repository.findAll().getFirst();
+		ResponseEntity<Void> responseEntity = controller.deleteBeer(beer.getId());
+		assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(HttpStatus.NO_CONTENT.value()));
 
+		Optional<Beer> foundBeer = repository.findById(beer.getId());
+		assertThat(foundBeer).isEmpty();
     }
 
     @Test
@@ -87,7 +94,7 @@ public class BeerControllerIT {
     }
 
 	@Test
-    void testUpdateBeerNotFOund() {
+    void testUpdateBeerNotFound() {
 		assertThrows(NotFoundException.class, () -> controller.updateBeer(UUID.randomUUID(), BeerDTO.builder().build()));
     }
 
