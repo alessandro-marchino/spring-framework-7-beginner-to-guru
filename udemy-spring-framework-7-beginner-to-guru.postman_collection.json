@@ -123,6 +123,41 @@
             {
               "name": "/:id",
               "request": {
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"quantityOnHand\": 11,\r\n    \"upc\": \"063123420003634\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/beer/:id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "beer",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "939f9154-2170-4036-87dc-d23261213c88"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "/:id",
+              "request": {
                 "method": "DELETE",
                 "header": [],
                 "url": {
@@ -253,6 +288,41 @@
                     {
                       "key": "id",
                       "value": "71116779-6c95-491c-9e24-4ce905566ec0"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "/:id",
+              "request": {
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"customerName\": \"Han Solo\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/customer/:id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "customer",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "38a45959-b69b-49a5-ab04-3a74833f5199"
                     }
                   ]
                 }

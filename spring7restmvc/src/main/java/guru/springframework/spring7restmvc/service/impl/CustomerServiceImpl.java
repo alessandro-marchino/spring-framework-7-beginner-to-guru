@@ -51,9 +51,9 @@ public class CustomerServiceImpl implements CustomerService {
 			return List.copyOf(customerMap.values());
 	}
 	@Override
-	public Customer getCustomerById(UUID id) {
-		log.debug("Get Customer Id in service is called with id {}", id);
-		return customerMap.get(id);
+	public Customer getCustomerById(UUID customerId) {
+		log.debug("Get Customer Id in service is called with id {}", customerId);
+		return customerMap.get(customerId);
 	}
 	@Override
 	public Customer saveNewCustomer(Customer customer) {
@@ -81,7 +81,21 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public void deleteById(UUID id) {
-		customerMap.remove(id);
+	public void deleteById(UUID custoemrId) {
+		customerMap.remove(custoemrId);
+	}
+
+	@Override
+	public void patchCustomerById(UUID customerId, Customer customer) {
+		Customer existing = customerMap.get(customerId);
+		if(existing == null) {
+			throw new RuntimeException("Customer with id " + customerId + " not found");
+		}
+		if(customer.getCustomerName() != null) {
+			existing.setCustomerName(customer.getCustomerName());
+		}
+		existing.setVersion(existing.getVersion() + 1);
+		existing.setUpdatedDate(LocalDateTime.now());
+		customerMap.put(customerId, existing);
 	}
 }
