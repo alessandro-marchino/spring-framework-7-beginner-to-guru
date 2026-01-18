@@ -10,10 +10,10 @@ import lombok.Builder;
 import lombok.Data;
 import tools.jackson.databind.annotation.JsonDeserialize;
 
-@JsonDeserialize(builder = Beer.BeerBuilder.class)
+@JsonDeserialize(builder = BeerDTO.BeerDTOBuilder.class)
 @Data
 @Builder
-public class Beer {
+public class BeerDTO {
 	@JsonProperty("id")
 	private UUID id;
 	@JsonProperty("version")

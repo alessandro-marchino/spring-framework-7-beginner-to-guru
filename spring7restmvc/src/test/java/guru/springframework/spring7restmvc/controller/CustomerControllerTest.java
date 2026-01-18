@@ -32,7 +32,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import guru.springframework.spring7restmvc.model.Customer;
+import guru.springframework.spring7restmvc.model.CustomerDTO;
 import guru.springframework.spring7restmvc.service.CustomerService;
 import tools.jackson.databind.json.JsonMapper;
 
@@ -43,7 +43,7 @@ public class CustomerControllerTest {
 	@Autowired JsonMapper jsonMapper;
 	@MockitoBean CustomerService customerService;
 	@Captor ArgumentCaptor<UUID> uuidArgumentCaptor;
-	@Captor ArgumentCaptor<Customer> customerArgumentCaptor;
+	@Captor ArgumentCaptor<CustomerDTO> customerArgumentCaptor;
 
     @Test
     void testDeleteCustomer() throws Exception {
@@ -58,7 +58,7 @@ public class CustomerControllerTest {
     @Test
     void testGetCustomerById() throws Exception {
 		UUID uuid = UUID.randomUUID();
-		Customer result = Customer.builder()
+		CustomerDTO result = CustomerDTO.builder()
 			.id(uuid)
 			.customerName("Test customer")
 			.version(1)
@@ -86,10 +86,10 @@ public class CustomerControllerTest {
 
     @Test
     void testListCustomers() throws Exception {
-		List<Customer> result = List.of(
-			Customer.builder().customerName("Customer 1").id(UUID.randomUUID()).build(),
-			Customer.builder().customerName("Customer 2").id(UUID.randomUUID()).build(),
-			Customer.builder().customerName("Customer 3").id(UUID.randomUUID()).build()
+		List<CustomerDTO> result = List.of(
+			CustomerDTO.builder().customerName("Customer 1").id(UUID.randomUUID()).build(),
+			CustomerDTO.builder().customerName("Customer 2").id(UUID.randomUUID()).build(),
+			CustomerDTO.builder().customerName("Customer 3").id(UUID.randomUUID()).build()
 		);
 		given(customerService.listCustomers()).willReturn(result);
 
@@ -117,14 +117,14 @@ public class CustomerControllerTest {
     @Test
     void testSaveCustomer() throws Exception {
 		UUID uuid = UUID.randomUUID();
-		Customer requestCustomer = Customer.builder()
+		CustomerDTO requestCustomer = CustomerDTO.builder()
 			.customerName("Test customer")
 			.build();
-		Customer result = Customer.builder()
+		CustomerDTO result = CustomerDTO.builder()
 			.id(uuid)
 			.build();
 
-		given(customerService.saveNewCustomer(any(Customer.class))).willReturn(result);
+		given(customerService.saveNewCustomer(any(CustomerDTO.class))).willReturn(result);
 		mockMvc.perform(post(CustomerController.PATH)
 				.accept(MediaType.APPLICATION_JSON)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -136,7 +136,7 @@ public class CustomerControllerTest {
     @Test
     void testUpdateCustomer() throws Exception {
 		UUID uuid = UUID.randomUUID();
-		Customer customer = Customer.builder()
+		CustomerDTO customer = CustomerDTO.builder()
 			.customerName("Test customer")
 			.build();
 
@@ -144,6 +144,6 @@ public class CustomerControllerTest {
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(jsonMapper.writeValueAsString(customer)))
 			.andExpect(status().isNoContent());
-		verify(customerService).updateCustomerById(eq(uuid), any(Customer.class));
+		verify(customerService).updateCustomerById(eq(uuid), any(CustomerDTO.class));
     }
 }

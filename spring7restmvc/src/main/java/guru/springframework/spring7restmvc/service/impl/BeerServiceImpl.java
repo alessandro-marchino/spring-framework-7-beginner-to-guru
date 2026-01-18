@@ -10,7 +10,7 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
-import guru.springframework.spring7restmvc.model.Beer;
+import guru.springframework.spring7restmvc.model.BeerDTO;
 import guru.springframework.spring7restmvc.model.BeerStyle;
 import guru.springframework.spring7restmvc.service.BeerService;
 import lombok.extern.slf4j.Slf4j;
@@ -19,11 +19,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class BeerServiceImpl implements BeerService {
 
-	private Map<UUID, Beer> beerMap;
+	private Map<UUID, BeerDTO> beerMap;
 
 	public BeerServiceImpl() {
 		this.beerMap = new HashMap<>();
-		Beer beer1 = Beer.builder()
+		BeerDTO beer1 = BeerDTO.builder()
 			.id(UUID.randomUUID())
 			.version(1)
 			.beerName("Galaxy Cat")
@@ -34,7 +34,7 @@ public class BeerServiceImpl implements BeerService {
 			.createdDate(LocalDateTime.now())
 			.updatedDate(LocalDateTime.now())
 			.build();
-		Beer beer2 = Beer.builder()
+		BeerDTO beer2 = BeerDTO.builder()
 			.id(UUID.randomUUID())
 			.version(1)
 			.beerName("Crank")
@@ -45,7 +45,7 @@ public class BeerServiceImpl implements BeerService {
 			.createdDate(LocalDateTime.now())
 			.updatedDate(LocalDateTime.now())
 			.build();
-		Beer beer3 = Beer.builder()
+		BeerDTO beer3 = BeerDTO.builder()
 			.id(UUID.randomUUID())
 			.version(1)
 			.beerName("Sunshine City")
@@ -62,19 +62,19 @@ public class BeerServiceImpl implements BeerService {
 	}
 
 	@Override
-	public List<Beer> listBeers() {
+	public List<BeerDTO> listBeers() {
 		return List.copyOf(beerMap.values());
 	}
 
 	@Override
-	public Optional<Beer> getBeerById(UUID beerId) {
+	public Optional<BeerDTO> getBeerById(UUID beerId) {
 		log.debug("Get Beer Id in service is called with id {}", beerId);
 		return Optional.ofNullable(beerMap.get(beerId));
 	}
 
 	@Override
-	public Beer saveNewBeer(Beer beer) {
-		Beer savedBeer = Beer.builder()
+	public BeerDTO saveNewBeer(BeerDTO beer) {
+		BeerDTO savedBeer = BeerDTO.builder()
 			.id(UUID.randomUUID())
 			.createdDate(LocalDateTime.now())
 			.updatedDate(LocalDateTime.now())
@@ -90,8 +90,8 @@ public class BeerServiceImpl implements BeerService {
 	}
 
 	@Override
-	public void updateBeerById(UUID beerId, Beer beer) {
-		Beer existing = beerMap.get(beerId);
+	public void updateBeerById(UUID beerId, BeerDTO beer) {
+		BeerDTO existing = beerMap.get(beerId);
 		if(existing == null) {
 			throw new RuntimeException("Beer with id " + beerId + " not found");
 		}
@@ -111,8 +111,8 @@ public class BeerServiceImpl implements BeerService {
 	}
 
 	@Override
-	public void patchBeerById(UUID beerId, Beer beer) {
-		Beer existing = beerMap.get(beerId);
+	public void patchBeerById(UUID beerId, BeerDTO beer) {
+		BeerDTO existing = beerMap.get(beerId);
 		if(existing == null) {
 			throw new RuntimeException("Beer with id " + beerId + " not found");
 		}

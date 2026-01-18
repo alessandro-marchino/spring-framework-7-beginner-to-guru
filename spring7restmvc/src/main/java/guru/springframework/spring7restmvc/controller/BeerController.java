@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import guru.springframework.spring7restmvc.model.Beer;
+import guru.springframework.spring7restmvc.model.BeerDTO;
 import guru.springframework.spring7restmvc.service.BeerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,20 +28,20 @@ public class BeerController {
 	private final BeerService beerService;
 
 	@GetMapping(PATH)
-	public List<Beer> listBeers() {
+	public List<BeerDTO> listBeers() {
 		return beerService.listBeers();
 	}
 
 	@GetMapping(PATH_ID)
-	public Beer getBeerById(@PathVariable("beerId") UUID id) {
+	public BeerDTO getBeerById(@PathVariable("beerId") UUID id) {
 		log.debug("Get Beer Id in controller is called with id {}", id);
 		return beerService.getBeerById(id)
 			.orElseThrow(NotFoundException::new);
 	}
 
 	@PostMapping(PATH)
-	public ResponseEntity<Void> saveBeer(@RequestBody Beer beer) {
-		Beer savedBeer = beerService.saveNewBeer(beer);
+	public ResponseEntity<Void> saveBeer(@RequestBody BeerDTO beer) {
+		BeerDTO savedBeer = beerService.saveNewBeer(beer);
 		log.debug("Saved beer with id {}", savedBeer.getId());
 		return ResponseEntity
 			.created(URI.create("/api/v1/beer/" + savedBeer.getId()))
@@ -49,7 +49,7 @@ public class BeerController {
 	}
 
 	@PutMapping(PATH_ID)
-	public ResponseEntity<Void> updateBeer(@PathVariable("beerId") UUID id, @RequestBody Beer beer) {
+	public ResponseEntity<Void> updateBeer(@PathVariable("beerId") UUID id, @RequestBody BeerDTO beer) {
 		beerService.updateBeerById(id, beer);
 		log.debug("Updated beer with id {}", id);
 		return ResponseEntity.noContent().build();
@@ -62,7 +62,7 @@ public class BeerController {
 	}
 
 	@PatchMapping(PATH_ID)
-	public ResponseEntity<Void> patchBeer(@PathVariable("beerId") UUID id, @RequestBody Beer beer) {
+	public ResponseEntity<Void> patchBeer(@PathVariable("beerId") UUID id, @RequestBody BeerDTO beer) {
 		beerService.patchBeerById(id, beer);
 		return ResponseEntity.noContent().build();
 	}
