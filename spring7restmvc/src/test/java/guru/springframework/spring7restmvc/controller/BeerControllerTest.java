@@ -4,6 +4,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -13,11 +14,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.List;
+import java.util.UUID;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
@@ -92,10 +96,20 @@ public class BeerControllerTest {
 		Beer beer = beerServiceImpl.listBeers().get(0);
 
 		mockMvc.perform(put("/api/v1/beer/{beerId}", beer.getId())
-				.accept(MediaType.APPLICATION_JSON)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(jsonMapper.writeValueAsString(beer)))
 			.andExpect(status().isNoContent());
 		verify(beerService).updateBeerById(eq(beer.getId()), any(Beer.class));
+	}
+
+	@Test
+	void testDeleteBeer() throws Exception {
+		Beer beer = beerServiceImpl.listBeers().get(0);
+
+		mockMvc.perform(delete("/api/v1/beer/{beerId}", beer.getId()))
+			.andExpect(status().isNoContent());
+		ArgumentCaptor<UUID> uuidArgumentCaptor = ArgumentCaptor.forClass(UUID.class);
+		verify(beerService).deleteById(uuidArgumentCaptor.capture());
+		assertThat(uuidArgumentCaptor.getValue()).isEqualTo(beer.getId());
 	}
 }

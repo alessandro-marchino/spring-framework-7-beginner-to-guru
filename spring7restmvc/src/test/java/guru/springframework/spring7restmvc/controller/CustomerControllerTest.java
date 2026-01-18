@@ -27,7 +27,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import guru.springframework.spring7restmvc.model.Customer;
 import guru.springframework.spring7restmvc.service.CustomerService;
 import guru.springframework.spring7restmvc.service.impl.CustomerServiceImpl;
-import tools.jackson.core.JacksonException;
 import tools.jackson.databind.json.JsonMapper;
 
 @WebMvcTest(CustomerController.class)
