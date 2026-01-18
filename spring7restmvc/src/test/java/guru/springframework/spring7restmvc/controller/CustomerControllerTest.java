@@ -8,6 +8,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -16,9 +17,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -41,6 +42,7 @@ public class CustomerControllerTest {
 	@Autowired JsonMapper jsonMapper;
 	@MockitoBean CustomerService customerService;
 	@Captor ArgumentCaptor<UUID> uuidArgumentCaptor;
+	@Captor ArgumentCaptor<Customer> customerArgumentCaptor;
 
     @Test
     void testDeleteCustomer() throws Exception {
@@ -89,9 +91,17 @@ public class CustomerControllerTest {
     }
 
     @Test
-	@Disabled
-    void testPatchCustomer() {
+    void testPatchCustomer() throws Exception {
+		UUID uuid = UUID.randomUUID();
+		Map<String, Object> customerMap = Map.of("customerName", "Test customer");
 
+		mockMvc.perform(patch("/api/v1/customer/{customerId}", uuid)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(jsonMapper.writeValueAsString(customerMap)))
+			.andExpect(status().isNoContent());
+		verify(customerService).patchCustomerById(uuidArgumentCaptor.capture(), customerArgumentCaptor.capture());
+		assertThat(uuidArgumentCaptor.getValue()).isEqualTo(uuid);
+		assertThat(customerArgumentCaptor.getValue().getCustomerName()).isEqualTo("Test customer");
     }
 
     @Test
@@ -121,7 +131,6 @@ public class CustomerControllerTest {
 			.build();
 
 		mockMvc.perform(put("/api/v1/customer/{customerId}", uuid)
-				.accept(MediaType.APPLICATION_JSON)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(jsonMapper.writeValueAsString(customer)))
 			.andExpect(status().isNoContent());
