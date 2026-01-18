@@ -1,8 +1,11 @@
 package guru.springframework.spring7restmvc.controller;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -10,6 +13,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.*;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
@@ -28,9 +32,16 @@ public class BeerControllerTest {
 	@Autowired JsonMapper jsonMapper;
 	@MockitoBean BeerService beerService;
 
+	private BeerServiceImpl beerServiceImpl;
+
+	@BeforeEach
+	void setUp() {
+		beerServiceImpl = new BeerServiceImpl();
+	}
+
 	@Test
 	void testGetBeerById() throws Exception {
-		Beer testBeer = new BeerServiceImpl().listBeers().get(0);
+		Beer testBeer = beerServiceImpl.listBeers().get(0);
 		given(beerService.getBeerById(testBeer.getId())).willReturn(testBeer);
 
 		mockMvc.perform(get("/api/v1/beer/{beerId}", testBeer.getId())
@@ -43,7 +54,7 @@ public class BeerControllerTest {
 
 	@Test
 	void testlistBeers() throws Exception {
-		List<Beer> beers = new BeerServiceImpl().listBeers();
+		List<Beer> beers = beerServiceImpl.listBeers();
 		given(beerService.listBeers()).willReturn(beers);
 
 		mockMvc.perform(get("/api/v1/beer")
@@ -55,7 +66,21 @@ public class BeerControllerTest {
 
 	@Test
 	void testCreateNewBeer() throws Exception {
-		Beer testBeer = new BeerServiceImpl().listBeers().get(0);
-		System.out.println(jsonMapper.writeValueAsString(testBeer));
+		Beer resultBeer = beerServiceImpl.listBeers().get(0);
+		Beer testBeer = Beer.builder()
+			.beerName(resultBeer.getBeerName())
+			.beerStyle(resultBeer.getBeerStyle())
+			.price(resultBeer.getPrice())
+			.quantityOnHand(resultBeer.getQuantityOnHand())
+			.upc(resultBeer.getUpc())
+			.build();
+
+		given(beerService.saveNewBeer(any(Beer.class))).willReturn(resultBeer);
+		mockMvc.perform(post("/api/v1/beer")
+				.accept(MediaType.APPLICATION_JSON)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(jsonMapper.writeValueAsString(testBeer)))
+			.andExpect(status().isCreated())
+			.andExpect(header().string("Location", "/api/v1/beer/" + resultBeer.getId()));
 	}
 }
