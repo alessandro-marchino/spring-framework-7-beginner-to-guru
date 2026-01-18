@@ -84,7 +84,11 @@ public class BeerControllerIT {
 		assertThat(beer).isNotNull();
 		assertThat(beer.getBeerName()).isEqualTo("New Beer");
 		assertThat(beer.getVersion()).isEqualTo(0);
+    }
 
+	@Test
+    void testUpdateBeerNotFOund() {
+		assertThrows(NotFoundException.class, () -> controller.updateBeer(UUID.randomUUID(), BeerDTO.builder().build()));
     }
 
     @Test

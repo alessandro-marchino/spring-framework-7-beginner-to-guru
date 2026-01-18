@@ -113,11 +113,24 @@ class BeerControllerTest {
 	@Test
 	void testUpdateBeer() throws Exception {
 		BeerDTO beer = beerServiceImpl.listBeers().get(0);
+		given(beerService.updateBeerById(eq(beer.getId()), any(BeerDTO.class))).willReturn(Optional.of(beer));
 
 		mockMvc.perform(put(BeerController.PATH_ID, beer.getId())
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(jsonMapper.writeValueAsString(beer)))
 			.andExpect(status().isNoContent());
+		verify(beerService).updateBeerById(eq(beer.getId()), any(BeerDTO.class));
+	}
+
+	@Test
+	void testUpdateBeerNotFound() throws Exception {
+		BeerDTO beer = beerServiceImpl.listBeers().get(0);
+		given(beerService.updateBeerById(eq(beer.getId()), any(BeerDTO.class))).willReturn(Optional.empty());
+
+		mockMvc.perform(put(BeerController.PATH_ID, beer.getId())
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(jsonMapper.writeValueAsString(beer)))
+			.andExpect(status().isNotFound());
 		verify(beerService).updateBeerById(eq(beer.getId()), any(BeerDTO.class));
 	}
 

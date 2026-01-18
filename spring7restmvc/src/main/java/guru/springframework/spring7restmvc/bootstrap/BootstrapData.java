@@ -1,6 +1,7 @@
 package guru.springframework.spring7restmvc.bootstrap;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -38,6 +39,8 @@ public class BootstrapData implements CommandLineRunner {
 			.upc("123456")
 			.price(new BigDecimal("12.99"))
 			.quantityOnHand(122)
+			.createdDate(LocalDateTime.now())
+			.updatedDate(LocalDateTime.now())
 			.build());
 		beerRepository.save(Beer.builder()
 			.beerName("Crank")
@@ -45,6 +48,8 @@ public class BootstrapData implements CommandLineRunner {
 			.upc("123456222")
 			.price(new BigDecimal("11.99"))
 			.quantityOnHand(392)
+			.createdDate(LocalDateTime.now())
+			.updatedDate(LocalDateTime.now())
 			.build());
 		beerRepository.save(Beer.builder()
 			.beerName("Sunshine City")
@@ -52,6 +57,8 @@ public class BootstrapData implements CommandLineRunner {
 			.upc("12356")
 			.price(new BigDecimal("13.99"))
 			.quantityOnHand(144)
+			.createdDate(LocalDateTime.now())
+			.updatedDate(LocalDateTime.now())
 			.build());
 		beerRepository.flush();
 	}
@@ -63,12 +70,18 @@ public class BootstrapData implements CommandLineRunner {
 		log.info("Loading Customer data...");
 		customerRepository.save(Customer.builder()
 			.customerName("Customer 1")
+			.createdDate(LocalDateTime.now())
+			.updatedDate(LocalDateTime.now())
 			.build());
 		customerRepository.save(Customer.builder()
 			.customerName("Customer 2")
+			.createdDate(LocalDateTime.now())
+			.updatedDate(LocalDateTime.now())
 			.build());
 		customerRepository.save(Customer.builder()
 			.customerName("Customer 3")
+			.createdDate(LocalDateTime.now())
+			.updatedDate(LocalDateTime.now())
 			.build());
 		customerRepository.flush();
 	}

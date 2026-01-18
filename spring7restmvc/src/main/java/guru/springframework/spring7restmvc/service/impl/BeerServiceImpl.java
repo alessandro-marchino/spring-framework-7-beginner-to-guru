@@ -90,10 +90,10 @@ public class BeerServiceImpl implements BeerService {
 	}
 
 	@Override
-	public void updateBeerById(UUID beerId, BeerDTO beer) {
+	public Optional<BeerDTO> updateBeerById(UUID beerId, BeerDTO beer) {
 		BeerDTO existing = beerMap.get(beerId);
 		if(existing == null) {
-			throw new RuntimeException("Beer with id " + beerId + " not found");
+			return Optional.empty();
 		}
 		existing.setBeerName(beer.getBeerName());
 		existing.setBeerStyle(beer.getBeerStyle());
@@ -103,6 +103,7 @@ public class BeerServiceImpl implements BeerService {
 		existing.setUpdatedDate(LocalDateTime.now());
 		existing.setVersion(existing.getVersion() + 1);
 		beerMap.put(beerId, existing);
+		return Optional.of(existing);
 	}
 
 	@Override

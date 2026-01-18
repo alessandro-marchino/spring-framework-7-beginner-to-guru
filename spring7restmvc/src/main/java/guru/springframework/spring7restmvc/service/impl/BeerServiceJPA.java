@@ -1,8 +1,10 @@
 package guru.springframework.spring7restmvc.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -38,18 +40,24 @@ public class BeerServiceJPA implements BeerService {
 
 	@Override
 	public BeerDTO saveNewBeer(BeerDTO beer) {
+		LocalDateTime now = LocalDateTime.now();
+		beer.setCreatedDate(now);
+		beer.setCreatedDate(now);
 		return beerMapper.beerToBeerDto(beerRepository.save(beerMapper.beerDtoToBeer(beer)));
 	}
 
 	@Override
-	public void updateBeerById(UUID beerId, BeerDTO dto) {
-		beerRepository.findById(beerId).ifPresent(beer -> {
+	public Optional<BeerDTO> updateBeerById(UUID beerId, BeerDTO dto) {
+		dto.setUpdatedDate(LocalDateTime.now());
+		AtomicReference<Optional<BeerDTO>> reference = new AtomicReference<>();
+		beerRepository.findById(beerId).ifPresentOrElse(beer -> {
 			beer.setBeerName(dto.getBeerName());
 			beer.setBeerStyle(dto.getBeerStyle());
 			beer.setUpc(dto.getUpc());
 			beer.setPrice(dto.getPrice());
-			beerRepository.save(beer);
-		});
+			reference.set(Optional.of(beerMapper.beerToBeerDto(beerRepository.save(beer))));
+		}, () -> reference.set(Optional.empty()));
+		return reference.get();
 	}
 
 	@Override
