@@ -41,6 +41,8 @@ public class BeerController {
 
 	@PostMapping(PATH)
 	public ResponseEntity<Void> saveBeer(@RequestBody BeerDTO beer) {
+		beer.setId(null);
+		beer.setVersion(null);
 		BeerDTO savedBeer = beerService.saveNewBeer(beer);
 		log.debug("Saved beer with id {}", savedBeer.getId());
 		return ResponseEntity
@@ -50,8 +52,6 @@ public class BeerController {
 
 	@PutMapping(PATH_ID)
 	public ResponseEntity<Void> updateBeer(@PathVariable("beerId") UUID id, @RequestBody BeerDTO beer) {
-		beer.setId(null);
-		beer.setVersion(null);
 		beerService.updateBeerById(id, beer).orElseThrow(NotFoundException::new);
 		log.debug("Updated beer with id {}", id);
 		return ResponseEntity.noContent().build();
@@ -67,7 +67,7 @@ public class BeerController {
 
 	@PatchMapping(PATH_ID)
 	public ResponseEntity<Void> patchBeer(@PathVariable("beerId") UUID id, @RequestBody BeerDTO beer) {
-		beerService.patchBeerById(id, beer);
+		beerService.patchBeerById(id, beer).orElseThrow(NotFoundException::new);
 		return ResponseEntity.noContent().build();
 	}
 

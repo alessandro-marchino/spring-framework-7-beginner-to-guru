@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -73,10 +72,28 @@ public class BeerControllerIT {
 		assertThat(dtos).hasSize(0);
     }
 
-    @Test
-	@Disabled
-    void testPatchBeer() {
+	@Test
+	void testPatchBeerNotFound() {
+		assertThrows(NotFoundException.class, () -> controller.patchBeer(UUID.randomUUID(), BeerDTO.builder().build()));
+	}
 
+    @Test
+	@Transactional
+	@Rollback
+    void testPatchBeer() {
+		Beer beer = repository.findAll().getFirst();
+		BeerDTO dto = mapper.beerToBeerDto(beer);
+		final String beerName = "UPDATED";
+		dto.setBeerName(beerName);
+
+		ResponseEntity<Void> responseEntity = controller.patchBeer(beer.getId(), dto);
+		assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(HttpStatus.NO_CONTENT.value()));
+		repository.flush();
+
+		Beer updatedBeer = repository.findById(beer.getId()).get();
+		assertThat(updatedBeer).isNotNull();
+		assertThat(updatedBeer.getBeerName()).isEqualTo(beerName);
+		assertThat(updatedBeer.getVersion()).isEqualTo(1);
     }
 
     @Test

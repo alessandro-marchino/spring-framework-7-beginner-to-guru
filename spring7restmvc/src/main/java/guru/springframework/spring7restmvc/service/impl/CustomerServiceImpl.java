@@ -70,27 +70,28 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public void updateCustomerById(UUID customerId, CustomerDTO customer) {
+	public Optional<CustomerDTO> updateCustomerById(UUID customerId, CustomerDTO customer) {
 		CustomerDTO existing = customerMap.get(customerId);
 		if(existing == null) {
-			throw new RuntimeException("Customer with id " + customerId + " not found");
+			return Optional.empty();
 		}
 		existing.setCustomerName(customer.getCustomerName());
 		existing.setVersion(existing.getVersion() + 1);
 		existing.setUpdatedDate(LocalDateTime.now());
 		customerMap.put(customerId, existing);
+		return Optional.of(existing);
 	}
 
 	@Override
-	public void deleteById(UUID custoemrId) {
-		customerMap.remove(custoemrId);
+	public boolean deleteById(UUID custoemrId) {
+		return customerMap.remove(custoemrId) != null;
 	}
 
 	@Override
-	public void patchCustomerById(UUID customerId, CustomerDTO customer) {
+	public Optional<CustomerDTO> patchCustomerById(UUID customerId, CustomerDTO customer) {
 		CustomerDTO existing = customerMap.get(customerId);
 		if(existing == null) {
-			throw new RuntimeException("Customer with id " + customerId + " not found");
+			return Optional.empty();
 		}
 		if(customer.getCustomerName() != null) {
 			existing.setCustomerName(customer.getCustomerName());
@@ -98,5 +99,6 @@ public class CustomerServiceImpl implements CustomerService {
 		existing.setVersion(existing.getVersion() + 1);
 		existing.setUpdatedDate(LocalDateTime.now());
 		customerMap.put(customerId, existing);
+		return Optional.of(existing);
 	}
 }

@@ -48,9 +48,20 @@ class CustomerControllerTest {
     @Test
     void testDeleteCustomer() throws Exception {
 		UUID uuid = UUID.randomUUID();
+		given(customerService.deleteById(eq(uuid))).willReturn(true);
 
 		mockMvc.perform(delete(CustomerController.PATH_ID, uuid))
 			.andExpect(status().isNoContent());
+		verify(customerService).deleteById(uuidArgumentCaptor.capture());
+		assertThat(uuidArgumentCaptor.getValue()).isEqualTo(uuid);
+	}
+	@Test
+    void testDeleteCustomerNotFound() throws Exception {
+		UUID uuid = UUID.randomUUID();
+		given(customerService.deleteById(eq(uuid))).willReturn(false);
+
+		mockMvc.perform(delete(CustomerController.PATH_ID, uuid))
+			.andExpect(status().isNotFound());
 		verify(customerService).deleteById(uuidArgumentCaptor.capture());
 		assertThat(uuidArgumentCaptor.getValue()).isEqualTo(uuid);
 	}
@@ -105,10 +116,27 @@ class CustomerControllerTest {
 		UUID uuid = UUID.randomUUID();
 		Map<String, Object> customerMap = Map.of("customerName", "Test customer");
 
+		given(customerService.patchCustomerById(eq(uuid), any(CustomerDTO.class))).willReturn(Optional.of(CustomerDTO.builder().build()));
+
 		mockMvc.perform(patch(CustomerController.PATH_ID, uuid)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(jsonMapper.writeValueAsString(customerMap)))
 			.andExpect(status().isNoContent());
+		verify(customerService).patchCustomerById(uuidArgumentCaptor.capture(), customerArgumentCaptor.capture());
+		assertThat(uuidArgumentCaptor.getValue()).isEqualTo(uuid);
+		assertThat(customerArgumentCaptor.getValue().getCustomerName()).isEqualTo("Test customer");
+    }
+	@Test
+    void testPatchCustomerNotFound() throws Exception {
+		UUID uuid = UUID.randomUUID();
+		Map<String, Object> customerMap = Map.of("customerName", "Test customer");
+
+		given(customerService.patchCustomerById(eq(uuid), any(CustomerDTO.class))).willReturn(Optional.empty());
+
+		mockMvc.perform(patch(CustomerController.PATH_ID, uuid)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(jsonMapper.writeValueAsString(customerMap)))
+			.andExpect(status().isNotFound());
 		verify(customerService).patchCustomerById(uuidArgumentCaptor.capture(), customerArgumentCaptor.capture());
 		assertThat(uuidArgumentCaptor.getValue()).isEqualTo(uuid);
 		assertThat(customerArgumentCaptor.getValue().getCustomerName()).isEqualTo("Test customer");
@@ -139,11 +167,27 @@ class CustomerControllerTest {
 		CustomerDTO customer = CustomerDTO.builder()
 			.customerName("Test customer")
 			.build();
+		given(customerService.updateCustomerById(eq(uuid), any(CustomerDTO.class))).willReturn(Optional.of(customer));
 
 		mockMvc.perform(put(CustomerController.PATH_ID, uuid)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(jsonMapper.writeValueAsString(customer)))
 			.andExpect(status().isNoContent());
+		verify(customerService).updateCustomerById(eq(uuid), any(CustomerDTO.class));
+    }
+
+	@Test
+    void testUpdateCustomerNotFound() throws Exception {
+		UUID uuid = UUID.randomUUID();
+		CustomerDTO customer = CustomerDTO.builder()
+			.customerName("Test customer")
+			.build();
+		given(customerService.updateCustomerById(eq(uuid), any(CustomerDTO.class))).willReturn(Optional.empty());
+
+		mockMvc.perform(put(CustomerController.PATH_ID, uuid)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(jsonMapper.writeValueAsString(customer)))
+			.andExpect(status().isNotFound());
 		verify(customerService).updateCustomerById(eq(uuid), any(CustomerDTO.class));
     }
 }

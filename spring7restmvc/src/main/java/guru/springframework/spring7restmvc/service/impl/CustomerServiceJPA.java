@@ -1,8 +1,10 @@
 package guru.springframework.spring7restmvc.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -38,26 +40,45 @@ public class CustomerServiceJPA implements CustomerService {
 
 	@Override
 	public CustomerDTO saveNewCustomer(CustomerDTO customer) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'saveNewCustomer'");
+		LocalDateTime now = LocalDateTime.now();
+		customer.setCreatedDate(now);
+		customer.setUpdatedDate(now);
+		return customerMapper.customerToCustomerDto(customerRepository.save(customerMapper.customerDtoToCustomer(customer)));
 	}
 
 	@Override
-	public void updateCustomerById(UUID customerId, CustomerDTO customer) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'updateCustomerById'");
+	public Optional<CustomerDTO> updateCustomerById(UUID customerId, CustomerDTO dto) {
+		dto.setUpdatedDate(LocalDateTime.now());
+		AtomicReference<Optional<CustomerDTO>> reference = new AtomicReference<>();
+		customerRepository.findById(customerId).ifPresentOrElse(customer -> {
+			customer.setCustomerName(dto.getCustomerName());
+			customer.setUpdatedDate(LocalDateTime.now());
+			reference.set(Optional.of(customerMapper.customerToCustomerDto(customerRepository.save(customer))));
+		}, () -> reference.set(Optional.empty()));
+		return reference.get();
 	}
 
 	@Override
-	public void deleteById(UUID customerId) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'deleteById'");
+	public boolean deleteById(UUID customerId) {
+		if(!customerRepository.existsById(customerId)) {
+			return false;
+		}
+		customerRepository.deleteById(customerId);
+		return true;
 	}
 
 	@Override
-	public void patchCustomerById(UUID customerId, CustomerDTO customer) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'patchCustomerById'");
+	public Optional<CustomerDTO> patchCustomerById(UUID customerId, CustomerDTO dto) {
+		dto.setUpdatedDate(LocalDateTime.now());
+		AtomicReference<Optional<CustomerDTO>> reference = new AtomicReference<>();
+		customerRepository.findById(customerId).ifPresentOrElse(customer -> {
+			if(dto.getCustomerName() != null) {
+				customer.setCustomerName(dto.getCustomerName());
+			}
+			customer.setUpdatedDate(LocalDateTime.now());
+			reference.set(Optional.of(customerMapper.customerToCustomerDto(customerRepository.save(customer))));
+		}, () -> reference.set(Optional.empty()));
+		return reference.get();
 	}
 
 }

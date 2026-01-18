@@ -46,6 +46,8 @@ public class CustomerController {
 
 	@PostMapping(PATH)
 	public ResponseEntity<Void> saveCustomer(@RequestBody CustomerDTO customer) {
+		customer.setId(null);
+		customer.setVersion(null);
 		CustomerDTO savedCustomer = customerService.saveNewCustomer(customer);
 		log.debug("Saved customer with id {}", savedCustomer.getId());
 		return ResponseEntity
@@ -55,20 +57,24 @@ public class CustomerController {
 
 	@PutMapping(PATH_ID)
 	public ResponseEntity<Void> updateCustomer(@PathVariable("customerId") UUID id, @RequestBody CustomerDTO customer) {
-		customerService.updateCustomerById(id, customer);
+		customer.setId(null);
+		customer.setVersion(null);
+		customerService.updateCustomerById(id, customer).orElseThrow(NotFoundException::new);
 		log.debug("Updated customer with id {}", id);
 		return ResponseEntity.noContent().build();
 	}
 
 	@DeleteMapping(PATH_ID)
 	public ResponseEntity<Void> deleteCustomer(@PathVariable("customerId") UUID id) {
-		customerService.deleteById(id);
+		if(!customerService.deleteById(id)) {
+			throw new NotFoundException();
+		}
 		return ResponseEntity.noContent().build();
 	}
 
 	@PatchMapping(PATH_ID)
 	public ResponseEntity<Void> patchCustomer(@PathVariable("customerId") UUID id, @RequestBody CustomerDTO customer) {
-		customerService.patchCustomerById(id, customer);
+		customerService.patchCustomerById(id, customer).orElseThrow(NotFoundException::new);
 		return ResponseEntity.noContent().build();
 	}
 }

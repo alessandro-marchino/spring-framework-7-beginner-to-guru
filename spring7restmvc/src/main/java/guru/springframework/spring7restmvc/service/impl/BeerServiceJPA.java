@@ -48,13 +48,14 @@ public class BeerServiceJPA implements BeerService {
 
 	@Override
 	public Optional<BeerDTO> updateBeerById(UUID beerId, BeerDTO dto) {
-		dto.setUpdatedDate(LocalDateTime.now());
 		AtomicReference<Optional<BeerDTO>> reference = new AtomicReference<>();
 		beerRepository.findById(beerId).ifPresentOrElse(beer -> {
 			beer.setBeerName(dto.getBeerName());
 			beer.setBeerStyle(dto.getBeerStyle());
 			beer.setUpc(dto.getUpc());
 			beer.setPrice(dto.getPrice());
+			beer.setQuantityOnHand(dto.getQuantityOnHand());
+			beer.setUpdatedDate(LocalDateTime.now());
 			reference.set(Optional.of(beerMapper.beerToBeerDto(beerRepository.save(beer))));
 		}, () -> reference.set(Optional.empty()));
 		return reference.get();
@@ -70,9 +71,29 @@ public class BeerServiceJPA implements BeerService {
 	}
 
 	@Override
-	public void patchBeerById(UUID beerId, BeerDTO beer) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'patchBeerById'");
+	public Optional<BeerDTO> patchBeerById(UUID beerId, BeerDTO dto) {
+		dto.setUpdatedDate(LocalDateTime.now());
+		AtomicReference<Optional<BeerDTO>> reference = new AtomicReference<>();
+		beerRepository.findById(beerId).ifPresentOrElse(beer -> {
+			if(dto.getBeerName() != null) {
+				beer.setBeerName(dto.getBeerName());
+			}
+			if(dto.getBeerStyle() != null) {
+				beer.setBeerStyle(dto.getBeerStyle());
+			}
+			if(dto.getUpc() != null) {
+				beer.setUpc(dto.getUpc());
+			}
+			if(dto.getPrice() != null) {
+				beer.setPrice(dto.getPrice());
+			}
+			if(dto.getQuantityOnHand() != null) {
+				beer.setQuantityOnHand(dto.getQuantityOnHand());
+			}
+			beer.setUpdatedDate(LocalDateTime.now());
+			reference.set(Optional.of(beerMapper.beerToBeerDto(beerRepository.save(beer))));
+		}, () -> reference.set(Optional.empty()));
+		return reference.get();
 	}
 
 }
