@@ -5,6 +5,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.List;
+
 import static org.hamcrest.Matchers.*;
 
 import org.junit.jupiter.api.Test;
@@ -34,5 +37,17 @@ public class BeerControllerTest {
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 			.andExpect(jsonPath("$.id", is(testBeer.getId().toString())))
 			.andExpect(jsonPath("$.beerName", is(testBeer.getBeerName())));
+	}
+
+	@Test
+	void testlistBeers() throws Exception {
+		List<Beer> beers = new BeerServiceImpl().listBeers();
+		given(beerService.listBeers()).willReturn(beers);
+
+		mockMvc.perform(get("/api/v1/beer")
+				.accept(MediaType.APPLICATION_JSON))
+			.andExpect(status().isOk())
+			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+			.andExpect(jsonPath("$.length()", is(3)));
 	}
 }
