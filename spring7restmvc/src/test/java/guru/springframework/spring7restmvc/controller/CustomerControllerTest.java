@@ -2,9 +2,12 @@ package guru.springframework.spring7restmvc.controller;
 
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -24,6 +27,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import guru.springframework.spring7restmvc.model.Customer;
 import guru.springframework.spring7restmvc.service.CustomerService;
 import guru.springframework.spring7restmvc.service.impl.CustomerServiceImpl;
+import tools.jackson.core.JacksonException;
 import tools.jackson.databind.json.JsonMapper;
 
 @WebMvcTest(CustomerController.class)
@@ -92,8 +96,14 @@ public class CustomerControllerTest {
     }
 
     @Test
-	@Disabled
-    void testUpdateCustomer() {
+    void testUpdateCustomer() throws Exception {
+		Customer customer = customerServiceImpl.listCustomers().get(0);
 
+		mockMvc.perform(put("/api/v1/customer/{customerId}", customer.getId())
+				.accept(MediaType.APPLICATION_JSON)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(jsonMapper.writeValueAsString(customer)))
+			.andExpect(status().isNoContent());
+		verify(customerService).updateCustomerById(eq(customer.getId()), any(Customer.class));
     }
 }
