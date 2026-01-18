@@ -20,10 +20,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import guru.springframework.spring7restmvc.model.Beer;
 import guru.springframework.spring7restmvc.service.BeerService;
 import guru.springframework.spring7restmvc.service.impl.BeerServiceImpl;
+import tools.jackson.databind.json.JsonMapper;
 
 @WebMvcTest(BeerController.class)
 public class BeerControllerTest {
 	@Autowired MockMvc mockMvc;
+	@Autowired JsonMapper jsonMapper;
 	@MockitoBean BeerService beerService;
 
 	@Test
@@ -49,5 +51,11 @@ public class BeerControllerTest {
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 			.andExpect(jsonPath("$.length()", is(3)));
+	}
+
+	@Test
+	void testCreateNewBeer() throws Exception {
+		Beer testBeer = new BeerServiceImpl().listBeers().get(0);
+		System.out.println(jsonMapper.writeValueAsString(testBeer));
 	}
 }
