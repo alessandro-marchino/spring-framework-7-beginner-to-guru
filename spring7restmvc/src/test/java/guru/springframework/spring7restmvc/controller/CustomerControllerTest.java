@@ -1,10 +1,12 @@
 package guru.springframework.spring7restmvc.controller;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -14,10 +16,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
@@ -30,10 +37,12 @@ import guru.springframework.spring7restmvc.service.impl.CustomerServiceImpl;
 import tools.jackson.databind.json.JsonMapper;
 
 @WebMvcTest(CustomerController.class)
+@ExtendWith(MockitoExtension.class)
 public class CustomerControllerTest {
 	@Autowired MockMvc mockMvc;
 	@Autowired JsonMapper jsonMapper;
 	@MockitoBean CustomerService customerService;
+	@Captor ArgumentCaptor<UUID> uuidArgumentCaptor;
 	private CustomerServiceImpl customerServiceImpl;
 
 	@BeforeEach
@@ -42,9 +51,13 @@ public class CustomerControllerTest {
 	}
 
     @Test
-	@Disabled
-    void testDeleteCustomer() {
+    void testDeleteCustomer() throws Exception {
+		UUID uuid = UUID.randomUUID();
 
+		mockMvc.perform(delete("/api/v1/customer/{customerId}", uuid))
+			.andExpect(status().isNoContent());
+		verify(customerService).deleteById(uuidArgumentCaptor.capture());
+		assertThat(uuidArgumentCaptor.getValue()).isEqualTo(uuid);
 	}
 
     @Test
