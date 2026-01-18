@@ -16,6 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -58,7 +59,7 @@ public class BeerControllerTest {
 	@Test
 	void testGetBeerById() throws Exception {
 		Beer testBeer = beerServiceImpl.listBeers().get(0);
-		given(beerService.getBeerById(testBeer.getId())).willReturn(testBeer);
+		given(beerService.getBeerById(testBeer.getId())).willReturn(Optional.of(testBeer));
 
 		mockMvc.perform(get(BeerController.PATH_ID, testBeer.getId())
 		.accept(MediaType.APPLICATION_JSON))
@@ -70,7 +71,7 @@ public class BeerControllerTest {
 
 	@Test
 	void testGetBeerByIdNotFound() throws Exception {
-		given(beerService.getBeerById(any(UUID.class))).willThrow(NotFoundException.class);
+		given(beerService.getBeerById(any(UUID.class))).willReturn(Optional.empty());
 
 		mockMvc.perform(get(BeerController.PATH_ID, UUID.randomUUID())
 				.accept(MediaType.APPLICATION_JSON))

@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -66,9 +67,9 @@ public class BeerServiceImpl implements BeerService {
 	}
 
 	@Override
-	public Beer getBeerById(UUID beerId) {
+	public Optional<Beer> getBeerById(UUID beerId) {
 		log.debug("Get Beer Id in service is called with id {}", beerId);
-		return beerMap.get(beerId);
+		return Optional.ofNullable(beerMap.get(beerId));
 	}
 
 	@Override

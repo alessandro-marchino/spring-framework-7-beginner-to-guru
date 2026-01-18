@@ -35,7 +35,8 @@ public class BeerController {
 	@GetMapping(PATH_ID)
 	public Beer getBeerById(@PathVariable("beerId") UUID id) {
 		log.debug("Get Beer Id in controller is called with id {}", id);
-		return beerService.getBeerById(id);
+		return beerService.getBeerById(id)
+			.orElseThrow(NotFoundException::new);
 	}
 
 	@PostMapping(PATH)

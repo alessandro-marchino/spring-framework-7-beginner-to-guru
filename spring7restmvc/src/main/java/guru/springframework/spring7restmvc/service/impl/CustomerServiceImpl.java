@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -51,9 +52,9 @@ public class CustomerServiceImpl implements CustomerService {
 			return List.copyOf(customerMap.values());
 	}
 	@Override
-	public Customer getCustomerById(UUID customerId) {
+	public Optional<Customer> getCustomerById(UUID customerId) {
 		log.debug("Get Customer Id in service is called with id {}", customerId);
-		return customerMap.get(customerId);
+		return Optional.ofNullable(customerMap.get(customerId));
 	}
 	@Override
 	public Customer saveNewCustomer(Customer customer) {
