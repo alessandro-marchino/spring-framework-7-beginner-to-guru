@@ -1,8 +1,10 @@
 package guru.springframework.spring7restmvc.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.HashMap;
@@ -21,6 +23,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
@@ -115,8 +118,6 @@ public class BeerControllerIT {
     }
 
 	@Test
-	@Transactional
-	@Rollback
     void testPatchBadNameBeer() throws Exception {
 		Beer beer = repository.findAll().getFirst();
 		Map<String, Object> beerMap = new HashMap<>();
@@ -125,7 +126,8 @@ public class BeerControllerIT {
 		mockMvc.perform(patch(BeerController.PATH_ID, beer.getId())
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(jsonMapper.writeValueAsString(beerMap)))
-			.andExpect(status().isBadRequest());
+			.andExpect(status().isBadRequest())
+			.andExpect(jsonPath("$.length()", is(1)));
     }
 
     @Test
