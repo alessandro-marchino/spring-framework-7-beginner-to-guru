@@ -122,8 +122,9 @@ class BeerControllerTest {
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(jsonMapper.writeValueAsString(testBeer)))
 			.andExpect(status().isBadRequest())
+			.andExpect(jsonPath("$.length()", is(2)))
 			.andReturn();
-		System.out.println("RESULT: " + result.getResponse().getContentAsString());
+		assertThat(result.getResponse().getContentAsString()).isNotBlank();
 		verify(beerService, never()).saveNewBeer(any());
 	}
 
