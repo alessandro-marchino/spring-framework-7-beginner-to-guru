@@ -34,6 +34,7 @@ import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import guru.springframework.spring7restmvc.model.BeerDTO;
 import guru.springframework.spring7restmvc.service.BeerService;
@@ -116,11 +117,13 @@ class BeerControllerTest {
 		BeerDTO testBeer = BeerDTO.builder()
 			.build();
 
-		mockMvc.perform(post(BeerController.PATH)
+		MvcResult result = mockMvc.perform(post(BeerController.PATH)
 				.accept(MediaType.APPLICATION_JSON)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(jsonMapper.writeValueAsString(testBeer)))
-			.andExpect(status().isBadRequest());
+			.andExpect(status().isBadRequest())
+			.andReturn();
+		System.out.println("RESULT: " + result.getResponse().getContentAsString());
 		verify(beerService, never()).saveNewBeer(any());
 	}
 
