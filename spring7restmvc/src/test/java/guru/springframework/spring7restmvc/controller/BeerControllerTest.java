@@ -115,6 +115,7 @@ class BeerControllerTest {
 	@Test
 	void testCreateNewBeerNullBeerName() throws Exception {
 		BeerDTO testBeer = BeerDTO.builder()
+			.quantityOnHand(-2)
 			.build();
 
 		MvcResult result = mockMvc.perform(post(BeerController.PATH)
@@ -122,8 +123,9 @@ class BeerControllerTest {
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(jsonMapper.writeValueAsString(testBeer)))
 			.andExpect(status().isBadRequest())
-			.andExpect(jsonPath("$.length()", is(2)))
+			.andExpect(jsonPath("$.length()", is(7)))
 			.andReturn();
+		System.out.println(result.getResponse().getContentAsString());
 		assertThat(result.getResponse().getContentAsString()).isNotBlank();
 		verify(beerService, never()).saveNewBeer(any());
 	}
@@ -138,6 +140,24 @@ class BeerControllerTest {
 				.content(jsonMapper.writeValueAsString(beer)))
 			.andExpect(status().isNoContent());
 		verify(beerService).updateBeerById(eq(beer.getId()), any(BeerDTO.class));
+	}
+
+	@Test
+	void testUpdateBeerNullBeerName() throws Exception {
+		BeerDTO beer = beerServiceImpl.listBeers().get(0);
+		BeerDTO testBeer = BeerDTO.builder()
+			.quantityOnHand(-2)
+			.build();
+
+		MvcResult result = mockMvc.perform(put(BeerController.PATH_ID, beer.getId())
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(jsonMapper.writeValueAsString(testBeer)))
+			.andExpect(status().isBadRequest())
+			.andExpect(jsonPath("$.length()", is(7)))
+			.andReturn();
+		System.out.println(result.getResponse().getContentAsString());
+		assertThat(result.getResponse().getContentAsString()).isNotBlank();
+		verify(beerService, never()).saveNewBeer(any());
 	}
 
 	@Test

@@ -52,7 +52,7 @@ public class BeerController {
 	}
 
 	@PutMapping(PATH_ID)
-	public ResponseEntity<Void> updateBeer(@PathVariable("beerId") UUID id, @RequestBody BeerDTO beer) {
+	public ResponseEntity<Void> updateBeer(@PathVariable("beerId") UUID id, @Validated @RequestBody BeerDTO beer) {
 		beerService.updateBeerById(id, beer).orElseThrow(NotFoundException::new);
 		log.debug("Updated beer with id {}", id);
 		return ResponseEntity.noContent().build();
