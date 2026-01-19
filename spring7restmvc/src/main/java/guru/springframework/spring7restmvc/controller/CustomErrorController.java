@@ -8,6 +8,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import jakarta.validation.ConstraintViolationException;
+
 @ControllerAdvice
 public class CustomErrorController {
 
@@ -19,6 +21,13 @@ public class CustomErrorController {
 		return ResponseEntity
 			.badRequest()
 			.body(errorList);
+	}
+
+	@ExceptionHandler(ConstraintViolationException.class)
+	ResponseEntity<Void> handleJPAViolation(ConstraintViolationException exception) {
+		return ResponseEntity.badRequest()
+			.build();
+
 	}
 
 }
