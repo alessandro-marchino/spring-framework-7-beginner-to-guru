@@ -3,6 +3,7 @@ package guru.springframework.spring7restmvc.controller;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -108,6 +109,19 @@ class BeerControllerTest {
 				.content(jsonMapper.writeValueAsString(testBeer)))
 			.andExpect(status().isCreated())
 			.andExpect(header().string("Location", "/api/v1/beer/" + resultBeer.getId()));
+	}
+
+	@Test
+	void testCreateNewBeerNullBeerName() throws Exception {
+		BeerDTO testBeer = BeerDTO.builder()
+			.build();
+
+		mockMvc.perform(post(BeerController.PATH)
+				.accept(MediaType.APPLICATION_JSON)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(jsonMapper.writeValueAsString(testBeer)))
+			.andExpect(status().isBadRequest());
+		verify(beerService, never()).saveNewBeer(any());
 	}
 
 	@Test
