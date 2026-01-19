@@ -14,7 +14,7 @@ class CustomerRepositoryTest {
 
 	@Test
 	void testSaveCustomer() {
-		Customer savedCustomer = repository.save(Customer.builder()
+		Customer savedCustomer = repository.saveAndFlush(Customer.builder()
 			.customerName("New name")
 			.build());
 		assertThat(savedCustomer).isNotNull();
