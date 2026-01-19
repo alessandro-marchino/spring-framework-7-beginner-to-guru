@@ -91,7 +91,7 @@ public class BeerServiceJPA implements BeerService {
 				beer.setQuantityOnHand(dto.getQuantityOnHand());
 			}
 			beer.setUpdatedDate(LocalDateTime.now());
-			reference.set(Optional.of(beerMapper.beerToBeerDto(beerRepository.save(beer))));
+			reference.set(Optional.of(beerMapper.beerToBeerDto(beerRepository.saveAndFlush(beer))));
 		}, () -> reference.set(Optional.empty()));
 		return reference.get();
 	}

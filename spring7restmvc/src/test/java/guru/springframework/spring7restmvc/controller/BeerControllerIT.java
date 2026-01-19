@@ -2,30 +2,49 @@ package guru.springframework.spring7restmvc.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.WebApplicationContext;
 
 import guru.springframework.spring7restmvc.entities.Beer;
 import guru.springframework.spring7restmvc.mappers.BeerMapper;
 import guru.springframework.spring7restmvc.model.BeerDTO;
 import guru.springframework.spring7restmvc.repositories.BeerRepository;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 
 @SpringBootTest
 public class BeerControllerIT {
 	@Autowired BeerController controller;
 	@Autowired BeerRepository repository;
 	@Autowired BeerMapper mapper;
+	@Autowired WebApplicationContext wac;
+	@Autowired JsonMapper jsonMapper;
+	MockMvc mockMvc;
+
+	@BeforeEach
+	void setUp() {
+		mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
+	}
 
     @Test
 	@Transactional
@@ -94,6 +113,20 @@ public class BeerControllerIT {
 		assertThat(updatedBeer).isNotNull();
 		assertThat(updatedBeer.getBeerName()).isEqualTo(beerName);
 		assertThat(updatedBeer.getVersion()).isEqualTo(1);
+    }
+
+	@Test
+	@Transactional
+	@Rollback
+    void testPatchBadNameBeer() throws Exception {
+		Beer beer = repository.findAll().getFirst();
+		Map<String, Object> beerMap = new HashMap<>();
+		beerMap.put("beerName", "New Name 12345678901234567890123456789012345678901234567890");
+
+		mockMvc.perform(patch(BeerController.PATH_ID, beer.getId())
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(jsonMapper.writeValueAsString(beerMap)))
+			.andExpect(status().isBadRequest());
     }
 
     @Test
