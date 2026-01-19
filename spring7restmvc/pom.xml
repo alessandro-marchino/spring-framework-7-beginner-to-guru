@@ -33,6 +33,10 @@
       <artifactId>mapstruct</artifactId>
       <version>${org.mapstruct.version}</version>
     </dependency>
+	  <dependency>
+	    <groupId>org.springframework.boot</groupId>
+	    <artifactId>spring-boot-starter-validation</artifactId>
+	  </dependency>
 
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -49,6 +53,12 @@
 			<artifactId>spring-boot-starter-data-jpa-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+    <dependency>
+	    <groupId>org.springframework.boot</groupId>
+	    <artifactId>spring-boot-starter-validation-test</artifactId>
+      <scope>test</scope>
+	  </dependency>
+
 
 	  <dependency>
 	    <groupId>org.springframework.boot</groupId>
@@ -60,6 +70,7 @@
 	    <artifactId>h2</artifactId>
 	    <scope>runtime</scope>
 	  </dependency>
+
 	</dependencies>
 
 	<build>
@@ -69,15 +80,15 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
 					<annotationProcessorPaths>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+						</path>
             <path>
               <groupId>org.mapstruct</groupId>
               <artifactId>mapstruct-processor</artifactId>
               <version>${org.mapstruct.version}</version>
             </path>
-						<path>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-						</path>
             <path>
               <groupId>org.projectlombok</groupId>
               <artifactId>lombok-mapstruct-binding</artifactId>
