@@ -35,6 +35,7 @@ public class Customer {
 	@Version
 	private Integer version;
 	private String customerName;
+	private String email;
 	private LocalDateTime createdDate;
 	private LocalDateTime updatedDate;
 }
