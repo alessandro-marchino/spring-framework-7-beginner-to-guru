@@ -18,7 +18,7 @@ import guru.springframework.spring7restmvc.entities.Beer;
 @Testcontainers
 @SpringBootTest
 @ActiveProfiles("localmysql")
-public class MySqlTest {
+public class MySqlIT {
 
 	@Container
 	@ServiceConnection
