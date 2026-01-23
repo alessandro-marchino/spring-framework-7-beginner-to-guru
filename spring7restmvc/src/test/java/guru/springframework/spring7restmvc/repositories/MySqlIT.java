@@ -29,6 +29,6 @@ public class MySqlIT {
 	@Test
 	void testListBeers() {
 		List<Beer> beers = beerRepository.findAll();
-		assertThat(beers).hasSize(3);
+		assertThat(beers).hasSize(2413);
 	}
 }
