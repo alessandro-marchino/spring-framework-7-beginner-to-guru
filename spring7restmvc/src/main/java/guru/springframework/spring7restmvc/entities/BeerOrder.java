@@ -1,6 +1,7 @@
 package guru.springframework.spring7restmvc.entities;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 import java.util.UUID;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -14,6 +15,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Version;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -45,4 +47,7 @@ public class BeerOrder {
 	private LocalDateTime createdDate;
 	@UpdateTimestamp
 	private LocalDateTime lastModifiedDate;
+
+	@OneToMany(mappedBy = BeerOrderLine_.BEER_ORDER)
+	private Set<BeerOrderLine> beerOrderLines;
 }

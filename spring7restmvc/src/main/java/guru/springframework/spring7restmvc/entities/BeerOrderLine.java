@@ -13,6 +13,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Version;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,10 +36,10 @@ public class BeerOrderLine {
 	@Version
 	private Integer version;
 
-	@JdbcTypeCode(SqlTypes.CHAR)
-	private UUID beerId;
-	@JdbcTypeCode(SqlTypes.CHAR)
-	private UUID beerOrderId;
+	@ManyToOne
+	private Beer beer;
+	@ManyToOne
+	private BeerOrder beerOrder;
 	private Integer orderQuantity;
 	private Integer quantityAllocated;
 

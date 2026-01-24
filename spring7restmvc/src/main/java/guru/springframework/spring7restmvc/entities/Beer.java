@@ -2,6 +2,7 @@ package guru.springframework.spring7restmvc.entities;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Set;
 import java.util.UUID;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -15,6 +16,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Version;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -64,4 +66,7 @@ public class Beer {
 	private LocalDateTime createdDate;
 	@UpdateTimestamp
 	private LocalDateTime updatedDate;
+
+	@OneToMany(mappedBy = BeerOrderLine_.BEER)
+	private Set<BeerOrderLine> beerOrderLines;
 }
