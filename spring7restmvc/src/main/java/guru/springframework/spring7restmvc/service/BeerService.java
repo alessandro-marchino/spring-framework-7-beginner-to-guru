@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 import guru.springframework.spring7restmvc.model.BeerDTO;
 import guru.springframework.spring7restmvc.model.BeerStyle;
@@ -23,10 +24,10 @@ public interface BeerService {
 	boolean deleteById(UUID beerId);
 	Optional<BeerDTO> patchBeerById(UUID beerId, BeerDTO beer);
 
-	default PageRequest buildPageRequest(Integer pageNumber, Integer pageSize) {
+	default PageRequest buildPageRequest(Integer pageNumber, Integer pageSize, Sort sort) {
 		int queryPageNumber = pageNumber == null || pageNumber <= 0 ? DEFAULT_PAGE_NUMBER : (pageNumber - 1);
 		int queryPageSize = pageSize == null || pageSize <= 0 ? DEFAULT_PAGE_SIZE : pageSize > MAX_PAGE_SIZE ? MAX_PAGE_SIZE : pageSize;
 
-		return PageRequest.of(queryPageNumber, queryPageSize);
+		return PageRequest.of(queryPageNumber, queryPageSize, sort);
 	}
 }

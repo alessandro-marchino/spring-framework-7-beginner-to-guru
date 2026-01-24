@@ -57,8 +57,8 @@ public class BeerControllerIT {
 				.queryParam("beerName", "IPA")
 			)
 			.andExpect(jsonPath("$.content.size()", is(25)))
-			.andExpect(jsonPath("$.totalElements", is(336)))
-			.andExpect(jsonPath("$.totalPages", is(14)));
+			.andExpect(jsonPath("$.page.totalElements", is(336)))
+			.andExpect(jsonPath("$.page.totalPages", is(14)));
 	}
 	@Test
 	void testListBeersByStyle() throws Exception {
@@ -66,8 +66,8 @@ public class BeerControllerIT {
 				.queryParam("beerStyle", BeerStyle.IPA.toString())
 			)
 			.andExpect(jsonPath("$.content.size()", is(25)))
-			.andExpect(jsonPath("$.totalElements", is(548)))
-			.andExpect(jsonPath("$.totalPages", is(22)));
+			.andExpect(jsonPath("$.page.totalElements", is(548)))
+			.andExpect(jsonPath("$.page.totalPages", is(22)));
 	}
 	@Test
 	void testListBeersByNameAndStyle() throws Exception {
@@ -76,8 +76,8 @@ public class BeerControllerIT {
 				.queryParam("beerStyle", BeerStyle.IPA.toString())
 			)
 			.andExpect(jsonPath("$.content.size()", is(25)))
-			.andExpect(jsonPath("$.totalElements", is(310)))
-			.andExpect(jsonPath("$.totalPages", is(13)))
+			.andExpect(jsonPath("$.page.totalElements", is(310)))
+			.andExpect(jsonPath("$.page.totalPages", is(13)))
 			.andExpect(jsonPath("$.content[0].quantityOnHand", nullValue()));
 	}
 	@Test
@@ -88,8 +88,8 @@ public class BeerControllerIT {
 				.queryParam("showInventory", "true")
 			)
 			.andExpect(jsonPath("$.content.size()", is(25)))
-			.andExpect(jsonPath("$.totalElements", is(310)))
-			.andExpect(jsonPath("$.totalPages", is(13)))
+			.andExpect(jsonPath("$.page.totalElements", is(310)))
+			.andExpect(jsonPath("$.page.totalPages", is(13)))
 			.andExpect(jsonPath("$.content[0].quantityOnHand", notNullValue()));
 	}
 	@Test
@@ -100,8 +100,8 @@ public class BeerControllerIT {
 				.queryParam("showInventory", "false")
 			)
 			.andExpect(jsonPath("$.content.size()", is(25)))
-			.andExpect(jsonPath("$.totalElements", is(310)))
-			.andExpect(jsonPath("$.totalPages", is(13)))
+			.andExpect(jsonPath("$.page.totalElements", is(310)))
+			.andExpect(jsonPath("$.page.totalPages", is(13)))
 			.andExpect(jsonPath("$.content[0].quantityOnHand", nullValue()));
 	}
 
@@ -115,8 +115,8 @@ public class BeerControllerIT {
 				.queryParam("pageSize", "50")
 			)
 			.andExpect(jsonPath("$.content.size()", is(50)))
-			.andExpect(jsonPath("$.totalElements", is(310)))
-			.andExpect(jsonPath("$.totalPages", is(7)))
+			.andExpect(jsonPath("$.page.totalElements", is(310)))
+			.andExpect(jsonPath("$.page.totalPages", is(7)))
 			.andExpect(jsonPath("$.content[0].quantityOnHand", notNullValue()));
 	}
 

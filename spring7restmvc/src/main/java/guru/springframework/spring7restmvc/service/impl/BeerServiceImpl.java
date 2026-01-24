@@ -11,6 +11,7 @@ import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import guru.springframework.spring7restmvc.model.BeerDTO;
@@ -66,7 +67,7 @@ public class BeerServiceImpl implements BeerService {
 
 	@Override
 	public Page<BeerDTO> listBeers(String beerName, BeerStyle beerStyle, boolean showInventory, Integer pageNumber, Integer pageSize) {
-		PageRequest pageRequest = buildPageRequest(pageNumber, pageSize);
+		PageRequest pageRequest = buildPageRequest(pageNumber, pageSize, Sort.unsorted());
 		List<BeerDTO> filtered = beerMap
 			.values()
 			.stream()

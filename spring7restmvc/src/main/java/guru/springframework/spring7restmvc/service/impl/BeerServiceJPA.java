@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import guru.springframework.spring7restmvc.entities.Beer;
@@ -44,7 +45,8 @@ public class BeerServiceJPA implements BeerService {
 		ExampleMatcher matcher = ExampleMatcher.matchingAll()
 			.withMatcher(Beer_.BEER_NAME, m -> m.ignoreCase().contains());
 		Example<Beer> example = Example.of(beerProbe, matcher);
-		return beerRepository.findAll(example, buildPageRequest(pageNumber, pageSize))
+		Sort sort = Sort.by(Sort.Order.asc(Beer_.BEER_NAME));
+		return beerRepository.findAll(example, buildPageRequest(pageNumber, pageSize, sort))
 			.map(beer -> {
 				if(!showInventory) {
 					beer.setQuantityOnHand(null);
