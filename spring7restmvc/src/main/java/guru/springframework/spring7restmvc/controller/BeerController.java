@@ -35,8 +35,8 @@ public class BeerController {
 			@RequestParam(required = false) String beerName,
 			@RequestParam(required = false) BeerStyle beerStyle,
 			@RequestParam(required = false) boolean showInventory,
-			@RequestParam(required = false) int pageNumber,
-			@RequestParam(required = false) int pageSize) {
+			@RequestParam(required = false) Integer pageNumber,
+			@RequestParam(required = false) Integer pageSize) {
 		return beerService.listBeers(beerName, beerStyle, showInventory, pageNumber, pageSize);
 	}
 
