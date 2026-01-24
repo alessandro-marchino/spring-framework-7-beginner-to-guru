@@ -9,6 +9,7 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.type.SqlTypes;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -45,11 +46,11 @@ public class BeerOrder {
 		this.id = id;
 		this.version = version;
 		this.customerRef = customerRef;
-		this.beerOrderShipment = beerOrderShipment;
 		this.createdDate = createdDate;
 		this.lastModifiedDate = lastModifiedDate;
 		this.beerOrderLines = beerOrderLines;
 		this.setCustomer(customer);
+		this.setBeerOrderShipment(beerOrderShipment);
 	}
 
 	@Id
@@ -63,7 +64,7 @@ public class BeerOrder {
 	private Customer customer;
 	private String customerRef;
 
-	@OneToOne
+	@OneToOne(cascade = CascadeType.PERSIST)
 	private BeerOrderShipment beerOrderShipment;
 
 	@CreationTimestamp
@@ -78,5 +79,9 @@ public class BeerOrder {
 	public void setCustomer(Customer customer) {
 		this.customer = customer;
 		customer.getBeerOrders().add(this);
+	}
+	public void setBeerOrderShipment(BeerOrderShipment beerOrderShipment) {
+		this.beerOrderShipment = beerOrderShipment;
+		beerOrderShipment.setBeerOrder(this);
 	}
 }

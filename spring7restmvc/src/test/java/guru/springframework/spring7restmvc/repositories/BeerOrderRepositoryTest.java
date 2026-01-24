@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import guru.springframework.spring7restmvc.entities.Beer;
 import guru.springframework.spring7restmvc.entities.BeerOrder;
+import guru.springframework.spring7restmvc.entities.BeerOrderShipment;
 import guru.springframework.spring7restmvc.entities.Beer_;
 import guru.springframework.spring7restmvc.entities.Customer;
 import guru.springframework.spring7restmvc.entities.Customer_;
@@ -39,9 +40,15 @@ public class BeerOrderRepositoryTest {
 		BeerOrder beerOrder = BeerOrder.builder()
 			.customerRef("Test order")
 			.customer(testCustomer)
+			.beerOrderShipment(BeerOrderShipment.builder()
+				.trackingNumber("1235r")
+				.build())
 			.build();
 		BeerOrder savedBeerOrder = beerOrderRepository.save(beerOrder);
 		assertThat(savedBeerOrder.getCustomer().getBeerOrders()).hasSize(1);
+		assertThat(savedBeerOrder.getBeerOrderShipment().getId()).isNotNull();
+		assertThat(savedBeerOrder.getBeerOrderShipment().getBeerOrder()).isNotNull();
+		assertThat(savedBeerOrder.getBeerOrderShipment().getBeerOrder().getId()).isEqualTo(savedBeerOrder.getId());
 	}
 }
 
