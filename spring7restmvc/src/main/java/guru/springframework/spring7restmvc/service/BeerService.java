@@ -9,7 +9,7 @@ import guru.springframework.spring7restmvc.model.BeerDTO;
 public interface BeerService {
 
 	Optional<BeerDTO> getBeerById(UUID beerId);
-	List<BeerDTO> listBeers();
+	List<BeerDTO> listBeers(String beerName);
 	BeerDTO saveNewBeer(BeerDTO beer);
 	Optional<BeerDTO> updateBeerById(UUID beerId, BeerDTO beer);
 	boolean deleteById(UUID beerId);
