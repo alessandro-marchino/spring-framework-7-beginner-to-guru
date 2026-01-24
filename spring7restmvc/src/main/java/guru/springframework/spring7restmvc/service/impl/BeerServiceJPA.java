@@ -1,7 +1,6 @@
 package guru.springframework.spring7restmvc.service.impl;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
@@ -9,7 +8,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import guru.springframework.spring7restmvc.entities.Beer;
@@ -30,10 +29,6 @@ public class BeerServiceJPA implements BeerService {
 	private final BeerRepository beerRepository;
 	private final BeerMapper beerMapper;
 
-	private static final int DEFAULT_PAGE_SIZE = 25;
-	private static final int MAX_PAGE_SIZE = 1000;
-	private static final int DEFAULT_PAGE_NUMBER = 0;
-
 	@Override
 	public Optional<BeerDTO> getBeerById(UUID beerId) {
 		return beerRepository.findById(beerId)
@@ -41,7 +36,7 @@ public class BeerServiceJPA implements BeerService {
 	}
 
 	@Override
-	public List<BeerDTO> listBeers(String beerName, BeerStyle beerStyle, boolean showInventory, Integer pageNumber, Integer pageSize) {
+	public Page<BeerDTO> listBeers(String beerName, BeerStyle beerStyle, boolean showInventory, Integer pageNumber, Integer pageSize) {
 		Beer beerProbe = Beer.builder()
 			.beerName(beerName)
 			.beerStyle(beerStyle)
@@ -50,22 +45,13 @@ public class BeerServiceJPA implements BeerService {
 			.withMatcher(Beer_.BEER_NAME, m -> m.ignoreCase().contains());
 		Example<Beer> example = Example.of(beerProbe, matcher);
 		return beerRepository.findAll(example, buildPageRequest(pageNumber, pageSize))
-			.stream()
 			.map(beer -> {
 				if(!showInventory) {
 					beer.setQuantityOnHand(null);
 				}
 				return beer;
 			})
-			.map(beerMapper::beerToBeerDto)
-			.toList();
-	}
-
-	private PageRequest buildPageRequest(Integer pageNumber, Integer pageSize) {
-		int queryPageNumber = pageNumber == null || pageNumber <= 0 ? DEFAULT_PAGE_NUMBER : (pageNumber - 1);
-		int queryPageSize = pageSize == null || pageSize <= 0 ? DEFAULT_PAGE_SIZE : pageSize > MAX_PAGE_SIZE ? MAX_PAGE_SIZE : pageSize;
-
-		return PageRequest.of(queryPageNumber, queryPageSize);
+			.map(beerMapper::beerToBeerDto);
 	}
 
 	@Override

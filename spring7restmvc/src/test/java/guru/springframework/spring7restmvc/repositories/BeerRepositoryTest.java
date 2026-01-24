@@ -4,12 +4,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import guru.springframework.spring7restmvc.bootstrap.BootstrapData;
 import guru.springframework.spring7restmvc.entities.Beer;
@@ -46,19 +47,50 @@ class BeerRepositoryTest {
 
 	@Test
 	void testGetBeerListByName() {
-		List<Beer> list = repository.findAllByBeerNameIsLikeIgnoreCase("%IPA%", null);
+		Page<Beer> list = repository.findAllByBeerNameIsLikeIgnoreCase("%IPA%", null);
 		assertThat(list).hasSize(336);
+		assertThat(list.getTotalPages()).isEqualTo(1);
+	}
+	@Test
+	void testGetBeerListByNamePaged() {
+		Page<Beer> list = repository.findAllByBeerNameIsLikeIgnoreCase("%IPA%", PageRequest.of(2, 50));
+		assertThat(list).hasSize(50);
+		assertThat(list.getTotalElements()).isEqualTo(336);
+		assertThat(list.getTotalPages()).isEqualTo(7);
 	}
 
 	@Test
 	void testGetBeerListByStyle() {
-		List<Beer> list = repository.findAllByBeerStyle(BeerStyle.IPA, null);
+		Page<Beer> list = repository.findAllByBeerStyle(BeerStyle.IPA, null);
 		assertThat(list).hasSize(548);
+		assertThat(list.getTotalPages()).isEqualTo(1);
+	}
+	@Test
+	void testGetBeerListByStylePaged() {
+		Page<Beer> list = repository.findAllByBeerStyle(BeerStyle.IPA, PageRequest.of(2, 50));
+		assertThat(list).hasSize(50);
+		assertThat(list.getTotalElements()).isEqualTo(548);
+		assertThat(list.getTotalPages()).isEqualTo(11);
 	}
 
 	@Test
 	void testGetBeerListByNameAndStyle() {
-		List<Beer> list = repository.findAllByBeerNameIsLikeIgnoreCaseAndBeerStyle("%IPA%", BeerStyle.IPA, null);
+		Page<Beer> list = repository.findAllByBeerNameIsLikeIgnoreCaseAndBeerStyle("%IPA%", BeerStyle.IPA, null);
 		assertThat(list).hasSize(310);
+		assertThat(list.getTotalPages()).isEqualTo(1);
+	}
+	@Test
+	void testGetBeerListByNameAndStylePaged() {
+		Page<Beer> list = repository.findAllByBeerNameIsLikeIgnoreCaseAndBeerStyle("%IPA%", BeerStyle.IPA, PageRequest.of(2, 50));
+		assertThat(list).hasSize(50);
+		assertThat(list.getTotalElements()).isEqualTo(310);
+		assertThat(list.getTotalPages()).isEqualTo(7);
+	}
+	@Test
+	void testGetBeerListByNameAndStylePagedPartialResult() {
+		Page<Beer> list = repository.findAllByBeerNameIsLikeIgnoreCaseAndBeerStyle("%IPA%", BeerStyle.IPA, PageRequest.of(6, 50));
+		assertThat(list).hasSize(10);
+		assertThat(list.getTotalElements()).isEqualTo(310);
+		assertThat(list.getTotalPages()).isEqualTo(7);
 	}
 }

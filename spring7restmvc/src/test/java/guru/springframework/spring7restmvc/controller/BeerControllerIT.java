@@ -11,7 +11,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -20,6 +19,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
@@ -56,14 +56,18 @@ public class BeerControllerIT {
 		mockMvc.perform(get(BeerController.PATH)
 				.queryParam("beerName", "IPA")
 			)
-			.andExpect(jsonPath("$.size()", is(336)));
+			.andExpect(jsonPath("$.content.size()", is(25)))
+			.andExpect(jsonPath("$.totalElements", is(336)))
+			.andExpect(jsonPath("$.totalPages", is(14)));
 	}
 	@Test
 	void testListBeersByStyle() throws Exception {
 		mockMvc.perform(get(BeerController.PATH)
 				.queryParam("beerStyle", BeerStyle.IPA.toString())
 			)
-			.andExpect(jsonPath("$.size()", is(548)));
+			.andExpect(jsonPath("$.content.size()", is(25)))
+			.andExpect(jsonPath("$.totalElements", is(548)))
+			.andExpect(jsonPath("$.totalPages", is(22)));
 	}
 	@Test
 	void testListBeersByNameAndStyle() throws Exception {
@@ -71,8 +75,10 @@ public class BeerControllerIT {
 				.queryParam("beerName", "IPA")
 				.queryParam("beerStyle", BeerStyle.IPA.toString())
 			)
-			.andExpect(jsonPath("$.size()", is(310)))
-			.andExpect(jsonPath("$[0].quantityOnHand", nullValue()));
+			.andExpect(jsonPath("$.content.size()", is(25)))
+			.andExpect(jsonPath("$.totalElements", is(310)))
+			.andExpect(jsonPath("$.totalPages", is(13)))
+			.andExpect(jsonPath("$.content[0].quantityOnHand", nullValue()));
 	}
 	@Test
 	void testListBeersByNameAndStyleShowInventory() throws Exception {
@@ -81,8 +87,10 @@ public class BeerControllerIT {
 				.queryParam("beerStyle", BeerStyle.IPA.toString())
 				.queryParam("showInventory", "true")
 			)
-			.andExpect(jsonPath("$.size()", is(310)))
-			.andExpect(jsonPath("$[0].quantityOnHand", notNullValue()));
+			.andExpect(jsonPath("$.content.size()", is(25)))
+			.andExpect(jsonPath("$.totalElements", is(310)))
+			.andExpect(jsonPath("$.totalPages", is(13)))
+			.andExpect(jsonPath("$.content[0].quantityOnHand", notNullValue()));
 	}
 	@Test
 	void testListBeersByNameAndStyleNotShowInventory() throws Exception {
@@ -91,8 +99,10 @@ public class BeerControllerIT {
 				.queryParam("beerStyle", BeerStyle.IPA.toString())
 				.queryParam("showInventory", "false")
 			)
-			.andExpect(jsonPath("$.size()", is(310)))
-			.andExpect(jsonPath("$[0].quantityOnHand", nullValue()));
+			.andExpect(jsonPath("$.content.size()", is(25)))
+			.andExpect(jsonPath("$.totalElements", is(310)))
+			.andExpect(jsonPath("$.totalPages", is(13)))
+			.andExpect(jsonPath("$.content[0].quantityOnHand", nullValue()));
 	}
 
 	@Test
@@ -104,8 +114,10 @@ public class BeerControllerIT {
 				.queryParam("pageNumber", "2")
 				.queryParam("pageSize", "50")
 			)
-			.andExpect(jsonPath("$.size()", is(50)))
-			.andExpect(jsonPath("$[0].quantityOnHand", notNullValue()));
+			.andExpect(jsonPath("$.content.size()", is(50)))
+			.andExpect(jsonPath("$.totalElements", is(310)))
+			.andExpect(jsonPath("$.totalPages", is(7)))
+			.andExpect(jsonPath("$.content[0].quantityOnHand", notNullValue()));
 	}
 
     @Test
@@ -140,8 +152,8 @@ public class BeerControllerIT {
 
     @Test
     void testListBeers() {
-		List<BeerDTO> dtos = controller.listBeers(null, null, false, 1, 2500);
-		assertThat(dtos).hasSize(2413);
+		Page<BeerDTO> dtos = controller.listBeers(null, null, false, 1, 2500);
+		assertThat(dtos).hasSize(1000);
     }
 
 	@Test
@@ -149,7 +161,7 @@ public class BeerControllerIT {
 	@Rollback
     void testListBeersEmpty() {
 		repository.deleteAll();
-		List<BeerDTO> dtos = controller.listBeers(null, null, false, 1, 25);
+		Page<BeerDTO> dtos = controller.listBeers(null, null, false, 1, 25);
 		assertThat(dtos).hasSize(0);
     }
 

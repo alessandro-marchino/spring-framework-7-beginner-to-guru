@@ -8,6 +8,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import guru.springframework.spring7restmvc.model.BeerDTO;
@@ -62,16 +65,15 @@ public class BeerServiceImpl implements BeerService {
 	}
 
 	@Override
-	public List<BeerDTO> listBeers(String beerName, BeerStyle beerStyle, boolean showInventory, Integer pageNumber, Integer pageSize) {
-		return beerMap
+	public Page<BeerDTO> listBeers(String beerName, BeerStyle beerStyle, boolean showInventory, Integer pageNumber, Integer pageSize) {
+		PageRequest pageRequest = buildPageRequest(pageNumber, pageSize);
+		List<BeerDTO> filtered = beerMap
 			.values()
 			.stream()
 			.filter(beer ->
 				(beerName == null || beerName.equalsIgnoreCase(beer.getBeerName()))
 				&& (beerStyle == null || beerStyle.equals(beer.getBeerStyle()))
 			)
-			.skip(pageNumber * pageSize)
-			.limit(pageSize)
 			.map(beer -> {
 				if(!showInventory) {
 					beer.setQuantityOnHand(null);
@@ -79,6 +81,12 @@ public class BeerServiceImpl implements BeerService {
 				return beer;
 			})
 			.toList();
+		List<BeerDTO> paged = filtered
+			.stream()
+			.skip(pageRequest.getOffset())
+			.limit(pageRequest.getPageSize())
+			.toList();
+		return new PageImpl<>(paged, pageRequest, filtered.size());
 	}
 
 	@Override
