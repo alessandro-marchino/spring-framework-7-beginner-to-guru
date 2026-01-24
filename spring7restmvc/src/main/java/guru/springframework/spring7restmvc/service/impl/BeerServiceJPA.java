@@ -12,6 +12,7 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import guru.springframework.spring7restmvc.entities.Beer;
+import guru.springframework.spring7restmvc.entities.Beer_;
 import guru.springframework.spring7restmvc.mappers.BeerMapper;
 import guru.springframework.spring7restmvc.model.BeerDTO;
 import guru.springframework.spring7restmvc.model.BeerStyle;
@@ -35,16 +36,22 @@ public class BeerServiceJPA implements BeerService {
 	}
 
 	@Override
-	public List<BeerDTO> listBeers(String beerName, BeerStyle beerStyle) {
-		Beer beer = Beer.builder()
+	public List<BeerDTO> listBeers(String beerName, BeerStyle beerStyle, boolean showInventory) {
+		Beer beerProbe = Beer.builder()
 			.beerName(beerName)
 			.beerStyle(beerStyle)
 			.build();
 		ExampleMatcher matcher = ExampleMatcher.matchingAll()
-			.withMatcher("beerName", m -> m.ignoreCase().contains());
-		Example<Beer> example = Example.of(beer, matcher);
+			.withMatcher(Beer_.BEER_NAME, m -> m.ignoreCase().contains());
+		Example<Beer> example = Example.of(beerProbe, matcher);
 		return beerRepository.findAll(example)
 			.stream()
+			.map(beer -> {
+				if(!showInventory) {
+					beer.setQuantityOnHand(null);
+				}
+				return beer;
+			})
 			.map(beerMapper::beerToBeerDto)
 			.toList();
 	}

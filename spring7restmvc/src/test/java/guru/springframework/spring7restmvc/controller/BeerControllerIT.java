@@ -2,6 +2,8 @@ package guru.springframework.spring7restmvc.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -69,7 +71,28 @@ public class BeerControllerIT {
 				.queryParam("beerName", "IPA")
 				.queryParam("beerStyle", BeerStyle.IPA.toString())
 			)
-			.andExpect(jsonPath("$.size()", is(310)));
+			.andExpect(jsonPath("$.size()", is(310)))
+			.andExpect(jsonPath("$[0].quantityOnHand", nullValue()));
+	}
+	@Test
+	void testListBeersByNameAndStyleShowInventory() throws Exception {
+		mockMvc.perform(get(BeerController.PATH)
+				.queryParam("beerName", "IPA")
+				.queryParam("beerStyle", BeerStyle.IPA.toString())
+				.queryParam("showInventory", "true")
+			)
+			.andExpect(jsonPath("$.size()", is(310)))
+			.andExpect(jsonPath("$[0].quantityOnHand", notNullValue()));
+	}
+	@Test
+	void testListBeersByNameAndStyleNotShowInventory() throws Exception {
+		mockMvc.perform(get(BeerController.PATH)
+				.queryParam("beerName", "IPA")
+				.queryParam("beerStyle", BeerStyle.IPA.toString())
+				.queryParam("showInventory", "false")
+			)
+			.andExpect(jsonPath("$.size()", is(310)))
+			.andExpect(jsonPath("$[0].quantityOnHand", nullValue()));
 	}
 
     @Test
@@ -104,7 +127,7 @@ public class BeerControllerIT {
 
     @Test
     void testListBeers() {
-		List<BeerDTO> dtos = controller.listBeers(null, null);
+		List<BeerDTO> dtos = controller.listBeers(null, null, false);
 		assertThat(dtos).hasSize(2413);
     }
 
@@ -113,7 +136,7 @@ public class BeerControllerIT {
 	@Rollback
     void testListBeersEmpty() {
 		repository.deleteAll();
-		List<BeerDTO> dtos = controller.listBeers(null, null);
+		List<BeerDTO> dtos = controller.listBeers(null, null, false);
 		assertThat(dtos).hasSize(0);
     }
 
