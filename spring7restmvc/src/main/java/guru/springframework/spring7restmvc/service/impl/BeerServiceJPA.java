@@ -6,9 +6,11 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
+import org.flywaydb.core.internal.util.StringUtils;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
+import guru.springframework.spring7restmvc.entities.Beer;
 import guru.springframework.spring7restmvc.mappers.BeerMapper;
 import guru.springframework.spring7restmvc.model.BeerDTO;
 import guru.springframework.spring7restmvc.repositories.BeerRepository;
@@ -32,10 +34,20 @@ public class BeerServiceJPA implements BeerService {
 
 	@Override
 	public List<BeerDTO> listBeers(String beerName) {
-		return beerRepository.findAll()
+		List<Beer> beerList;
+		if(StringUtils.hasText(beerName)) {
+			beerList = listBeersByName(beerName);
+		} else {
+			beerList = beerRepository.findAll();
+		}
+		return beerList
 			.stream()
 			.map(beerMapper::beerToBeerDto)
 			.toList();
+	}
+
+	List<Beer> listBeersByName(String beerName) {
+		return List.of();
 	}
 
 	@Override
