@@ -8,6 +8,8 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.flywaydb.core.internal.util.StringUtils;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import guru.springframework.spring7restmvc.entities.Beer;
@@ -47,7 +49,11 @@ public class BeerServiceJPA implements BeerService {
 	}
 
 	List<Beer> listBeersByName(String beerName) {
-		return List.of();
+		Beer beer = Beer.builder().beerName(beerName).build();
+		ExampleMatcher matcher = ExampleMatcher.matchingAll()
+			.withMatcher("beerName", m -> m.ignoreCase().contains());
+		Example<Beer> example = Example.of(beer, matcher);
+		return beerRepository.findAll(example);
 	}
 
 	@Override

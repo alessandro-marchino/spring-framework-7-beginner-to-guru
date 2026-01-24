@@ -4,16 +4,21 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
+import org.springframework.context.annotation.Import;
 
+import guru.springframework.spring7restmvc.bootstrap.BootstrapData;
 import guru.springframework.spring7restmvc.entities.Beer;
 import guru.springframework.spring7restmvc.model.BeerStyle;
+import guru.springframework.spring7restmvc.service.impl.BeerCsvServiceImpl;
 import jakarta.validation.ConstraintViolationException;
 
 @DataJpaTest
+@Import({ BootstrapData.class, BeerCsvServiceImpl.class })
 class BeerRepositoryTest {
 	@Autowired BeerRepository repository;
 
@@ -37,5 +42,11 @@ class BeerRepositoryTest {
 			.upc("123456789")
 			.price(new BigDecimal("12.99"))
 			.build()));
+	}
+
+	@Test
+	void testGetBeerListByName() {
+		List<Beer> list = repository.findAllByBeerNameIsLikeIgnoreCase("%IPA%");
+		assertThat(list).hasSize(336);
 	}
 }
