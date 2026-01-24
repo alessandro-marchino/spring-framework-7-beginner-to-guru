@@ -40,7 +40,7 @@ public class BeerOrderRepositoryTest {
 			.customerRef("Test order")
 			.customer(testCustomer)
 			.build();
-		BeerOrder savedBeerOrder = beerOrderRepository.saveAndFlush(beerOrder);
+		BeerOrder savedBeerOrder = beerOrderRepository.save(beerOrder);
 		assertThat(savedBeerOrder.getCustomer().getBeerOrders()).hasSize(1);
 	}
 }

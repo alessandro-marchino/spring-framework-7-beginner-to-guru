@@ -1,6 +1,7 @@
 package guru.springframework.spring7restmvc.entities;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -45,5 +46,6 @@ public class Customer {
 	private LocalDateTime updatedDate;
 
 	@OneToMany(mappedBy = BeerOrder_.CUSTOMER)
-	private Set<BeerOrder> beerOrders;
+	@Builder.Default
+	private Set<BeerOrder> beerOrders = new HashSet<>();
 }
