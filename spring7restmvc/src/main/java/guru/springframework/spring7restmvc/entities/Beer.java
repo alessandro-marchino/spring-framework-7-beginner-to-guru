@@ -8,12 +8,10 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.type.SqlTypes;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import guru.springframework.spring7restmvc.model.BeerStyle;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -35,7 +33,6 @@ import lombok.Setter;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@EntityListeners(AuditingEntityListener.class)
 public class Beer {
 
 	@Id
@@ -63,6 +60,7 @@ public class Beer {
 	private BigDecimal price;
 
 	@CreationTimestamp
+	@Column(updatable = false)
 	private LocalDateTime createdDate;
 	@UpdateTimestamp
 	private LocalDateTime updatedDate;

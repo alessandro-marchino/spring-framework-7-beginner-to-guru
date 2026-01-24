@@ -1,7 +1,6 @@
 package guru.springframework.spring7restmvc.entities;
 
 import java.time.LocalDateTime;
-import java.util.Set;
 import java.util.UUID;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -14,7 +13,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Version;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,7 +27,7 @@ import lombok.Setter;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-public class Customer {
+public class BeerOrder {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
@@ -36,14 +35,14 @@ public class Customer {
 	private UUID id;
 	@Version
 	private Integer version;
-	private String customerName;
-	private String email;
+
+	@ManyToOne
+	private Customer customer;
+	private String customerRef;
+
 	@CreationTimestamp
 	@Column(updatable = false)
 	private LocalDateTime createdDate;
 	@UpdateTimestamp
-	private LocalDateTime updatedDate;
-
-	@OneToMany(mappedBy = "customer")
-	private Set<BeerOrder> beerOrders;
+	private LocalDateTime lastModifiedDate;
 }
