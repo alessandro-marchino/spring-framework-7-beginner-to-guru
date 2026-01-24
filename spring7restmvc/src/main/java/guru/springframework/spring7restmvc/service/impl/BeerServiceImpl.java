@@ -62,8 +62,15 @@ public class BeerServiceImpl implements BeerService {
 	}
 
 	@Override
-	public List<BeerDTO> listBeers(String beerName) {
-		return List.copyOf(beerMap.values());
+	public List<BeerDTO> listBeers(String beerName, BeerStyle beerStyle) {
+		return beerMap
+			.values()
+			.stream()
+			.filter(beer ->
+				(beerName == null || beerName.equalsIgnoreCase(beer.getBeerName()))
+				&& (beerStyle == null || beerStyle.equals(beer.getBeerStyle()))
+			)
+			.toList();
 	}
 
 	@Override

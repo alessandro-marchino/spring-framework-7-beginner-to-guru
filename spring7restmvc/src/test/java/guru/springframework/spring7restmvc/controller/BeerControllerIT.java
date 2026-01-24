@@ -31,6 +31,7 @@ import org.springframework.web.context.WebApplicationContext;
 import guru.springframework.spring7restmvc.entities.Beer;
 import guru.springframework.spring7restmvc.mappers.BeerMapper;
 import guru.springframework.spring7restmvc.model.BeerDTO;
+import guru.springframework.spring7restmvc.model.BeerStyle;
 import guru.springframework.spring7restmvc.repositories.BeerRepository;
 import tools.jackson.databind.json.JsonMapper;
 
@@ -54,6 +55,21 @@ public class BeerControllerIT {
 				.queryParam("beerName", "IPA")
 			)
 			.andExpect(jsonPath("$.size()", is(336)));
+	}
+	@Test
+	void testListBeersByStyle() throws Exception {
+		mockMvc.perform(get(BeerController.PATH)
+				.queryParam("beerStyle", BeerStyle.IPA.toString())
+			)
+			.andExpect(jsonPath("$.size()", is(548)));
+	}
+	@Test
+	void testListBeersByNameAndStyle() throws Exception {
+		mockMvc.perform(get(BeerController.PATH)
+				.queryParam("beerName", "IPA")
+				.queryParam("beerStyle", BeerStyle.IPA.toString())
+			)
+			.andExpect(jsonPath("$.size()", is(310)));
 	}
 
     @Test
@@ -88,7 +104,7 @@ public class BeerControllerIT {
 
     @Test
     void testListBeers() {
-		List<BeerDTO> dtos = controller.listBeers(null);
+		List<BeerDTO> dtos = controller.listBeers(null, null);
 		assertThat(dtos).hasSize(2413);
     }
 
@@ -97,7 +113,7 @@ public class BeerControllerIT {
 	@Rollback
     void testListBeersEmpty() {
 		repository.deleteAll();
-		List<BeerDTO> dtos = controller.listBeers(null);
+		List<BeerDTO> dtos = controller.listBeers(null, null);
 		assertThat(dtos).hasSize(0);
     }
 
