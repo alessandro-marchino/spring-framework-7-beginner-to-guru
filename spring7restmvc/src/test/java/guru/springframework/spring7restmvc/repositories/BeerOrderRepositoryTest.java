@@ -8,8 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.transaction.annotation.Transactional;
 
 import guru.springframework.spring7restmvc.entities.Beer;
+import guru.springframework.spring7restmvc.entities.BeerOrder;
 import guru.springframework.spring7restmvc.entities.Beer_;
 import guru.springframework.spring7restmvc.entities.Customer;
 import guru.springframework.spring7restmvc.entities.Customer_;
@@ -32,13 +34,14 @@ public class BeerOrderRepositoryTest {
 	}
 
 	@Test
+	@Transactional
 	void testBeerOrders() {
-		assertThat(beerOrderRepository.count()).isEqualTo(0);
-		assertThat(customerRepository.count()).isEqualTo(3);
-		assertThat(beerRepository.count()).isEqualTo(2413);
-
-		log.warn("{}", testCustomer.getCustomerName());
-		log.warn("{}", testBeer.getBeerName());
+		BeerOrder beerOrder = BeerOrder.builder()
+			.customerRef("Test order")
+			.customer(testCustomer)
+			.build();
+		BeerOrder savedBeerOrder = beerOrderRepository.saveAndFlush(beerOrder);
+		assertThat(savedBeerOrder.getCustomer().getBeerOrders()).hasSize(1);
 	}
 }
 
