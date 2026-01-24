@@ -6,7 +6,6 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.flywaydb.core.internal.util.StringUtils;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -36,24 +35,16 @@ public class BeerServiceJPA implements BeerService {
 
 	@Override
 	public List<BeerDTO> listBeers(String beerName) {
-		List<Beer> beerList;
-		if(StringUtils.hasText(beerName)) {
-			beerList = listBeersByName(beerName);
-		} else {
-			beerList = beerRepository.findAll();
-		}
-		return beerList
-			.stream()
-			.map(beerMapper::beerToBeerDto)
-			.toList();
-	}
-
-	List<Beer> listBeersByName(String beerName) {
-		Beer beer = Beer.builder().beerName(beerName).build();
+		Beer beer = Beer.builder()
+			.beerName(beerName)
+			.build();
 		ExampleMatcher matcher = ExampleMatcher.matchingAll()
 			.withMatcher("beerName", m -> m.ignoreCase().contains());
 		Example<Beer> example = Example.of(beer, matcher);
-		return beerRepository.findAll(example);
+		return beerRepository.findAll(example)
+			.stream()
+			.map(beerMapper::beerToBeerDto)
+			.toList();
 	}
 
 	@Override

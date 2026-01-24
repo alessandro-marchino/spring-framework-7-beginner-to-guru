@@ -51,8 +51,9 @@ public class BeerControllerIT {
 	@Test
 	void testListBeersByName() throws Exception {
 		mockMvc.perform(get(BeerController.PATH)
-				.queryParam("beerName", "IPA"))
-			.andExpect(jsonPath("$.size()", is(100)));
+				.queryParam("beerName", "IPA")
+			)
+			.andExpect(jsonPath("$.size()", is(336)));
 	}
 
     @Test
