@@ -62,7 +62,7 @@ public class BeerServiceImpl implements BeerService {
 	}
 
 	@Override
-	public List<BeerDTO> listBeers(String beerName, BeerStyle beerStyle, boolean showInventory) {
+	public List<BeerDTO> listBeers(String beerName, BeerStyle beerStyle, boolean showInventory, int pageNumber, int pageSize) {
 		return beerMap
 			.values()
 			.stream()
@@ -70,6 +70,8 @@ public class BeerServiceImpl implements BeerService {
 				(beerName == null || beerName.equalsIgnoreCase(beer.getBeerName()))
 				&& (beerStyle == null || beerStyle.equals(beer.getBeerStyle()))
 			)
+			.skip(pageNumber * pageSize)
+			.limit(pageSize)
 			.map(beer -> {
 				if(!showInventory) {
 					beer.setQuantityOnHand(null);

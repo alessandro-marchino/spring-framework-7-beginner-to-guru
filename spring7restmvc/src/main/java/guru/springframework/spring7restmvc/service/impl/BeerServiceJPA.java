@@ -9,6 +9,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import guru.springframework.spring7restmvc.entities.Beer;
@@ -36,15 +37,16 @@ public class BeerServiceJPA implements BeerService {
 	}
 
 	@Override
-	public List<BeerDTO> listBeers(String beerName, BeerStyle beerStyle, boolean showInventory) {
+	public List<BeerDTO> listBeers(String beerName, BeerStyle beerStyle, boolean showInventory, int pageNumber, int pageSize) {
 		Beer beerProbe = Beer.builder()
 			.beerName(beerName)
 			.beerStyle(beerStyle)
 			.build();
 		ExampleMatcher matcher = ExampleMatcher.matchingAll()
 			.withMatcher(Beer_.BEER_NAME, m -> m.ignoreCase().contains());
+		PageRequest pageRequest = PageRequest.of(pageNumber - 1, pageSize);
 		Example<Beer> example = Example.of(beerProbe, matcher);
-		return beerRepository.findAll(example)
+		return beerRepository.findAll(example, pageRequest)
 			.stream()
 			.map(beer -> {
 				if(!showInventory) {
