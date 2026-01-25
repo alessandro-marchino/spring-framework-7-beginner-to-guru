@@ -11,7 +11,7 @@
 	<groupId>guru.springframework</groupId>
 	<artifactId>spring7webapp</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>spring6webapp</name>
+	<name>spring7webapp</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
 	<licenses>
