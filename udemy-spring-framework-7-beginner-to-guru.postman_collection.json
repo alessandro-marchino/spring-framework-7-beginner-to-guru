@@ -358,6 +358,243 @@
           ]
         }
       ]
+    },
+    {
+      "name": "spring7datarest",
+      "item": [
+        {
+          "name": "/beer",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/beer",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "beer"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/beer/:id",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/beer/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "beer",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "c46f82da-771f-4765-80e1-a96c8b746dd8"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/beer",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"beerName\": \"Mango Bobs - JTs TEST\",\r\n    \"beerStyle\": \"PALE_ALE\",\r\n    \"price\": 12.99,\r\n    \"quantityOnHand\": 125,\r\n    \"upc\": \"123456\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/beer",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "beer"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/beer/:id",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"beerName\": \"Mango Bobs - JTs TEST 1\",\r\n    \"beerStyle\": \"PALE_ALE\",\r\n    \"price\": 12.99,\r\n    \"quantityOnHand\": 125,\r\n    \"upc\": \"123456\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/beer/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "beer",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "c46f82da-771f-4765-80e1-a96c8b746dd8"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/beer/:id",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"beerName\": \"Mango Bobs - JTs TEST 1\",\r\n    \"beerStyle\": \"PALE_ALE\",\r\n    \"price\": 12.99,\r\n    \"quantityOnHand\": 125,\r\n    \"upc\": \"123456\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/beer/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "beer",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "c46f82da-771f-4765-80e1-a96c8b746dd8"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/profile/beer",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/profile/beer",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "profile",
+                "beer"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/beer/search",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/beer/search/:method?upc=0631234200036",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "beer",
+                "search",
+                ":method"
+              ],
+              "query": [
+                {
+                  "key": "upc",
+                  "value": "0631234200036"
+                }
+              ],
+              "variable": [
+                {
+                  "key": "method",
+                  "value": "findByUpc"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/beer/search",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/beer/search/:method?beerStyle=PORTER",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "beer",
+                "search",
+                ":method"
+              ],
+              "query": [
+                {
+                  "key": "beerStyle",
+                  "value": "PORTER"
+                }
+              ],
+              "variable": [
+                {
+                  "key": "method",
+                  "value": "findAllByBeerStyle"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
     }
   ],
   "event": [
