@@ -17,7 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class BeerClientImpl implements BeerClient {
 
-	private static final String BASE_URL = "http://localhost:8080";
 	private static final String GET_BEER_PATH = "/api/v1/beer";
 
 	private final RestTemplateBuilder restTemplateBuilder;
@@ -25,7 +24,7 @@ public class BeerClientImpl implements BeerClient {
 	@SuppressWarnings("rawtypes")
 	@Override
 	public Page<BeerDTO> listBeers() {
-		RestTemplate restTemplate = restTemplateBuilder.rootUri(BASE_URL).build();
+		RestTemplate restTemplate = restTemplateBuilder.build();
 
 		ResponseEntity<RestPageImpl> jsonResponse = restTemplate.getForEntity(GET_BEER_PATH, RestPageImpl.class);
 		log.warn("Body: {}", jsonResponse.getBody());
