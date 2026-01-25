@@ -2,6 +2,7 @@ package guru.springframework.spring7resttemplate.config;
 
 import java.time.Duration;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.restclient.RestTemplateBuilder;
 import org.springframework.boot.restclient.autoconfigure.RestTemplateBuilderConfigurer;
 import org.springframework.context.annotation.Bean;
@@ -11,9 +12,13 @@ import org.springframework.web.util.DefaultUriBuilderFactory;
 @Configuration
 public class RestTemplateBuilderConfig {
 
+	@Value("${rest.template.rootUrl}")
+	String rootUrl;
+
 	@Bean
 	RestTemplateBuilder restTemplateBuilder(RestTemplateBuilderConfigurer configurer) {
-		DefaultUriBuilderFactory defaultUriBuilderFactory = new DefaultUriBuilderFactory("http://localhost:8080");
+		assert rootUrl != null;
+		DefaultUriBuilderFactory defaultUriBuilderFactory = new DefaultUriBuilderFactory(rootUrl);
 
 		return configurer.configure(new RestTemplateBuilder())
 			.uriTemplateHandler(defaultUriBuilderFactory)
