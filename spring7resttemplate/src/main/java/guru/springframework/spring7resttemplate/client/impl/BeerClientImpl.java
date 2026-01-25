@@ -1,6 +1,5 @@
 package guru.springframework.spring7resttemplate.client.impl;
 
-import java.net.URI;
 import java.util.Map;
 
 import org.springframework.boot.restclient.RestTemplateBuilder;
@@ -13,6 +12,7 @@ import guru.springframework.spring7resttemplate.client.BeerClient;
 import guru.springframework.spring7resttemplate.model.BeerDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import tools.jackson.databind.JsonNode;
 
 @Service
 @RequiredArgsConstructor
@@ -34,6 +34,11 @@ public class BeerClientImpl implements BeerClient {
 
 		ResponseEntity<Map> mapResponse = restTemplate.getForEntity(GET_BEER_PATH, Map.class);
 		log.warn("Body: {}", mapResponse.getBody());
+
+		ResponseEntity<JsonNode> jsonResponse = restTemplate.getForEntity(GET_BEER_PATH, JsonNode.class);
+		log.warn("Body: {}", jsonResponse.getBody());
+		jsonResponse.getBody().findPath("content").iterator().forEachRemaining(node -> log.info("BeerName: {}", node.get("beerName").asString()));
+
 		// TODO Auto-generated method stub
 		return null;
 	}
