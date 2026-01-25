@@ -7,6 +7,7 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -20,12 +21,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
@@ -35,9 +38,11 @@ import guru.springframework.spring7restmvc.mappers.BeerMapper;
 import guru.springframework.spring7restmvc.model.BeerDTO;
 import guru.springframework.spring7restmvc.model.BeerStyle;
 import guru.springframework.spring7restmvc.repositories.BeerRepository;
+import lombok.extern.slf4j.Slf4j;
 import tools.jackson.databind.json.JsonMapper;
 
 @SpringBootTest
+@Slf4j
 public class BeerControllerIT {
 	@Autowired BeerController controller;
 	@Autowired BeerRepository repository;
@@ -124,7 +129,7 @@ public class BeerControllerIT {
 	@Transactional
 	@Rollback
     void testDeleteBeer() {
-		Beer beer = repository.findAll().getFirst();
+		Beer beer = repository.findAll(Pageable.ofSize(1)).getContent().getFirst();
 		ResponseEntity<Void> responseEntity = controller.deleteBeer(beer.getId());
 		assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(HttpStatus.NO_CONTENT.value()));
 
@@ -139,7 +144,7 @@ public class BeerControllerIT {
 
     @Test
     void testGetBeerById() {
-		Beer beer = repository.findAll().getFirst();
+		Beer beer = repository.findAll(Pageable.ofSize(1)).getContent().getFirst();
 		BeerDTO dto = controller.getBeerById(beer.getId());
 
 		assertThat(dto).isNotNull();
@@ -174,7 +179,7 @@ public class BeerControllerIT {
 	@Transactional
 	@Rollback
     void testPatchBeer() {
-		Beer beer = repository.findAll().getFirst();
+		Beer beer = repository.findAll(Pageable.ofSize(1)).getContent().getFirst();
 		BeerDTO dto = mapper.beerToBeerDto(beer);
 		final String beerName = "UPDATED";
 		dto.setBeerName(beerName);
@@ -191,7 +196,7 @@ public class BeerControllerIT {
 
 	@Test
     void testPatchBadNameBeer() throws Exception {
-		Beer beer = repository.findAll().getFirst();
+		Beer beer = repository.findAll(Pageable.ofSize(1)).getContent().getFirst();
 		Map<String, Object> beerMap = new HashMap<>();
 		beerMap.put("beerName", "New Name 12345678901234567890123456789012345678901234567890");
 
@@ -230,7 +235,7 @@ public class BeerControllerIT {
 	@Transactional
 	@Rollback
     void testUpdateBeer() {
-		Beer beer = repository.findAll().getFirst();
+		Beer beer = repository.findAll(Pageable.ofSize(1)).getContent().getFirst();
 		BeerDTO dto = mapper.beerToBeerDto(beer);
 		final String beerName = "UPDATED";
 		dto.setBeerName(beerName);
@@ -244,4 +249,26 @@ public class BeerControllerIT {
 		assertThat(updatedBeer.getBeerName()).isEqualTo(beerName);
 		assertThat(updatedBeer.getVersion()).isEqualTo(1);
     }
+
+	@Test
+	void testUpdateBeerBadVersion() throws Exception {
+		Beer beer = repository.findAll(Pageable.ofSize(1)).getContent().getFirst();
+		BeerDTO beerDTO = mapper.beerToBeerDto(beer);
+		beerDTO.setBeerName("Updated Name");
+		MvcResult result = mockMvc.perform(put(BeerController.PATH_ID, beer.getId())
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON)
+				.content(jsonMapper.writeValueAsString(beerDTO)))
+			.andExpect(status().isNoContent())
+			.andReturn();
+		log.warn("First response: {}", result.getResponse().getStatus());
+		beerDTO.setBeerName("Updated Name 2");
+		MvcResult result2 = mockMvc.perform(put(BeerController.PATH_ID, beer.getId())
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON)
+				.content(jsonMapper.writeValueAsString(beerDTO)))
+			.andExpect(status().isNoContent())
+			.andReturn();
+		log.warn("Second response: {}", result2.getResponse().getStatus());
+	}
 }
