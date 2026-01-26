@@ -6,5 +6,5 @@ import guru.springframework.spring7resttemplate.model.BeerDTO;
 
 public interface BeerClient {
 
-	Page<BeerDTO> listBeers();
+	Page<BeerDTO> listBeers(String beerName);
 }

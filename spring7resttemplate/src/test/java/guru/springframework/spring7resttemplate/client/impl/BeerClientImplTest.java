@@ -15,8 +15,15 @@ class BeerClientImplTest {
 	@Autowired BeerClientImpl beerClientImpl;
 
     @Test
-    void testListBeers() {
-		Page<BeerDTO> page = beerClientImpl.listBeers();
+    void testListBeersNoName() {
+		Page<BeerDTO> page = beerClientImpl.listBeers(null);
 		assertThat(page).isNotNull();
+    }
+
+	@Test
+    void testListBeers() {
+		Page<BeerDTO> page = beerClientImpl.listBeers("ALE");
+		assertThat(page).isNotNull();
+		assertThat(page.getTotalPages()).isLessThan(30);
     }
 }

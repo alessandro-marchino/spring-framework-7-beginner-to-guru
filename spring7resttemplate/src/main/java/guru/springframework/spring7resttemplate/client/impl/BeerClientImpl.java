@@ -22,11 +22,14 @@ public class BeerClientImpl implements BeerClient {
 
 	private final RestTemplateBuilder restTemplateBuilder;
 
-	@SuppressWarnings("rawtypes")
 	@Override
-	public Page<BeerDTO> listBeers() {
+	public Page<BeerDTO> listBeers(String beerName) {
 		RestTemplate restTemplate = restTemplateBuilder.build();
 		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromPath(GET_BEER_PATH);
+		if(beerName != null) {
+			uriComponentsBuilder.queryParam("beerName", beerName);
+		}
+
 		log.warn("URL: {}", uriComponentsBuilder.toUriString());
 
 		ResponseEntity<RestPageImpl> jsonResponse = restTemplate.getForEntity(uriComponentsBuilder.toUriString(), RestPageImpl.class);
