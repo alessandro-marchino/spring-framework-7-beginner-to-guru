@@ -2,6 +2,8 @@ package guru.springframework.spring7resttemplate.client.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.UUID;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -40,4 +42,13 @@ class BeerClientImplTest {
 		assertThat(page).isNotNull();
 		assertThat(page.getTotalPages()).isLessThan(300);
     }
+
+	@Test
+	void testGetBeerById() {
+		Page<BeerDTO> page = beerClientImpl.listBeers();
+		UUID id = page.getContent().getFirst().getId();
+		BeerDTO beerDTO = beerClientImpl.getBeerById(id, Boolean.TRUE);
+		assertThat(beerDTO).isNotNull();
+		assertThat(beerDTO.getId()).isEqualTo(id);
+	}
 }

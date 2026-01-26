@@ -1,5 +1,7 @@
 package guru.springframework.spring7resttemplate.client.impl;
 
+import java.util.UUID;
+
 import org.springframework.boot.restclient.RestTemplateBuilder;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 public class BeerClientImpl implements BeerClient {
 
 	private static final String GET_BEER_PATH = "/api/v1/beer";
+	private static final String GET_BEER_BY_ID_PATH = "/api/v1/beer/{beerId}";
 
 	private final RestTemplateBuilder restTemplateBuilder;
 
@@ -71,5 +74,11 @@ public class BeerClientImpl implements BeerClient {
 			uriComponentsBuilder.queryParam("pageSize", pageSize);
 		}
 		return doListBeers(uriComponentsBuilder);
+	}
+
+	@Override
+	public BeerDTO getBeerById(UUID beerId, Boolean showInventory) {
+		RestTemplate restTemplate = restTemplateBuilder.build();
+		return restTemplate.getForObject(GET_BEER_BY_ID_PATH, BeerDTO.class, beerId);
 	}
 }
