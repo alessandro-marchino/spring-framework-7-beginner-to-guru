@@ -78,7 +78,18 @@ public class BeerClientImpl implements BeerClient {
 
 	@Override
 	public BeerDTO getBeerById(UUID beerId, Boolean showInventory) {
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromPath(GET_BEER_PATH);
+		if(showInventory != null) {
+			uriComponentsBuilder.queryParam("showInventory", showInventory);
+		}
 		RestTemplate restTemplate = restTemplateBuilder.build();
-		return restTemplate.getForObject(GET_BEER_BY_ID_PATH, BeerDTO.class, beerId);
+		return restTemplate.getForObject(uriComponentsBuilder.toUriString(), BeerDTO.class, beerId);
+	}
+
+	@Override
+	public BeerDTO createBeer(BeerDTO beerDTO) {
+		RestTemplate restTemplate = restTemplateBuilder.build();
+		ResponseEntity<BeerDTO> response = restTemplate.postForEntity(GET_BEER_PATH, beerDTO, BeerDTO.class);
+		return response.getBody();
 	}
 }
