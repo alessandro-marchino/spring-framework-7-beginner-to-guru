@@ -37,6 +37,7 @@ public class BootstrapData implements CommandLineRunner {
 		loadBeerData();
 		loadCsvData();
 		loadCustomerData();
+		log.info("Data loaded - application ready");
 	}
 
 	private void loadCsvData() throws FileNotFoundException {

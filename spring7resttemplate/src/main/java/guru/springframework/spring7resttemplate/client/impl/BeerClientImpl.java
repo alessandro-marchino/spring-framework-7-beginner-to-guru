@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import guru.springframework.spring7resttemplate.client.BeerClient;
 import guru.springframework.spring7resttemplate.model.BeerDTO;
@@ -25,8 +26,10 @@ public class BeerClientImpl implements BeerClient {
 	@Override
 	public Page<BeerDTO> listBeers() {
 		RestTemplate restTemplate = restTemplateBuilder.build();
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromPath(GET_BEER_PATH);
+		log.warn("URL: {}", uriComponentsBuilder.toUriString());
 
-		ResponseEntity<RestPageImpl> jsonResponse = restTemplate.getForEntity(GET_BEER_PATH, RestPageImpl.class);
+		ResponseEntity<RestPageImpl> jsonResponse = restTemplate.getForEntity(uriComponentsBuilder.toUriString(), RestPageImpl.class);
 		log.warn("Body: {}", jsonResponse.getBody());
 
 		return jsonResponse.getBody();
