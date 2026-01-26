@@ -1,5 +1,6 @@
 package guru.springframework.spring7resttemplate.client.impl;
 
+import java.net.URI;
 import java.util.UUID;
 
 import org.springframework.boot.restclient.RestTemplateBuilder;
@@ -78,18 +79,19 @@ public class BeerClientImpl implements BeerClient {
 
 	@Override
 	public BeerDTO getBeerById(UUID beerId, Boolean showInventory) {
-		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromPath(GET_BEER_PATH);
+		UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromPath(GET_BEER_BY_ID_PATH);
 		if(showInventory != null) {
 			uriComponentsBuilder.queryParam("showInventory", showInventory);
 		}
 		RestTemplate restTemplate = restTemplateBuilder.build();
-		return restTemplate.getForObject(uriComponentsBuilder.toUriString(), BeerDTO.class, beerId);
+		return restTemplate.getForObject(uriComponentsBuilder.buildAndExpand(beerId).toString(), BeerDTO.class);
 	}
 
 	@Override
 	public BeerDTO createBeer(BeerDTO beerDTO) {
 		RestTemplate restTemplate = restTemplateBuilder.build();
-		ResponseEntity<BeerDTO> response = restTemplate.postForEntity(GET_BEER_PATH, beerDTO, BeerDTO.class);
-		return response.getBody();
+		URI uri = restTemplate.postForLocation(GET_BEER_PATH, beerDTO);
+		log.warn("URI returned: {}", uri);
+		return restTemplate.getForObject(uri.getPath(), BeerDTO.class);
 	}
 }
