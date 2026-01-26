@@ -16,4 +16,6 @@ public interface BeerClient {
 	BeerDTO getBeerById(UUID beerId, Boolean showInventory);
 
 	BeerDTO createBeer(BeerDTO beerDTO);
+
+	BeerDTO updateBeer(BeerDTO beerDTO);
 }
