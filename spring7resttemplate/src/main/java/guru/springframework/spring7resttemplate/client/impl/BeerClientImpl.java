@@ -13,7 +13,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import guru.springframework.spring7resttemplate.client.BeerClient;
 import guru.springframework.spring7resttemplate.model.BeerDTO;
 import guru.springframework.spring7resttemplate.model.BeerStyle;
-import guru.springframework.spring7resttemplate.model.RestPageImpl;
+import guru.springframework.spring7resttemplate.model.BeerDTOPageImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,8 +22,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class BeerClientImpl implements BeerClient {
 
-	private static final String GET_BEER_PATH = "/api/v1/beer";
-	private static final String GET_BEER_BY_ID_PATH = "/api/v1/beer/{beerId}";
+	public static final String GET_BEER_PATH = "/api/v1/beer";
+	public static final String GET_BEER_BY_ID_PATH = "/api/v1/beer/{beerId}";
 
 	private final RestTemplateBuilder restTemplateBuilder;
 
@@ -53,7 +53,7 @@ public class BeerClientImpl implements BeerClient {
 		log.warn("URL: {}", uriComponentsBuilder.toUriString());
 
 		RestTemplate restTemplate = restTemplateBuilder.build();
-		ResponseEntity<RestPageImpl> jsonResponse = restTemplate.getForEntity(uriComponentsBuilder.toUriString(), RestPageImpl.class);
+		ResponseEntity<BeerDTOPageImpl> jsonResponse = restTemplate.getForEntity(uriComponentsBuilder.toUriString(), BeerDTOPageImpl.class);
 		log.warn("Body: {}", jsonResponse.getBody());
 
 		return jsonResponse.getBody();

@@ -11,10 +11,10 @@ import com.fasterxml.jackson.annotation.JsonCreator.Mode;
 
 import tools.jackson.databind.JsonNode;
 
-public class RestPageImpl extends PageImpl<BeerDTO> {
+public class BeerDTOPageImpl extends PageImpl<BeerDTO> {
 
 	@JsonCreator(mode = Mode.PROPERTIES)
-	public RestPageImpl(
+	public BeerDTOPageImpl(
 			@JsonProperty("content") List<BeerDTO> content,
 			@JsonProperty("page") JsonNode page) {
 		super(content, PageRequest.of(page.get("number").asInt(), page.get("size").asInt()), page.get("totalElements").asInt());
