@@ -83,6 +83,23 @@ public class BeerClientMockTest {
 		assertThat(dtos).hasSizeGreaterThan(0);
 	}
 	@Test
+	void testListBeersWithQueryParam() {
+		String payload = jsonMapper.writeValueAsString(getPage());
+		URI uri = UriComponentsBuilder.fromUriString(URL + BeerClientImpl.GET_BEER_PATH)
+			.queryParam("beerName", "ALE")
+			.build()
+			.toUri();
+
+		server.expect(method(HttpMethod.GET))
+			.andExpect(requestTo(uri))
+			.andExpect(queryParam("beerName", "ALE"))
+			.andRespond(withSuccess(payload, MediaType.APPLICATION_JSON));
+
+
+		Page<BeerDTO> dtos = beerClient.listBeers("ALE", null, null, null, null);
+		assertThat(dtos).hasSizeGreaterThan(0);
+	}
+	@Test
 	void testGetBeerById() {
 		server.expect(method(HttpMethod.GET))
 			.andExpect(requestToUriTemplate(URL + BeerClientImpl.GET_BEER_BY_ID_PATH + "?showInventory=true", beer.getId()))
