@@ -6,6 +6,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -28,17 +29,23 @@ import org.mockito.Captor;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import guru.springframework.spring7restmvc.config.SpringSecurityConfig;
 import guru.springframework.spring7restmvc.model.CustomerDTO;
 import guru.springframework.spring7restmvc.service.CustomerService;
 import tools.jackson.databind.json.JsonMapper;
 
 @WebMvcTest(CustomerController.class)
 @ExtendWith(MockitoExtension.class)
+@Import(SpringSecurityConfig.class)
 class CustomerControllerTest {
+	private static final String TEST_USER = "user1";
+	private static final String TEST_PASSWORD = "password";
+
 	@Autowired MockMvc mockMvc;
 	@Autowired JsonMapper jsonMapper;
 	@MockitoBean CustomerService customerService;
@@ -50,7 +57,8 @@ class CustomerControllerTest {
 		UUID uuid = UUID.randomUUID();
 		given(customerService.deleteById(eq(uuid))).willReturn(true);
 
-		mockMvc.perform(delete(CustomerController.PATH_ID, uuid))
+		mockMvc.perform(delete(CustomerController.PATH_ID, uuid)
+				.with(httpBasic(TEST_USER, TEST_PASSWORD)))
 			.andExpect(status().isNoContent());
 		verify(customerService).deleteById(uuidArgumentCaptor.capture());
 		assertThat(uuidArgumentCaptor.getValue()).isEqualTo(uuid);
@@ -60,7 +68,8 @@ class CustomerControllerTest {
 		UUID uuid = UUID.randomUUID();
 		given(customerService.deleteById(eq(uuid))).willReturn(false);
 
-		mockMvc.perform(delete(CustomerController.PATH_ID, uuid))
+		mockMvc.perform(delete(CustomerController.PATH_ID, uuid)
+				.with(httpBasic(TEST_USER, TEST_PASSWORD)))
 			.andExpect(status().isNotFound());
 		verify(customerService).deleteById(uuidArgumentCaptor.capture());
 		assertThat(uuidArgumentCaptor.getValue()).isEqualTo(uuid);
@@ -78,6 +87,7 @@ class CustomerControllerTest {
 		given(customerService.getCustomerById(uuid)).willReturn(Optional.of(result));
 
 		mockMvc.perform(get(CustomerController.PATH_ID, uuid)
+				.with(httpBasic(TEST_USER, TEST_PASSWORD))
 				.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -91,6 +101,7 @@ class CustomerControllerTest {
 		given(customerService.getCustomerById(any(UUID.class))).willReturn(Optional.empty());
 
 		mockMvc.perform(get(CustomerController.PATH_ID, UUID.randomUUID())
+				.with(httpBasic(TEST_USER, TEST_PASSWORD))
 				.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isNotFound());
 	}
@@ -105,6 +116,7 @@ class CustomerControllerTest {
 		given(customerService.listCustomers()).willReturn(result);
 
 		mockMvc.perform(get(CustomerController.PATH)
+				.with(httpBasic(TEST_USER, TEST_PASSWORD))
 				.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -119,6 +131,7 @@ class CustomerControllerTest {
 		given(customerService.patchCustomerById(eq(uuid), any(CustomerDTO.class))).willReturn(Optional.of(CustomerDTO.builder().build()));
 
 		mockMvc.perform(patch(CustomerController.PATH_ID, uuid)
+				.with(httpBasic(TEST_USER, TEST_PASSWORD))
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(jsonMapper.writeValueAsString(customerMap)))
 			.andExpect(status().isNoContent());
@@ -134,6 +147,7 @@ class CustomerControllerTest {
 		given(customerService.patchCustomerById(eq(uuid), any(CustomerDTO.class))).willReturn(Optional.empty());
 
 		mockMvc.perform(patch(CustomerController.PATH_ID, uuid)
+				.with(httpBasic(TEST_USER, TEST_PASSWORD))
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(jsonMapper.writeValueAsString(customerMap)))
 			.andExpect(status().isNotFound());
@@ -154,6 +168,7 @@ class CustomerControllerTest {
 
 		given(customerService.saveNewCustomer(any(CustomerDTO.class))).willReturn(result);
 		mockMvc.perform(post(CustomerController.PATH)
+				.with(httpBasic(TEST_USER, TEST_PASSWORD))
 				.accept(MediaType.APPLICATION_JSON)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(jsonMapper.writeValueAsString(requestCustomer)))
@@ -170,6 +185,7 @@ class CustomerControllerTest {
 		given(customerService.updateCustomerById(eq(uuid), any(CustomerDTO.class))).willReturn(Optional.of(customer));
 
 		mockMvc.perform(put(CustomerController.PATH_ID, uuid)
+				.with(httpBasic(TEST_USER, TEST_PASSWORD))
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(jsonMapper.writeValueAsString(customer)))
 			.andExpect(status().isNoContent());
@@ -185,6 +201,7 @@ class CustomerControllerTest {
 		given(customerService.updateCustomerById(eq(uuid), any(CustomerDTO.class))).willReturn(Optional.empty());
 
 		mockMvc.perform(put(CustomerController.PATH_ID, uuid)
+				.with(httpBasic(TEST_USER, TEST_PASSWORD))
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(jsonMapper.writeValueAsString(customer)))
 			.andExpect(status().isNotFound());
