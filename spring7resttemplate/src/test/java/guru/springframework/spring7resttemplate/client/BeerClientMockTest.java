@@ -107,6 +107,21 @@ public class BeerClientMockTest {
 		assertThat(dto.getId()).isEqualTo(beer.getId());
 	}
 
+	@Test
+	void testUpdateBeer() {
+		server.expect(method(HttpMethod.PUT))
+			.andExpect(requestToUriTemplate(URL + BeerClientImpl.GET_BEER_BY_ID_PATH, beer.getId()))
+			.andRespond(withNoContent());
+
+		server.expect(method(HttpMethod.GET))
+			.andExpect(requestToUriTemplate(URL + BeerClientImpl.GET_BEER_BY_ID_PATH + "?showInventory=true", beer.getId()))
+			.andRespond(withSuccess(payload, MediaType.APPLICATION_JSON));
+
+		BeerDTO dto = beerClient.updateBeer(beer);
+		assertThat(dto).isNotNull();
+		assertThat(dto.getId()).isEqualTo(beer.getId());
+	}
+
 	BeerDTO getBeerDto() {
 		return BeerDTO.builder()
 			.id(UUID.randomUUID())
