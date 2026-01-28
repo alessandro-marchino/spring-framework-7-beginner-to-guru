@@ -6,6 +6,7 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 import static org.springframework.test.web.client.response.MockRestResponseCreators.*;
 
 import java.math.BigDecimal;
+import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,6 +28,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import guru.springframework.spring7resttemplate.client.impl.BeerClientImpl;
 import guru.springframework.spring7resttemplate.config.RestTemplateBuilderConfig;
@@ -85,6 +87,24 @@ public class BeerClientMockTest {
 		assertThat(dto.getUpc()).isEqualTo(beer.getUpc());
 	}
 
+	@Test
+	void testCreateBeer() {
+		BeerDTO beer = getBeerDto();
+		String payload = jsonMapper.writeValueAsString(beer);
+		URI uri = UriComponentsBuilder.fromPath(BeerClientImpl.GET_BEER_BY_ID_PATH).build(beer.getId());
+
+		server.expect(method(HttpMethod.POST))
+			.andExpect(requestTo(URL + BeerClientImpl.GET_BEER_PATH))
+			.andRespond(withAccepted().location(uri));
+
+		server.expect(method(HttpMethod.GET))
+			.andExpect(requestToUriTemplate(URL + BeerClientImpl.GET_BEER_BY_ID_PATH, beer.getId()))
+			.andRespond(withSuccess(payload, MediaType.APPLICATION_JSON));
+
+		BeerDTO dto = beerClient.createBeer(beer);
+		assertThat(dto).isNotNull();
+		assertThat(dto.getId()).isEqualTo(beer.getId());
+	}
 
 	BeerDTO getBeerDto() {
 		return BeerDTO.builder()
