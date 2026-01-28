@@ -14,6 +14,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 
 import java.util.Map;
 import java.util.Optional;
@@ -64,11 +65,12 @@ class BeerControllerTest {
 		given(beerService.getBeerById(testBeer.getId())).willReturn(Optional.of(testBeer));
 
 		mockMvc.perform(get(BeerController.PATH_ID, testBeer.getId())
-		.accept(MediaType.APPLICATION_JSON))
-		.andExpect(status().isOk())
-		.andExpect(content().contentType(MediaType.APPLICATION_JSON))
-		.andExpect(jsonPath("$.id", is(testBeer.getId().toString())))
-		.andExpect(jsonPath("$.beerName", is(testBeer.getBeerName())));
+				.with(httpBasic("user1", "password"))
+				.accept(MediaType.APPLICATION_JSON))
+			.andExpect(status().isOk())
+			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+			.andExpect(jsonPath("$.id", is(testBeer.getId().toString())))
+			.andExpect(jsonPath("$.beerName", is(testBeer.getBeerName())));
 	}
 
 	@Test
@@ -76,6 +78,7 @@ class BeerControllerTest {
 		given(beerService.getBeerById(any(UUID.class))).willReturn(Optional.empty());
 
 		mockMvc.perform(get(BeerController.PATH_ID, UUID.randomUUID())
+				.with(httpBasic("user1", "password"))
 				.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isNotFound());
 	}
@@ -86,10 +89,31 @@ class BeerControllerTest {
 		given(beerService.listBeers(null, null, false, null, null)).willReturn(beers);
 
 		mockMvc.perform(get(BeerController.PATH)
+				.with(httpBasic("user1", "password"))
 				.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 			.andExpect(jsonPath("$.content.length()", is(3)));
+	}
+
+	@Test
+	void testlistBeersNoUser() throws Exception {
+		Page<BeerDTO> beers = beerServiceImpl.listBeers(null, null, false, null, null);
+		given(beerService.listBeers(null, null, false, null, null)).willReturn(beers);
+
+		mockMvc.perform(get(BeerController.PATH)
+				.accept(MediaType.APPLICATION_JSON))
+			.andExpect(status().isUnauthorized());
+	}
+	@Test
+	void testlistBeersWrongUser() throws Exception {
+		Page<BeerDTO> beers = beerServiceImpl.listBeers(null, null, false, null, null);
+		given(beerService.listBeers(null, null, false, null, null)).willReturn(beers);
+
+		mockMvc.perform(get(BeerController.PATH)
+				.with(httpBasic("user2", "password2"))
+				.accept(MediaType.APPLICATION_JSON))
+			.andExpect(status().isUnauthorized());
 	}
 
 	@Test
@@ -105,6 +129,7 @@ class BeerControllerTest {
 
 		given(beerService.saveNewBeer(any(BeerDTO.class))).willReturn(resultBeer);
 		mockMvc.perform(post(BeerController.PATH)
+				.with(httpBasic("user1", "password"))
 				.accept(MediaType.APPLICATION_JSON)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(jsonMapper.writeValueAsString(testBeer)))
