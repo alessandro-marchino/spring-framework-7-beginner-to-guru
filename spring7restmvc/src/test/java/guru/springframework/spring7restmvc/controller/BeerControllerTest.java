@@ -31,12 +31,14 @@ import org.mockito.Captor;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import guru.springframework.spring7restmvc.config.SpringSecurityConfig;
 import guru.springframework.spring7restmvc.model.BeerDTO;
 import guru.springframework.spring7restmvc.service.BeerService;
 import guru.springframework.spring7restmvc.service.impl.BeerServiceImpl;
@@ -44,6 +46,7 @@ import tools.jackson.databind.json.JsonMapper;
 
 @WebMvcTest(BeerController.class)
 @ExtendWith(MockitoExtension.class)
+@Import(SpringSecurityConfig.class)
 class BeerControllerTest {
 	@Autowired MockMvc mockMvc;
 	@Autowired JsonMapper jsonMapper;
