@@ -1,6 +1,7 @@
 package guru.springframework.spring7resttemplate.client;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.*;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.*;
@@ -28,6 +29,7 @@ import org.springframework.data.web.PagedModel;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.client.MockRestServiceServer;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -135,6 +137,15 @@ public class BeerClientMockTest {
 			.andRespond(withNoContent());
 
 		beerClient.deleteBeer(beer.getId());
+	}
+
+	@Test
+	void testDeleteBeerNotFound() {
+		server.expect(method(HttpMethod.DELETE))
+			.andExpect(requestToUriTemplate(URL + BeerClientImpl.GET_BEER_BY_ID_PATH, beer.getId()))
+			.andRespond(withResourceNotFound());
+
+		assertThrows(HttpClientErrorException.class, () -> beerClient.deleteBeer(beer.getId()));
 	}
 
 	BeerDTO getBeerDto() {
