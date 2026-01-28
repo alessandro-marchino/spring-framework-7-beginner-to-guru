@@ -49,11 +49,17 @@ public class BeerClientMockTest {
 	@Mock RestTemplateBuilder mockRestTemplateBuilder;
 	@InjectMocks BeerClientImpl beerClient;
 
+	BeerDTO beer;
+	String payload;
+
 	@BeforeEach
 	void setUp() {
 		RestTemplate restTemplate = restTemplateBuilder.build();
 		server = MockRestServiceServer.bindTo(restTemplate).build();
 		when(mockRestTemplateBuilder.build()).thenReturn(restTemplate);
+
+		beer = getBeerDto();
+		payload = jsonMapper.writeValueAsString(beer);
 	}
 
 	@Test
@@ -70,9 +76,6 @@ public class BeerClientMockTest {
 	}
 	@Test
 	void testGetBeerById() {
-		BeerDTO beer = getBeerDto();
-		String payload = jsonMapper.writeValueAsString(beer);
-
 		server.expect(method(HttpMethod.GET))
 			.andExpect(requestToUriTemplate(URL + BeerClientImpl.GET_BEER_BY_ID_PATH + "?showInventory=true", beer.getId()))
 			.andRespond(withSuccess(payload, MediaType.APPLICATION_JSON));
@@ -89,8 +92,6 @@ public class BeerClientMockTest {
 
 	@Test
 	void testCreateBeer() {
-		BeerDTO beer = getBeerDto();
-		String payload = jsonMapper.writeValueAsString(beer);
 		URI uri = UriComponentsBuilder.fromPath(BeerClientImpl.GET_BEER_BY_ID_PATH).build(beer.getId());
 
 		server.expect(method(HttpMethod.POST))
