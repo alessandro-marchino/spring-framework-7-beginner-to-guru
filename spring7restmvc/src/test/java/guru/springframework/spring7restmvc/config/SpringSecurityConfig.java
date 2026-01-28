@@ -12,6 +12,7 @@ public class SpringSecurityConfig {
 	@Bean
 	DefaultSecurityFilterChain filterChain(HttpSecurity http) {
 		return http
+			.authorizeHttpRequests(authoizizeCustomizer -> authoizizeCustomizer.anyRequest().authenticated())
 			.csrf(csrfCustomizer -> csrfCustomizer.ignoringRequestMatchers("/api/**"))
 			.httpBasic(Customizer.withDefaults())
 			.build();
