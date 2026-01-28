@@ -10,6 +10,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -60,6 +61,11 @@ public class BeerClientMockTest {
 
 		beer = getBeerDto();
 		payload = jsonMapper.writeValueAsString(beer);
+	}
+
+	@AfterEach
+	void tearDown() {
+		server.verify();
 	}
 
 	@Test
@@ -120,6 +126,15 @@ public class BeerClientMockTest {
 		BeerDTO dto = beerClient.updateBeer(beer);
 		assertThat(dto).isNotNull();
 		assertThat(dto.getId()).isEqualTo(beer.getId());
+	}
+
+	@Test
+	void testDeleteBeer() {
+		server.expect(method(HttpMethod.DELETE))
+			.andExpect(requestToUriTemplate(URL + BeerClientImpl.GET_BEER_BY_ID_PATH, beer.getId()))
+			.andRespond(withNoContent());
+
+		beerClient.deleteBeer(beer.getId());
 	}
 
 	BeerDTO getBeerDto() {
