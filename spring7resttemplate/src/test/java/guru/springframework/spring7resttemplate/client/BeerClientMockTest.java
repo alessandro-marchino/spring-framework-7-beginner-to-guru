@@ -12,6 +12,7 @@ import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,11 +31,8 @@ import org.springframework.web.client.RestTemplate;
 import guru.springframework.spring7resttemplate.client.impl.BeerClientImpl;
 import guru.springframework.spring7resttemplate.config.RestTemplateBuilderConfig;
 import guru.springframework.spring7resttemplate.model.BeerDTO;
-import guru.springframework.spring7resttemplate.model.BeerDTOPageImpl;
 import guru.springframework.spring7resttemplate.model.BeerStyle;
 import tools.jackson.databind.json.JsonMapper;
-import tools.jackson.databind.node.JsonNodeFactory;
-import tools.jackson.databind.node.ObjectNode;
 
 @RestClientTest
 @ExtendWith(MockitoExtension.class)
@@ -45,16 +43,15 @@ public class BeerClientMockTest {
 	@Autowired JsonMapper jsonMapper;
 	@Autowired RestTemplateBuilder restTemplateBuilder;
 	MockRestServiceServer server;
-	BeerClient beerClient;
 
 	@Mock RestTemplateBuilder mockRestTemplateBuilder;
+	@InjectMocks BeerClientImpl beerClient;
 
 	@BeforeEach
 	void setUp() {
 		RestTemplate restTemplate = restTemplateBuilder.build();
 		server = MockRestServiceServer.bindTo(restTemplate).build();
 		when(mockRestTemplateBuilder.build()).thenReturn(restTemplate);
-		beerClient = new BeerClientImpl(mockRestTemplateBuilder);
 	}
 
 	@Test
@@ -69,6 +66,26 @@ public class BeerClientMockTest {
 		Page<BeerDTO> dtos = beerClient.listBeers();
 		assertThat(dtos).hasSizeGreaterThan(0);
 	}
+	@Test
+	void testGetBeerById() {
+		BeerDTO beer = getBeerDto();
+		String payload = jsonMapper.writeValueAsString(beer);
+
+		server.expect(method(HttpMethod.GET))
+			.andExpect(requestToUriTemplate(URL + BeerClientImpl.GET_BEER_BY_ID_PATH + "?showInventory=true", beer.getId()))
+			.andRespond(withSuccess(payload, MediaType.APPLICATION_JSON));
+
+		BeerDTO dto = beerClient.getBeerById(beer.getId(), true);
+		assertThat(dto).isNotNull();
+		assertThat(dto.getId()).isEqualTo(beer.getId());
+		assertThat(dto.getPrice()).isEqualTo(beer.getPrice());
+		assertThat(dto.getBeerName()).isEqualTo(beer.getBeerName());
+		assertThat(dto.getBeerStyle()).isEqualTo(beer.getBeerStyle());
+		assertThat(dto.getQuantityOnHand()).isEqualTo(beer.getQuantityOnHand());
+		assertThat(dto.getUpc()).isEqualTo(beer.getUpc());
+	}
+
+
 	BeerDTO getBeerDto() {
 		return BeerDTO.builder()
 			.id(UUID.randomUUID())
