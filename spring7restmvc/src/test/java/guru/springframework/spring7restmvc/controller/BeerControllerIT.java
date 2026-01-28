@@ -141,6 +141,21 @@ public class BeerControllerIT {
 			.andExpect(jsonPath("$.page.totalPages", is(7)))
 			.andExpect(jsonPath("$.content[0].quantityOnHand", notNullValue()));
 	}
+	@Test
+	void testListBeersNoAuth() throws Exception {
+		mockMvc.perform(get(BeerController.PATH)
+				.queryParam("beerName", "IPA")
+			)
+			.andExpect(status().isUnauthorized());
+	}
+	@Test
+	void testListBeersWrongAuth() throws Exception {
+		mockMvc.perform(get(BeerController.PATH)
+				.with(httpBasic("wrong", "user"))
+				.queryParam("beerName", "IPA")
+			)
+			.andExpect(status().isUnauthorized());
+	}
 
     @Test
 	@Transactional
