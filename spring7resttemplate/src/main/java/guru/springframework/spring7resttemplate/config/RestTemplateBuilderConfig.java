@@ -28,7 +28,6 @@ public class RestTemplateBuilderConfig {
 			.basicAuthentication(username, password)
 			.uriTemplateHandler(defaultUriBuilderFactory)
 			.connectTimeout(Duration.ofSeconds(10))
-			.readTimeout(Duration.ofSeconds(20))
-			;
+			.readTimeout(Duration.ofSeconds(20));
 	}
 }
