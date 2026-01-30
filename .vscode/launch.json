@@ -40,6 +40,16 @@
             "projectName": "spring7datarest",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-Spring7authserverApplication<spring7authserver>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "guru.springframework.spring7authserver.Spring7authserverApplication",
+            "projectName": "spring7authserver",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }
