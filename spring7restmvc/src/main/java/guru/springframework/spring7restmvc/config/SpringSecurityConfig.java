@@ -14,7 +14,7 @@ public class SpringSecurityConfig {
 		return http
 			.authorizeHttpRequests(authoizizeCustomizer -> authoizizeCustomizer.anyRequest().authenticated())
 			.csrf(csrfCustomizer -> csrfCustomizer.ignoringRequestMatchers("/api/**"))
-			.httpBasic(Customizer.withDefaults())
+			.oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
 			.build();
 	}
 }
