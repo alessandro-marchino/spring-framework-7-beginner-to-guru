@@ -7,6 +7,150 @@
   },
   "item": [
     {
+      "name": "spring7authserver",
+      "item": [
+        {
+          "name": "/oauth2/token",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "password",
+                  "value": "secret",
+                  "type": "string"
+                },
+                {
+                  "key": "username",
+                  "value": "oidc-client",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "grant_type",
+                  "value": "client_credentials",
+                  "type": "text",
+                  "uuid": "069640ce-961c-4479-b9f3-f2063025ef5e"
+                },
+                {
+                  "key": "scope",
+                  "value": "openid profile",
+                  "type": "text",
+                  "uuid": "d408f1d9-04b6-43ab-8d7c-f6570213ac45"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{authServer}}/oauth2/token",
+              "host": [
+                "{{authServer}}"
+              ],
+              "path": [
+                "oauth2",
+                "token"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "auth": {
+        "type": "oauth2",
+        "oauth2": [
+          {
+            "key": "refreshRequestParams",
+            "value": [],
+            "type": "any"
+          },
+          {
+            "key": "tokenRequestParams",
+            "value": [],
+            "type": "any"
+          },
+          {
+            "key": "authRequestParams",
+            "value": [],
+            "type": "any"
+          },
+          {
+            "key": "tokenName",
+            "value": "spring-framework-7-beginner-to-guru",
+            "type": "string"
+          },
+          {
+            "key": "challengeAlgorithm",
+            "value": "S256",
+            "type": "string"
+          },
+          {
+            "key": "scope",
+            "value": "openid profile",
+            "type": "string"
+          },
+          {
+            "key": "grant_type",
+            "value": "client_credentials",
+            "type": "string"
+          },
+          {
+            "key": "clientSecret",
+            "value": "secret",
+            "type": "string"
+          },
+          {
+            "key": "clientId",
+            "value": "oidc-client",
+            "type": "string"
+          },
+          {
+            "key": "addTokenTo",
+            "value": "header",
+            "type": "string"
+          },
+          {
+            "key": "client_authentication",
+            "value": "header",
+            "type": "string"
+          },
+          {
+            "key": "accessTokenUrl",
+            "value": "http://localhost:9000/oauth2/token",
+            "type": "string"
+          }
+        ]
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              ""
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
       "name": "spring7restmvc",
       "item": [
         {
@@ -357,6 +501,45 @@
             }
           ]
         }
+      ],
+      "auth": {
+        "type": "basic",
+        "basic": [
+          {
+            "key": "password",
+            "value": "password",
+            "type": "string"
+          },
+          {
+            "key": "username",
+            "value": "user1",
+            "type": "string"
+          }
+        ]
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              ""
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              ""
+            ]
+          }
+        }
       ]
     },
     {
@@ -625,6 +808,14 @@
     {
       "key": "baseUrl",
       "value": ""
+    },
+    {
+      "key": "authServer",
+      "value": ""
+    },
+    {
+      "value": "",
+      "type": "default"
     }
   ]
 }
