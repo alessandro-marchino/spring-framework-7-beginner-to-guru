@@ -35,7 +35,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
-import guru.springframework.spring7restmvc.TestConstant;
+import guru.springframework.spring7restmvc.TestUtils;
 import guru.springframework.spring7restmvc.entities.Beer;
 import guru.springframework.spring7restmvc.mappers.BeerMapper;
 import guru.springframework.spring7restmvc.model.BeerDTO;
@@ -64,7 +64,7 @@ public class BeerControllerIT {
 	@Test
 	void testListBeersByName() throws Exception {
 		mockMvc.perform(get(BeerController.PATH)
-				.with(httpBasic(TestConstant.TEST_USER, TestConstant.TEST_PASSWORD))
+				.with(TestUtils.JWT_REQUEST_POST_PROCESSOR)
 				.queryParam("beerName", "IPA")
 			)
 			.andExpect(status().isOk())
@@ -75,7 +75,7 @@ public class BeerControllerIT {
 	@Test
 	void testListBeersByStyle() throws Exception {
 		mockMvc.perform(get(BeerController.PATH)
-				.with(httpBasic(TestConstant.TEST_USER, TestConstant.TEST_PASSWORD))
+				.with(TestUtils.JWT_REQUEST_POST_PROCESSOR)
 				.queryParam("beerStyle", BeerStyle.IPA.toString())
 			)
 			.andExpect(status().isOk())
@@ -86,7 +86,7 @@ public class BeerControllerIT {
 	@Test
 	void testListBeersByNameAndStyle() throws Exception {
 		mockMvc.perform(get(BeerController.PATH)
-				.with(httpBasic(TestConstant.TEST_USER, TestConstant.TEST_PASSWORD))
+				.with(TestUtils.JWT_REQUEST_POST_PROCESSOR)
 				.queryParam("beerName", "IPA")
 				.queryParam("beerStyle", BeerStyle.IPA.toString())
 			)
@@ -99,7 +99,7 @@ public class BeerControllerIT {
 	@Test
 	void testListBeersByNameAndStyleShowInventory() throws Exception {
 		mockMvc.perform(get(BeerController.PATH)
-				.with(httpBasic(TestConstant.TEST_USER, TestConstant.TEST_PASSWORD))
+				.with(TestUtils.JWT_REQUEST_POST_PROCESSOR)
 				.queryParam("beerName", "IPA")
 				.queryParam("beerStyle", BeerStyle.IPA.toString())
 				.queryParam("showInventory", "true")
@@ -113,7 +113,7 @@ public class BeerControllerIT {
 	@Test
 	void testListBeersByNameAndStyleNotShowInventory() throws Exception {
 		mockMvc.perform(get(BeerController.PATH)
-				.with(httpBasic(TestConstant.TEST_USER, TestConstant.TEST_PASSWORD))
+				.with(TestUtils.JWT_REQUEST_POST_PROCESSOR)
 				.queryParam("beerName", "IPA")
 				.queryParam("beerStyle", BeerStyle.IPA.toString())
 				.queryParam("showInventory", "false")
@@ -128,7 +128,7 @@ public class BeerControllerIT {
 	@Test
 	void testListBeersByNameAndStyleShowInventoryPage2() throws Exception {
 		mockMvc.perform(get(BeerController.PATH)
-				.with(httpBasic(TestConstant.TEST_USER, TestConstant.TEST_PASSWORD))
+				.with(TestUtils.JWT_REQUEST_POST_PROCESSOR)
 				.queryParam("beerName", "IPA")
 				.queryParam("beerStyle", BeerStyle.IPA.toString())
 				.queryParam("showInventory", "true")
@@ -233,7 +233,7 @@ public class BeerControllerIT {
 		beerMap.put("beerName", "New Name 12345678901234567890123456789012345678901234567890");
 
 		mockMvc.perform(patch(BeerController.PATH_ID, beer.getId())
-				.with(httpBasic(TestConstant.TEST_USER, TestConstant.TEST_PASSWORD))
+				.with(TestUtils.JWT_REQUEST_POST_PROCESSOR)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(jsonMapper.writeValueAsString(beerMap)))
 			.andExpect(status().isBadRequest())
@@ -289,7 +289,7 @@ public class BeerControllerIT {
 		BeerDTO beerDTO = mapper.beerToBeerDto(beer);
 		beerDTO.setBeerName("Updated Name");
 		MvcResult result = mockMvc.perform(put(BeerController.PATH_ID, beer.getId())
-				.with(httpBasic(TestConstant.TEST_USER, TestConstant.TEST_PASSWORD))
+				.with(TestUtils.JWT_REQUEST_POST_PROCESSOR)
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON)
 				.content(jsonMapper.writeValueAsString(beerDTO)))
@@ -298,7 +298,7 @@ public class BeerControllerIT {
 		log.warn("First response: {}", result.getResponse().getStatus());
 		beerDTO.setBeerName("Updated Name 2");
 		MvcResult result2 = mockMvc.perform(put(BeerController.PATH_ID, beer.getId())
-				.with(httpBasic(TestConstant.TEST_USER, TestConstant.TEST_PASSWORD))
+				.with(TestUtils.JWT_REQUEST_POST_PROCESSOR)
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON)
 				.content(jsonMapper.writeValueAsString(beerDTO)))
