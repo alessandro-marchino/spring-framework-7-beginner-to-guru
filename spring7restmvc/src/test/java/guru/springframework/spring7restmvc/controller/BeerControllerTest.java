@@ -16,6 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 
+import java.time.Instant;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -238,7 +239,11 @@ class BeerControllerTest {
 		given(beerService.patchBeerById(eq(beer.getId()), any(BeerDTO.class))).willReturn(Optional.of(beer));
 
 		mockMvc.perform(patch(BeerController.PATH_ID, beer.getId())
-				.with(httpBasic(TestConstant.TEST_USER, TestConstant.TEST_PASSWORD))
+				.with(jwt().jwt(jwt -> jwt
+					.claims(claims -> claims
+						.put("scope", "openid profile"))
+					.subject("openid-client")
+					.notBefore(Instant.now().minusSeconds(5))))
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(jsonMapper.writeValueAsString(beerMap)))
 			.andExpect(status().isNoContent());
