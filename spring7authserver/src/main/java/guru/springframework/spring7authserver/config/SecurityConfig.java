@@ -97,6 +97,7 @@ public class SecurityConfig {
 			.clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
 			.authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
 			.authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
+			.authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
 			.redirectUri("http://localhost:8080/login/oauth2/code/oidc-client")
 			.postLogoutRedirectUri("http://localhost:8080/")
 			.scope(OidcScopes.OPENID)
@@ -113,9 +114,9 @@ public class SecurityConfig {
 		RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
 		RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
 		RSAKey rsaKey = new RSAKey.Builder(publicKey)
-				.privateKey(privateKey)
-				.keyID(UUID.randomUUID().toString())
-				.build();
+			.privateKey(privateKey)
+			.keyID(UUID.randomUUID().toString())
+			.build();
 		JWKSet jwkSet = new JWKSet(rsaKey);
 		return new ImmutableJWKSet<>(jwkSet);
 	}
