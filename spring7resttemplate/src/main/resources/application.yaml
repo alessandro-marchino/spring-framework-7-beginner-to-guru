@@ -1,0 +1,24 @@
+spring:
+  application.name: spring7resttemplate
+  security:
+    oauth2:
+      client:
+        registration:
+          springauth:
+            client-id: oidc-client
+            client-secret: secret
+            scope: [ openid, profile ]
+            authorization-grant-type: client-credentials
+            provider: springauthprovider
+        provider:
+          springauthprovider:
+            # authorization-uri: http://localhost:9000/auth2/autorized
+            # token-uri: http://localhost:9000/auth2/token
+            issuer-uri: http://localhost:9000
+
+logging.level:
+  '[org.springframework.web.client]': TRACE
+
+rest:
+  template:
+    root-url: http://localhost:8080

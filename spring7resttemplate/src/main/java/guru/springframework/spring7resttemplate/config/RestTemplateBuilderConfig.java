@@ -14,10 +14,6 @@ public class RestTemplateBuilderConfig {
 
 	@Value("${rest.template.root-url}")
 	String rootUrl;
-	@Value("${rest.template.username}")
-	String username;
-	@Value("${rest.template.password}")
-	String password;
 
 	@Bean
 	RestTemplateBuilder restTemplateBuilder(RestTemplateBuilderConfigurer configurer) {
@@ -25,7 +21,6 @@ public class RestTemplateBuilderConfig {
 		DefaultUriBuilderFactory defaultUriBuilderFactory = new DefaultUriBuilderFactory(rootUrl);
 
 		return configurer.configure(new RestTemplateBuilder())
-			.basicAuthentication(username, password)
 			.uriTemplateHandler(defaultUriBuilderFactory)
 			.connectTimeout(Duration.ofSeconds(10))
 			.readTimeout(Duration.ofSeconds(20));

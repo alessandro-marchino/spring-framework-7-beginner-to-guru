@@ -1,19 +1,7 @@
-{
-  "properties": [
-    {
-      "name": "rest.template.root-url",
-      "type": "java.lang.String",
-      "description": "Root URL"
-    },
-    {
-      "name": "rest.template.username",
-      "type": "java.lang.String",
-      "description": "Basic auth Username"
-    },
-    {
-      "name": "rest.template.password",
-      "type": "java.lang.String",
-      "description": "Basic auth Password"
-    }
-  ]
-}
+{"properties": [
+  {
+    "name": "rest.template.root-url",
+    "type": "java.lang.String",
+    "description": "Root URL"
+  }
+]}
