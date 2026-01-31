@@ -16,9 +16,9 @@ spring:
             # token-uri: http://localhost:9000/auth2/token
             issuer-uri: http://localhost:9000
 
-logging.level:
-  '[org.springframework.web.client]': TRACE
-  '[org.springframework.security]': TRACE
+# logging.level:
+#   '[org.springframework.web.client]': TRACE
+#   '[org.springframework.security]': TRACE
 
 rest:
   template:
