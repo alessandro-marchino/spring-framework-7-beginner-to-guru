@@ -61,4 +61,17 @@ class PersonRepositoryImplTest {
 		listMono
 			.subscribe(list -> assertThat(list).hasSize(4));
 	}
+	@Test
+	void testFilterOnName() {
+		personRepository.findAll()
+			.filter(person -> "Fiona".equals(person.getFirstName()))
+			.subscribe(person -> assertThat(person.getFirstName()).isEqualTo("Fiona"));
+	}
+	@Test
+	void testGetById() {
+		Mono<Person> fionaMono = personRepository.findAll()
+			.filter(person -> "Fiona".equals(person.getFirstName()))
+			.next();
+		fionaMono.subscribe(person -> assertThat(person.getFirstName()).isEqualTo("Fiona"));
+	}
 }
