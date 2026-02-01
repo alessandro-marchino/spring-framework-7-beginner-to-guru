@@ -74,4 +74,13 @@ class PersonRepositoryImplTest {
 			.next();
 		fionaMono.subscribe(person -> assertThat(person.getFirstName()).isEqualTo("Fiona"));
 	}
+
+	@Test
+	void testFindPersonByIdNotFound() {
+		Flux<Person> personFlux = personRepository.findAll();
+		final Integer id = 0;
+		personFlux.filter(person -> id.equals(person.getId()))
+			.single()
+			.subscribe(System.out::println, t -> assertThat(t).isNotNull());
+	}
 }
