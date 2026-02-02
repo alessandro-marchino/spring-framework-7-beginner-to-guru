@@ -10,6 +10,7 @@ import guru.springframework.spring7reactiveexamples.domain.Person;
 import guru.springframework.spring7reactiveexamples.repository.PersonRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 class PersonRepositoryImplTest {
 
@@ -40,6 +41,18 @@ class PersonRepositoryImplTest {
 		personRepository.getById(8)
 			.hasElement()
 			.subscribe(hasElement -> assertThat(hasElement).isFalse());
+	}
+	@Test
+	void testGetByIdNotFoundStepVerifier() {
+		// Not preferred
+		Mono<Person> personMono = personRepository.getById(8);
+		StepVerifier.create(personMono).expectNextCount(0).verifyComplete();
+	}
+	@Test
+	void testGetByIdStepVerifier() {
+		// Not preferred
+		Mono<Person> personMono = personRepository.getById(1);
+		StepVerifier.create(personMono).expectNextCount(1).verifyComplete();
 	}
 
 	@Test
