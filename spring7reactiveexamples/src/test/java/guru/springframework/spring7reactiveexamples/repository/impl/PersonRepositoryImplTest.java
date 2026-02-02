@@ -34,6 +34,13 @@ class PersonRepositoryImplTest {
 			.map(Person::getFirstName)
 			.subscribe(firstName -> assertThat(firstName).isEqualTo("Michael"));
 	}
+	@Test
+	void testGetByIdNotFound() {
+		// Not preferred
+		personRepository.getById(8)
+			.hasElement()
+			.subscribe(hasElement -> assertThat(hasElement).isFalse());
+	}
 
 	@Test
 	void testFluxBlock() {
