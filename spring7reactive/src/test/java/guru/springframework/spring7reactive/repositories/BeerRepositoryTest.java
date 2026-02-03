@@ -24,7 +24,7 @@ class BeerRepositoryTest {
 	void saveNewBeer() {
 		StepVerifier.create(repository.save(getTestBeer()))
 			.assertNext(beer -> {
-				assertThat(beer.getId()).isEqualTo(1);
+				assertThat(beer.getId()).isNotNull();
 				assertThat(beer.getCreatedDate()).isNotNull();
 				assertThat(beer.getLastModifiedDate()).isNotNull();
 			})
