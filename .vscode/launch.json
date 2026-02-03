@@ -50,6 +50,16 @@
             "projectName": "spring7authserver",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-Spring7reactiveApplication<spring7reactive>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "guru.springframework.spring7reactive.Spring7reactiveApplication",
+            "projectName": "spring7reactive",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }
