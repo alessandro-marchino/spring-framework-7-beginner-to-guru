@@ -8,6 +8,7 @@ import guru.springframework.spring7reactive.repositories.BeerRepository;
 import guru.springframework.spring7reactive.service.BeerService;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @RequiredArgsConstructor
 @Service
@@ -18,6 +19,12 @@ public class BeerServiceImpl implements BeerService {
 	@Override
 	public Flux<BeerDTO> listBeers() {
 		return beerRepository.findAll()
+			.map(beerMapper::toBeerDTO);
+	}
+
+	@Override
+	public Mono<BeerDTO> getBeerById(Integer id) {
+		return beerRepository.findById(id)
 			.map(beerMapper::toBeerDTO);
 	}
 }
