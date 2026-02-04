@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import guru.springframework.spring7reactive.model.BeerDTO;
+import guru.springframework.spring7reactive.service.BeerService;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Flux;
 
@@ -15,11 +16,10 @@ public class BeerController {
 
 	public static final String BEER_PATH = "/api/v2/beer";
 
+	private final BeerService beerService;
+
 	@GetMapping
 	public Flux<BeerDTO> listBeers() {
-		return Flux.just(
-			BeerDTO.builder().id(1).build(),
-			BeerDTO.builder().id(2).build()
-		);
+		return beerService.listBeers();
 	}
 }
