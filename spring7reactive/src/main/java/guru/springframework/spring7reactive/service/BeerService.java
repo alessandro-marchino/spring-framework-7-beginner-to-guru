@@ -8,4 +8,5 @@ public interface BeerService {
 
 	Flux<BeerDTO> listBeers();
 	Mono<BeerDTO> getBeerById(Integer id);
+	Mono<BeerDTO> saveNewBeer(BeerDTO beerDTO);
 }
