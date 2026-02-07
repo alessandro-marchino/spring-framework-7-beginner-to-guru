@@ -20,12 +20,12 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping(CustomerController.BEER_PATH)
+@RequestMapping(CustomerController.PATH)
 @RequiredArgsConstructor
 public class CustomerController {
 
-	public static final String BEER_PATH = "/api/v2/customer";
-	public static final String BEER_PATH_ID = "/{customerId}";
+	public static final String PATH = "/api/v2/customer";
+	public static final String PATH_ID = "/{customerId}";
 
 	private final CustomerService customerService;
 
@@ -34,7 +34,7 @@ public class CustomerController {
 		return customerService.listCustomers();
 	}
 
-	@GetMapping(BEER_PATH_ID)
+	@GetMapping(PATH_ID)
 	public Mono<CustomerDTO> getCustomerById(@PathVariable Integer customerId) {
 		return customerService.getCustomerById(customerId);
 	}
@@ -42,24 +42,24 @@ public class CustomerController {
 	@PostMapping
 	public Mono<ResponseEntity<Void>> createNewCustomer(@RequestBody @Validated CustomerDTO customerDTO) {
 		return customerService.saveNewCustomer(customerDTO)
-			.map(savedDto -> ResponseEntity.created(UriComponentsBuilder.fromUriString("http://localhost:8080" + BEER_PATH + BEER_PATH_ID).build(savedDto.getId())).build());
+			.map(savedDto -> ResponseEntity.created(UriComponentsBuilder.fromUriString("http://localhost:8080" + PATH + PATH_ID).build(savedDto.getId())).build());
 	}
 
-	@PutMapping(BEER_PATH_ID)
+	@PutMapping(PATH_ID)
 	public Mono<ResponseEntity<Void>> updateExistingCustomer(@PathVariable Integer customerId, @RequestBody @Validated CustomerDTO customerDTO) {
 		return customerService.updateCustomer(customerId, customerDTO)
-			.map(_ -> ResponseEntity.ok().build());
+			.map(_ -> ResponseEntity.noContent().build());
 	}
 
-	@PatchMapping(BEER_PATH_ID)
+	@PatchMapping(PATH_ID)
 	public Mono<ResponseEntity<Void>> patchExistingCustomer(@PathVariable Integer customerId, @RequestBody CustomerDTO customerDTO) {
 		return customerService.patchCustomer(customerId, customerDTO)
-			.map(_ -> ResponseEntity.ok().build());
+			.map(_ -> ResponseEntity.noContent().build());
 	}
 
-	@DeleteMapping(BEER_PATH_ID)
+	@DeleteMapping(PATH_ID)
 	public Mono<ResponseEntity<Void>> deleteCustomer(@PathVariable Integer customerId) {
 		return customerService.deleteCustomer(customerId)
-			.map(_ -> ResponseEntity.noContent().build());
+			.thenReturn(ResponseEntity.noContent().build());
 	}
 }
