@@ -1,7 +1,9 @@
 package guru.springframework.spring7reactive.controllers;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -46,5 +48,17 @@ public class BeerController {
 	public Mono<ResponseEntity<Void>> updateExistingBeer(@PathVariable Integer beerId, @RequestBody BeerDTO beerDTO) {
 		return beerService.updateBeer(beerId, beerDTO)
 			.map(_ -> ResponseEntity.ok().build());
+	}
+
+	@PatchMapping(BEER_PATH_ID)
+	public Mono<ResponseEntity<Void>> patchExistingBeer(@PathVariable Integer beerId, @RequestBody BeerDTO beerDTO) {
+		return beerService.patchBeer(beerId, beerDTO)
+			.map(_ -> ResponseEntity.ok().build());
+	}
+
+	@DeleteMapping(BEER_PATH_ID)
+	public Mono<ResponseEntity<Void>> deleteBeer(@PathVariable Integer beerId) {
+		return beerService.deleteBeer(beerId)
+			.map(_ -> ResponseEntity.noContent().build());
 	}
 }
