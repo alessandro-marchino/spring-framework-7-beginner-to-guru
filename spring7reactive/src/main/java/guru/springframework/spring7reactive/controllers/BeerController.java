@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,5 +40,11 @@ public class BeerController {
 	public Mono<ResponseEntity<Void>> createNewBeer(@RequestBody BeerDTO beerDTO) {
 		return beerService.saveNewBeer(beerDTO)
 			.map(savedDto -> ResponseEntity.created(UriComponentsBuilder.fromUriString("http://localhost:8080" + BEER_PATH + BEER_PATH_ID).build(savedDto.getId())).build());
+	}
+
+	@PutMapping(BEER_PATH_ID)
+	public Mono<ResponseEntity<Void>> updateExistingBeer(@PathVariable Integer beerId, @RequestBody BeerDTO beerDTO) {
+		return beerService.updateBeer(beerId, beerDTO)
+			.map(_ -> ResponseEntity.ok().build());
 	}
 }
