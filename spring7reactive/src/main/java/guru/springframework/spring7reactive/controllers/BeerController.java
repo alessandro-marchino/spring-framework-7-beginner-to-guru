@@ -1,6 +1,7 @@
 package guru.springframework.spring7reactive.controllers;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -39,13 +40,13 @@ public class BeerController {
 	}
 
 	@PostMapping
-	public Mono<ResponseEntity<Void>> createNewBeer(@RequestBody BeerDTO beerDTO) {
+	public Mono<ResponseEntity<Void>> createNewBeer(@RequestBody @Validated BeerDTO beerDTO) {
 		return beerService.saveNewBeer(beerDTO)
 			.map(savedDto -> ResponseEntity.created(UriComponentsBuilder.fromUriString("http://localhost:8080" + BEER_PATH + BEER_PATH_ID).build(savedDto.getId())).build());
 	}
 
 	@PutMapping(BEER_PATH_ID)
-	public Mono<ResponseEntity<Void>> updateExistingBeer(@PathVariable Integer beerId, @RequestBody BeerDTO beerDTO) {
+	public Mono<ResponseEntity<Void>> updateExistingBeer(@PathVariable Integer beerId, @RequestBody @Validated BeerDTO beerDTO) {
 		return beerService.updateBeer(beerId, beerDTO)
 			.map(_ -> ResponseEntity.ok().build());
 	}
