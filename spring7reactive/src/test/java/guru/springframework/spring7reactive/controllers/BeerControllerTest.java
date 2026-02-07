@@ -4,7 +4,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
 
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient;
@@ -18,10 +21,12 @@ import reactor.core.publisher.Mono;
 
 @SpringBootTest
 @AutoConfigureWebTestClient
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class BeerControllerTest {
 	@Autowired WebTestClient webTestClient;
 
     @Test
+	@Order(30)
     void testCreateNewBeer() {
 		webTestClient.post()
 				.uri(BeerController.BEER_PATH)
@@ -33,6 +38,7 @@ class BeerControllerTest {
     }
 
     @Test
+	@Order(60)
     void testDeleteBeer() {
 		webTestClient.delete()
 				.uri(BeerController.BEER_PATH + BeerController.BEER_PATH_ID, 1)
@@ -41,18 +47,20 @@ class BeerControllerTest {
     }
 
     @Test
+	@Order(20)
     void testGetBeerById() {
 		webTestClient.get()
-				.uri(BeerController.BEER_PATH + BeerController.BEER_PATH_ID, 1)
-			.exchange()
-			.expectStatus().isOk()
-			.expectHeader().valueEquals(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-			.expectBody(BeerDTO.class).value(beerDto -> {
-				assertThat(beerDto.getId()).isEqualTo(1L);
-			});
+		.uri(BeerController.BEER_PATH + BeerController.BEER_PATH_ID, 1)
+		.exchange()
+		.expectStatus().isOk()
+		.expectHeader().valueEquals(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+		.expectBody(BeerDTO.class).value(beerDto -> {
+			assertThat(beerDto.getId()).isEqualTo(1L);
+		});
     }
 
     @Test
+	@Order(10)
     void testListBeers() {
 		webTestClient.get()
 				.uri(BeerController.BEER_PATH)
@@ -63,6 +71,7 @@ class BeerControllerTest {
     }
 
     @Test
+	@Order(50)
     void testPatchExistingBeer() {
 		webTestClient.patch()
 				.uri(BeerController.BEER_PATH + BeerController.BEER_PATH_ID, 1)
@@ -73,6 +82,7 @@ class BeerControllerTest {
     }
 
     @Test
+	@Order(40)
     void testUpdateExistingBeer() {
 		webTestClient.put()
 				.uri(BeerController.BEER_PATH + BeerController.BEER_PATH_ID, 1)
