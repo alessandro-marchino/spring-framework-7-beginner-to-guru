@@ -60,6 +60,6 @@ public class BeerController {
 	@DeleteMapping(BEER_PATH_ID)
 	public Mono<ResponseEntity<Void>> deleteBeer(@PathVariable Integer beerId) {
 		return beerService.deleteBeer(beerId)
-			.map(_ -> ResponseEntity.noContent().build());
+			.thenReturn(ResponseEntity.noContent().build());
 	}
 }
