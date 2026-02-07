@@ -1,8 +1,9 @@
-package guru.springframework.spring7reactive.model;
+package guru.springframework.spring7reactive.mappers;
 
 import org.mapstruct.Mapper;
 
 import guru.springframework.spring7reactive.domain.Beer;
+import guru.springframework.spring7reactive.model.BeerDTO;
 
 @Mapper
 public interface BeerMapper {

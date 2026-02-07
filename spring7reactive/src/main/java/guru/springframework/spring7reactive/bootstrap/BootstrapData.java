@@ -6,7 +6,9 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import guru.springframework.spring7reactive.domain.Beer;
+import guru.springframework.spring7reactive.domain.Customer;
 import guru.springframework.spring7reactive.repositories.BeerRepository;
+import guru.springframework.spring7reactive.repositories.CustomerRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -15,12 +17,15 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class BootstrapData implements CommandLineRunner {
 	private final BeerRepository beerRepository;
+	private final CustomerRepository customerRepository;
 
 	@Override
 	public void run(String... args) throws Exception {
 		loadBeerData();
+		loadCustomerData();
 
-		beerRepository.count().subscribe(count -> log.warn("Count is: {}", count));
+		beerRepository.count().subscribe(count -> log.warn("Beer count is: {}", count));
+		customerRepository.count().subscribe(count -> log.warn("Customer count is: {}", count));
 	}
 
 	private void loadBeerData() {
@@ -52,6 +57,27 @@ public class BootstrapData implements CommandLineRunner {
 					.upc("12356")
 					.price(new BigDecimal("13.99"))
 					.quantityOnHand(144)
+					.build()).subscribe();
+			});
+	}
+
+	private void loadCustomerData() {
+		customerRepository.count()
+			.subscribe(count -> {
+				if(count > 0) {
+					log.info("Customer data already loaded");
+					return;
+				}
+
+				log.info("Loading Customer data...");
+				customerRepository.save(Customer.builder()
+					.customerName("Sam")
+					.build()).subscribe();
+				customerRepository.save(Customer.builder()
+					.customerName("Mike")
+					.build()).subscribe();
+				customerRepository.save(Customer.builder()
+					.customerName("Roger")
 					.build()).subscribe();
 			});
 	}

@@ -2,8 +2,8 @@ package guru.springframework.spring7reactive.service.impl;
 
 import org.springframework.stereotype.Service;
 
+import guru.springframework.spring7reactive.mappers.BeerMapper;
 import guru.springframework.spring7reactive.model.BeerDTO;
-import guru.springframework.spring7reactive.model.BeerMapper;
 import guru.springframework.spring7reactive.repositories.BeerRepository;
 import guru.springframework.spring7reactive.service.BeerService;
 import lombok.RequiredArgsConstructor;
