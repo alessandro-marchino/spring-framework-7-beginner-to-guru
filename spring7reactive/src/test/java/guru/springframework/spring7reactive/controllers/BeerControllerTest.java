@@ -61,12 +61,22 @@ class BeerControllerTest {
 
     @Test
     void testPatchExistingBeer() {
-
+		webTestClient.patch()
+				.uri(BeerController.BEER_PATH + BeerController.BEER_PATH_ID, 1)
+				.body(Mono.just(getTestBeer()), BeerDTO.class)
+				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+			.exchange()
+			.expectStatus().isNoContent();
     }
 
     @Test
     void testUpdateExistingBeer() {
-
+		webTestClient.put()
+				.uri(BeerController.BEER_PATH + BeerController.BEER_PATH_ID, 1)
+				.body(Mono.just(getTestBeer()), BeerDTO.class)
+				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+			.exchange()
+			.expectStatus().isNoContent();
     }
 
 	Beer getTestBeer() {
