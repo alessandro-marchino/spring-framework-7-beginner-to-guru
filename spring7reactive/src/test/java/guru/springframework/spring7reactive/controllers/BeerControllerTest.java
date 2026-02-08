@@ -72,6 +72,15 @@ class BeerControllerTest {
 		});
     }
 
+	@Test
+	@Order(25)
+    void testGetBeerByIdNotFound() {
+		webTestClient.get()
+		.uri(BeerController.BEER_PATH + BeerController.BEER_PATH_ID, 999)
+		.exchange()
+		.expectStatus().isNotFound();
+    }
+
     @Test
 	@Order(10)
     void testListBeers() {

@@ -1,5 +1,6 @@
 package guru.springframework.spring7reactive.controllers;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import guru.springframework.spring7reactive.model.BeerDTO;
@@ -36,7 +38,8 @@ public class BeerController {
 
 	@GetMapping(BEER_PATH_ID)
 	public Mono<BeerDTO> getBeerById(@PathVariable Integer beerId) {
-		return beerService.getBeerById(beerId);
+		return beerService.getBeerById(beerId)
+			.switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND)));
 	}
 
 	@PostMapping
