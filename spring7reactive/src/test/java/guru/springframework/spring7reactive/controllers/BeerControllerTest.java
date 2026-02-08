@@ -37,7 +37,7 @@ class BeerControllerTest {
     }
 
 	@Test
-	@Order(30)
+	@Order(35)
     void testCreateNewBeerBadData() {
 		BeerDTO testBeer = getTestBeer();
 		testBeer.setBeerName("");
@@ -103,6 +103,20 @@ class BeerControllerTest {
 				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
 			.exchange()
 			.expectStatus().isNoContent();
+    }
+
+	@Test
+	@Order(45)
+    void testUpdateExistingBeerBadData() {
+		BeerDTO testBeer = getTestBeer();
+		testBeer.setBeerName("");
+
+		webTestClient.put()
+				.uri(BeerController.BEER_PATH + BeerController.BEER_PATH_ID, 1)
+				.body(Mono.just(testBeer), BeerDTO.class)
+				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+			.exchange()
+			.expectStatus().isBadRequest();
     }
 
 	BeerDTO getTestBeer() {
