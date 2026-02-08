@@ -102,6 +102,16 @@ class BeerControllerTest {
 			.expectStatus().isNoContent();
     }
 
+	@Test
+    void testPatchExistingBeerNotFound() {
+		webTestClient.patch()
+				.uri(BeerController.BEER_PATH + BeerController.BEER_PATH_ID, 999)
+				.body(Mono.just(getTestBeer()), BeerDTO.class)
+				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+			.exchange()
+			.expectStatus().isNotFound();
+    }
+
     @Test
 	@Order(40)
     void testUpdateExistingBeer() {
