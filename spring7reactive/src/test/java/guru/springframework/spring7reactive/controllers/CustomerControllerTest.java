@@ -13,7 +13,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
-import guru.springframework.spring7reactive.domain.Customer;
 import guru.springframework.spring7reactive.model.CustomerDTO;
 import reactor.core.publisher.Mono;
 
@@ -35,6 +34,19 @@ public class CustomerControllerTest {
 			.expectHeader().location("http://localhost:8080" + CustomerController.PATH + "/4");
     }
 
+	@Test
+	@Order(35)
+    void testCreateNewCustomerBadRequest() {
+		CustomerDTO customerDTO = getTestCustomer();
+		customerDTO.setCustomerName("");
+		webTestClient.post()
+				.uri(CustomerController.PATH)
+				.body(Mono.just(customerDTO), CustomerDTO.class)
+				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+			.exchange()
+			.expectStatus().isBadRequest();
+    }
+
     @Test
 	@Order(60)
     void testDeleteCustomer() {
@@ -44,17 +56,33 @@ public class CustomerControllerTest {
 			.expectStatus().isNoContent();
     }
 
+	@Test
+    void testDeleteCustomerNotFOund() {
+		webTestClient.delete()
+				.uri(CustomerController.PATH + CustomerController.PATH_ID, 999)
+			.exchange()
+			.expectStatus().isNotFound();
+    }
+
     @Test
 	@Order(20)
     void testGetCustomerById() {
 		webTestClient.get()
-		.uri(CustomerController.PATH + CustomerController.PATH_ID, 1)
-		.exchange()
-		.expectStatus().isOk()
-		.expectHeader().valueEquals(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-		.expectBody(CustomerDTO.class).value(customerDto -> {
-			assertThat(customerDto.getId()).isEqualTo(1L);
-		});
+			.uri(CustomerController.PATH + CustomerController.PATH_ID, 1)
+			.exchange()
+			.expectStatus().isOk()
+			.expectHeader().valueEquals(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+			.expectBody(CustomerDTO.class).value(customerDto -> {
+				assertThat(customerDto.getId()).isEqualTo(1L);
+			});
+    }
+
+	@Test
+    void testGetCustomerByIdNotFound() {
+		webTestClient.get()
+			.uri(CustomerController.PATH + CustomerController.PATH_ID, 999)
+			.exchange()
+			.expectStatus().isNotFound();
     }
 
     @Test
@@ -79,6 +107,17 @@ public class CustomerControllerTest {
 			.expectStatus().isNoContent();
     }
 
+	@Test
+	@Order(50)
+    void testPatchExistingCustomerNotFound() {
+		webTestClient.patch()
+				.uri(CustomerController.PATH + CustomerController.PATH_ID, 999)
+				.body(Mono.just(getTestCustomer()), CustomerDTO.class)
+				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+			.exchange()
+			.expectStatus().isNotFound();
+    }
+
     @Test
 	@Order(40)
     void testUpdateExistingCustomer() {
@@ -90,8 +129,31 @@ public class CustomerControllerTest {
 			.expectStatus().isNoContent();
     }
 
-	Customer getTestCustomer() {
-		return Customer.builder()
+	@Test
+    void testUpdateExistingCustomerNotFound() {
+		webTestClient.put()
+				.uri(CustomerController.PATH + CustomerController.PATH_ID, 999)
+				.body(Mono.just(getTestCustomer()), CustomerDTO.class)
+				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+			.exchange()
+			.expectStatus().isNotFound();
+    }
+
+	@Test
+	@Order(45)
+    void testUpdateExistingCustomerBadRequest() {
+		CustomerDTO	customerDTO = getTestCustomer();
+		customerDTO.setCustomerName("");
+		webTestClient.put()
+				.uri(CustomerController.PATH + CustomerController.PATH_ID, 1)
+				.body(Mono.just(customerDTO), CustomerDTO.class)
+				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+			.exchange()
+			.expectStatus().isBadRequest();
+    }
+
+	CustomerDTO getTestCustomer() {
+		return CustomerDTO.builder()
 			.customerName("Luke")
 			.build();
 	}
