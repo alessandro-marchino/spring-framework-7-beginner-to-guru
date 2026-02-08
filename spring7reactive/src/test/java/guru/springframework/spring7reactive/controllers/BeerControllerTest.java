@@ -15,7 +15,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
-import guru.springframework.spring7reactive.domain.Beer;
 import guru.springframework.spring7reactive.model.BeerDTO;
 import reactor.core.publisher.Mono;
 
@@ -35,6 +34,20 @@ class BeerControllerTest {
 			.exchange()
 			.expectStatus().isCreated()
 			.expectHeader().location("http://localhost:8080" + BeerController.BEER_PATH + "/4");
+    }
+
+	@Test
+	@Order(30)
+    void testCreateNewBeerBadData() {
+		BeerDTO testBeer = getTestBeer();
+		testBeer.setBeerName("");
+
+		webTestClient.post()
+				.uri(BeerController.BEER_PATH)
+				.body(Mono.just(testBeer), BeerDTO.class)
+				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+			.exchange()
+			.expectStatus().isBadRequest();
     }
 
     @Test
@@ -92,8 +105,8 @@ class BeerControllerTest {
 			.expectStatus().isNoContent();
     }
 
-	Beer getTestBeer() {
-		return Beer.builder()
+	BeerDTO getTestBeer() {
+		return BeerDTO.builder()
 			.beerName("Space Dust")
 			.beerStyle("IPA")
 			.price(BigDecimal.TEN)
