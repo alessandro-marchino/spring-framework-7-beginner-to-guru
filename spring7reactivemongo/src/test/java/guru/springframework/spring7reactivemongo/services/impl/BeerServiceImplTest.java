@@ -12,6 +12,7 @@ import guru.springframework.spring7reactivemongo.mapper.BeerMapper;
 import guru.springframework.spring7reactivemongo.model.BeerDTO;
 import guru.springframework.spring7reactivemongo.services.BeerService;
 import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 @SpringBootTest
 class BeerServiceImplTest {
@@ -23,10 +24,12 @@ class BeerServiceImplTest {
 	void saveBeer() {
 		Mono<BeerDTO> savedMono = beerService.saveBeer(Mono.just(getTestBeer()));
 
-		savedMono.subscribe(savedDto -> {
-			assertThat(savedDto.getId()).isNotNull();
-			assertThat(savedDto.getBeerName()).isEqualTo("Space Dust");
-		});
+		StepVerifier.create(savedMono)
+			.assertNext(savedDto -> {
+				assertThat(savedDto.getId()).isNotNull();
+				assertThat(savedDto.getBeerName()).isEqualTo("Space Dust");
+			})
+			.verifyComplete();
 	}
 
 	private BeerDTO getTestBeer() {
