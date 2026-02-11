@@ -23,12 +23,16 @@ import reactor.test.StepVerifier;
 @Slf4j
 class BeerServiceImplTest {
 
-	@Autowired
-	BeerService beerService;
-	@Autowired
-	BeerMapper beerMapper;
-	@Autowired
-	BeerRepository beerRepository;
+	@Autowired BeerService beerService;
+	@Autowired BeerMapper beerMapper;
+	@Autowired BeerRepository beerRepository;
+
+	@Test
+	void listBeers() {
+		StepVerifier.create(beerService.listBeers())
+			.expectNextCount(3)
+			.verifyComplete();
+	}
 
 	@Test
 	void saveBeer() {
