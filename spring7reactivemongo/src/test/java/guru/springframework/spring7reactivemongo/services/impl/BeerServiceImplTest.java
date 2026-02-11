@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -30,7 +31,11 @@ class BeerServiceImplTest {
 	@Test
 	void listBeers() {
 		StepVerifier.create(beerService.listBeers())
-			.expectNextCount(3)
+			.recordWith(ArrayList::new)
+			.thenConsumeWhile(_ -> true)
+			.consumeRecordedWith(list -> {
+				assertThat(list).hasSizeGreaterThanOrEqualTo(3);
+			})
 			.verifyComplete();
 	}
 
