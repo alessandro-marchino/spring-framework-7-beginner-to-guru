@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 
 import java.math.BigDecimal;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.junit.jupiter.api.Test;
@@ -14,10 +15,12 @@ import guru.springframework.spring7reactivemongo.mapper.BeerMapper;
 import guru.springframework.spring7reactivemongo.model.BeerDTO;
 import guru.springframework.spring7reactivemongo.repositories.BeerRepository;
 import guru.springframework.spring7reactivemongo.services.BeerService;
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 @SpringBootTest
+@Slf4j
 class BeerServiceImplTest {
 
 	@Autowired
@@ -55,6 +58,21 @@ class BeerServiceImplTest {
 				assertThat(dto.getBeerName()).isEqualTo(savedDto.getBeerName());
 			})
 			.verifyComplete();
+	}
+
+	@Test
+	void findByBeerStyleTest() {
+		BeerDTO savedDto = getSavedBeer();
+		AtomicBoolean latch = new AtomicBoolean();
+
+
+
+		beerService.findByBeerStyle(savedDto.getBeerStyle())
+			.subscribe(dto -> {
+				log.warn("DTO: {}", dto);
+				latch.set(true);
+			});
+		await().untilTrue(latch);
 	}
 
 	@Test
