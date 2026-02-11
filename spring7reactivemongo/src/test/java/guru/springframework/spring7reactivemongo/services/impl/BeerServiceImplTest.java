@@ -32,11 +32,11 @@ class BeerServiceImplTest {
 		Mono<BeerDTO> savedMono = beerService.saveBeer(Mono.just(getTestBeer()));
 
 		StepVerifier.create(savedMono)
-				.assertNext(savedDto -> {
-					assertThat(savedDto.getId()).isNotNull();
-					assertThat(savedDto.getBeerName()).isEqualTo("Space Dust");
-				})
-				.verifyComplete();
+			.assertNext(savedDto -> {
+				assertThat(savedDto.getId()).isNotNull();
+				assertThat(savedDto.getBeerName()).isEqualTo("Space Dust Test");
+			})
+			.verifyComplete();
 	}
 
 	@Test
@@ -44,6 +44,17 @@ class BeerServiceImplTest {
 		BeerDTO savedDto = beerService.saveBeer(Mono.just(getTestBeer())).block();
 		assertThat(savedDto).isNotNull();
 		assertThat(savedDto.getId()).isNotNull();
+	}
+
+	@Test
+	void findFirstByBeerNameTest() {
+		BeerDTO savedDto = getSavedBeer();
+		StepVerifier.create(beerService.findFirstByBeerName(savedDto.getBeerName()))
+			.assertNext(dto -> {
+				assertThat(dto.getId()).isNotNull();
+				assertThat(dto.getBeerName()).isEqualTo(savedDto.getBeerName());
+			})
+			.verifyComplete();
 	}
 
 	@Test
@@ -66,13 +77,13 @@ class BeerServiceImplTest {
 		AtomicReference<BeerDTO> atomicDto = new AtomicReference<>();
 
 		beerService.saveBeer(Mono.just(getTestBeer()))
-				.map(savedBeerDto -> {
-					savedBeerDto.setBeerName(newName);
-					return savedBeerDto;
-				})
-				.flatMap(savedBeerDto -> beerService.updateBeer(savedBeerDto.getId(), savedBeerDto))
-				.flatMap(savedUpdatedDto -> beerService.getById(savedUpdatedDto.getId()))
-				.subscribe(dtoFromDb -> atomicDto.set(dtoFromDb));
+			.map(savedBeerDto -> {
+				savedBeerDto.setBeerName(newName);
+				return savedBeerDto;
+			})
+			.flatMap(savedBeerDto -> beerService.updateBeer(savedBeerDto.getId(), savedBeerDto))
+			.flatMap(savedUpdatedDto -> beerService.getById(savedUpdatedDto.getId()))
+			.subscribe(dtoFromDb -> atomicDto.set(dtoFromDb));
 
 		await().until(() -> atomicDto.get() != null);
 		assertThat(atomicDto.get().getBeerName()).isEqualTo(newName);
@@ -93,7 +104,7 @@ class BeerServiceImplTest {
 
 	private BeerDTO getTestBeer() {
 		return BeerDTO.builder()
-			.beerName("Space Dust")
+			.beerName("Space Dust Test")
 			.beerStyle("IPA")
 			.price(BigDecimal.TEN)
 			.quantityOnHand(12)
