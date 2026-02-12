@@ -11,6 +11,10 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.mongodb.MongoDBContainer;
 
 import guru.springframework.spring7reactivemongo.mapper.BeerMapper;
 import guru.springframework.spring7reactivemongo.model.BeerDTO;
@@ -20,9 +24,14 @@ import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
+@Testcontainers
 @SpringBootTest
 @Slf4j
 class BeerServiceImplTest {
+
+	@Container
+	@ServiceConnection
+	public static MongoDBContainer mongoDbContainer = new MongoDBContainer("mongo:latest");
 
 	@Autowired BeerService beerService;
 	@Autowired BeerMapper beerMapper;
