@@ -17,6 +17,7 @@ public class BeerRouterConfig {
 	RouterFunction<ServerResponse> beerRoutes(BeerHandler handler) {
 		return RouterFunctions.route()
 			.GET(PATH, RequestPredicates.accept(MediaType.APPLICATION_JSON), handler::listBeers)
+			.GET(PATH_ID, RequestPredicates.accept(MediaType.APPLICATION_JSON), handler::getBeerById)
 			.build();
 	}
 }

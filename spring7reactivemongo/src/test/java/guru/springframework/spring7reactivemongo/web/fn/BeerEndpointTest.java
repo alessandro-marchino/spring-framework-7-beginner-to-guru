@@ -19,7 +19,9 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.mongodb.MongoDBContainer;
 
+import guru.springframework.spring7reactivemongo.mapper.BeerMapper;
 import guru.springframework.spring7reactivemongo.model.BeerDTO;
+import guru.springframework.spring7reactivemongo.repositories.BeerRepository;
 import reactor.core.publisher.Mono;
 
 @Testcontainers
@@ -33,6 +35,8 @@ public class BeerEndpointTest {
 	public static MongoDBContainer mongoDbContainer = new MongoDBContainer("mongo:latest");
 
 	@Autowired WebTestClient webTestClient;
+	@Autowired BeerRepository beerRepository;
+	@Autowired BeerMapper beerMapper;
 
     @Test
 	@Order(30)
@@ -64,7 +68,7 @@ public class BeerEndpointTest {
 	@Order(60)
     void testDeleteBeer() {
 		webTestClient.delete()
-				.uri(BeerRouterConfig.PATH + BeerRouterConfig.PATH_ID, 1)
+				.uri(BeerRouterConfig.PATH_ID, 1)
 			.exchange()
 			.expectStatus().isNoContent();
     }
@@ -72,7 +76,7 @@ public class BeerEndpointTest {
 	@Test
     void testDeleteBeerNotFound() {
 		webTestClient.delete()
-				.uri(BeerRouterConfig.PATH + BeerRouterConfig.PATH_ID, 999)
+				.uri(BeerRouterConfig.PATH_ID, 999)
 			.exchange()
 			.expectStatus().isNotFound();
     }
@@ -80,20 +84,22 @@ public class BeerEndpointTest {
     @Test
 	@Order(20)
     void testGetBeerById() {
+		BeerDTO dto = getSavedBeer();
 		webTestClient.get()
-		.uri(BeerRouterConfig.PATH + BeerRouterConfig.PATH_ID, 1)
+		.uri(BeerRouterConfig.PATH_ID, dto.getId())
 		.exchange()
 		.expectStatus().isOk()
 		.expectHeader().valueEquals(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
 		.expectBody(BeerDTO.class).value(beerDto -> {
-			assertThat(beerDto.getId()).isEqualTo(1L);
+			assertThat(beerDto.getId()).isEqualTo(dto.getId());
+			assertThat(beerDto.getBeerName()).isEqualTo(dto.getBeerName());
 		});
     }
 
 	@Test
     void testGetBeerByIdNotFound() {
 		webTestClient.get()
-		.uri(BeerRouterConfig.PATH + BeerRouterConfig.PATH_ID, 999)
+		.uri(BeerRouterConfig.PATH_ID, 1)
 		.exchange()
 		.expectStatus().isNotFound();
     }
@@ -113,7 +119,7 @@ public class BeerEndpointTest {
 	@Order(50)
     void testPatchExistingBeer() {
 		webTestClient.patch()
-				.uri(BeerRouterConfig.PATH + BeerRouterConfig.PATH_ID, 1)
+				.uri(BeerRouterConfig.PATH_ID, 1)
 				.body(Mono.just(getTestBeer()), BeerDTO.class)
 				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
 			.exchange()
@@ -123,7 +129,7 @@ public class BeerEndpointTest {
 	@Test
     void testPatchExistingBeerNotFound() {
 		webTestClient.patch()
-				.uri(BeerRouterConfig.PATH + BeerRouterConfig.PATH_ID, 999)
+				.uri(BeerRouterConfig.PATH_ID, 999)
 				.body(Mono.just(getTestBeer()), BeerDTO.class)
 				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
 			.exchange()
@@ -134,7 +140,7 @@ public class BeerEndpointTest {
 	@Order(40)
     void testUpdateExistingBeer() {
 		webTestClient.put()
-				.uri(BeerRouterConfig.PATH + BeerRouterConfig.PATH_ID, 1)
+				.uri(BeerRouterConfig.PATH_ID, 1)
 				.body(Mono.just(getTestBeer()), BeerDTO.class)
 				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
 			.exchange()
@@ -148,7 +154,7 @@ public class BeerEndpointTest {
 		testBeer.setBeerName("");
 
 		webTestClient.put()
-				.uri(BeerRouterConfig.PATH + BeerRouterConfig.PATH_ID, 1)
+				.uri(BeerRouterConfig.PATH_ID, 1)
 				.body(Mono.just(testBeer), BeerDTO.class)
 				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
 			.exchange()
@@ -158,7 +164,7 @@ public class BeerEndpointTest {
 	@Test
     void testUpdateExistingBeerNotFound() {
 		webTestClient.put()
-				.uri(BeerRouterConfig.PATH + BeerRouterConfig.PATH_ID, 999)
+				.uri(BeerRouterConfig.PATH_ID, 999)
 				.body(Mono.just(getTestBeer()), BeerDTO.class)
 				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
 			.exchange()
@@ -173,5 +179,9 @@ public class BeerEndpointTest {
 			.quantityOnHand(12)
 			.upc("123123")
 			.build();
+	}
+
+	BeerDTO getSavedBeer() {
+		return beerMapper.beerToBeerDTO(beerRepository.findAll().blockFirst());
 	}
 }
