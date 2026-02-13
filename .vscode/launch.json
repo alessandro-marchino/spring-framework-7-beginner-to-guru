@@ -60,6 +60,16 @@
             "projectName": "spring7reactive",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-Spring7reactivemongoApplication<spring7reactivemongo>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "guru.springframework.spring7reactivemongo.Spring7reactivemongoApplication",
+            "projectName": "spring7reactivemongo",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }
