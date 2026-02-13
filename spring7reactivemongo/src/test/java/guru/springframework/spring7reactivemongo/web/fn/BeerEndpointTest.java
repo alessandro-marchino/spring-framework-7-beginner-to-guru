@@ -77,7 +77,6 @@ public class BeerEndpointTest {
 	}
 
 	@Test
-	@Disabled
 	void testDeleteBeerNotFound() {
 		webTestClient.delete()
 			.uri(BeerRouterConfig.PATH_ID, 999)
@@ -101,7 +100,6 @@ public class BeerEndpointTest {
 	}
 
 	@Test
-	@Disabled
 	void testGetBeerByIdNotFound() {
 		webTestClient.get()
 			.uri(BeerRouterConfig.PATH_ID, 1)
@@ -133,7 +131,6 @@ public class BeerEndpointTest {
 	}
 
 	@Test
-	@Disabled
 	void testPatchExistingBeerNotFound() {
 		webTestClient.patch()
 			.uri(BeerRouterConfig.PATH_ID, 999)
@@ -171,7 +168,6 @@ public class BeerEndpointTest {
 	}
 
 	@Test
-	@Disabled
 	void testUpdateExistingBeerNotFound() {
 		webTestClient.put()
 			.uri(BeerRouterConfig.PATH_ID, 999)
