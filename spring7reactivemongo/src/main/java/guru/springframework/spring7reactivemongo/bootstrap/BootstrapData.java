@@ -6,7 +6,9 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import guru.springframework.spring7reactivemongo.domain.Beer;
+import guru.springframework.spring7reactivemongo.domain.Customer;
 import guru.springframework.spring7reactivemongo.repositories.BeerRepository;
+import guru.springframework.spring7reactivemongo.repositories.CustomerRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -16,12 +18,12 @@ import lombok.extern.slf4j.Slf4j;
 public class BootstrapData implements CommandLineRunner {
 
 	private final BeerRepository beerRepository;
+	private final CustomerRepository customerRepository;
 
 	@Override
 	public void run(String... args) throws Exception {
-		beerRepository.deleteAll()
-			.doOnSuccess(_ -> loadBeerData())
-			.subscribe();
+		beerRepository.deleteAll().doOnSuccess(_ -> loadBeerData()).subscribe();
+		customerRepository.deleteAll().doOnSuccess(_ -> loadCustomerData()).subscribe();
 	}
 
 	private void loadBeerData() {
@@ -53,6 +55,27 @@ public class BootstrapData implements CommandLineRunner {
 					.upc("12356")
 					.price(new BigDecimal("13.99"))
 					.quantityOnHand(144)
+					.build()).subscribe();
+			});
+	}
+
+	private void loadCustomerData() {
+		customerRepository.count()
+			.subscribe(count -> {
+				if(count > 0) {
+					log.info("Customer data already loaded");
+					return;
+				}
+
+				log.info("Loading Customer data...");
+				customerRepository.save(Customer.builder()
+					.customerName("Mike")
+					.build()).subscribe();
+				customerRepository.save(Customer.builder()
+					.customerName("Louise")
+					.build()).subscribe();
+				customerRepository.save(Customer.builder()
+					.customerName("Bob")
 					.build()).subscribe();
 			});
 	}

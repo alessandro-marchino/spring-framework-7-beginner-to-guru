@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CustomerDTO {
 
-	private Integer id;
+	private String id;
 	@NotBlank
 	private String customerName;
 	private LocalDateTime createdDate;
