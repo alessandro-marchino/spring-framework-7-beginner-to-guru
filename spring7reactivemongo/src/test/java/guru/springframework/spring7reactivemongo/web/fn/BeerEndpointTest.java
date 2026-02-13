@@ -15,6 +15,7 @@ import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTest
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.web.util.UriComponentsBuilder;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.mongodb.MongoDBContainer;
@@ -114,6 +115,21 @@ public class BeerEndpointTest {
 			.expectStatus().isOk()
 			.expectHeader().valueEquals(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
 			.expectBody().jsonPath("$.size()").isEqualTo(3);
+	}
+
+	@Test
+	@Order(15)
+	void testListBeersByStyle() {
+		final String beerStyle = "IPA";
+		webTestClient.get()
+			.uri(UriComponentsBuilder.fromPath(BeerRouterConfig.PATH)
+				.queryParam("beerStyle", beerStyle)
+				.build()
+				.toUri())
+			.exchange()
+			.expectStatus().isOk()
+			.expectHeader().valueEquals(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+			.expectBody().jsonPath("$.size()").isEqualTo(1);
 	}
 
 	@Test

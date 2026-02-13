@@ -15,6 +15,7 @@ import guru.springframework.spring7reactivemongo.model.BeerDTO;
 import guru.springframework.spring7reactivemongo.services.BeerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Component
@@ -33,8 +34,15 @@ public class BeerHandler {
 	}
 
 	public Mono<ServerResponse> listBeers(ServerRequest request) {
+		Flux<BeerDTO> flux;
+		if(request.queryParam("beerStyle").isPresent()) {
+			flux = beerService.findByBeerStyle(request.queryParam("beerStyle").get());
+		} else {
+			flux = beerService.listBeers();
+		}
+
 		return ServerResponse.ok()
-			.body(beerService.listBeers(), BeerDTO.class);
+			.body(flux, BeerDTO.class);
 	}
 
 	public Mono<ServerResponse> getBeerById(ServerRequest request) {
