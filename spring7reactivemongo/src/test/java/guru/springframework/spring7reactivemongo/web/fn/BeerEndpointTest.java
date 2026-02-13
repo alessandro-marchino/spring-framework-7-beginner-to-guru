@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -53,7 +52,6 @@ public class BeerEndpointTest {
 
 	@Test
 	@Order(35)
-	@Disabled
 	void testCreateNewBeerBadData() {
 		BeerDTO testBeer = getTestBeer();
 		testBeer.setBeerName("");
@@ -154,7 +152,6 @@ public class BeerEndpointTest {
 
 	@Test
 	@Order(45)
-	@Disabled
 	void testUpdateExistingBeerBadData() {
 		BeerDTO testBeer = getTestBeer();
 		testBeer.setBeerName("");
