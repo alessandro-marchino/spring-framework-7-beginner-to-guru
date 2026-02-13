@@ -145,10 +145,10 @@ public class BeerEndpointTest {
 
 	@Test
 	@Order(40)
-	@Disabled
 	void testUpdateExistingBeer() {
+		BeerDTO dto = getSavedBeer();
 		webTestClient.put()
-			.uri(BeerRouterConfig.PATH_ID, 1)
+			.uri(BeerRouterConfig.PATH_ID, dto.getId())
 			.body(Mono.just(getTestBeer()), BeerDTO.class)
 			.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
 			.exchange()

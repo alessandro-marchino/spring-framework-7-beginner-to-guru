@@ -31,4 +31,10 @@ public class BeerHandler {
 				.created(UriComponentsBuilder.fromPath(BeerRouterConfig.PATH_ID).build(beerDTO.getId()))
 				.build());
 	}
+
+	public Mono<ServerResponse> updateBeerById(ServerRequest request) {
+		return request.bodyToMono(BeerDTO.class)
+			.flatMap(beerDTO -> beerService.updateBeer(request.pathVariable("beerId"), beerDTO))
+			.flatMap(beerDTO -> ServerResponse.noContent().build());
+	}
 }
