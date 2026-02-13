@@ -1,6 +1,5 @@
 package guru.springframework.spring7reactivemongo.web.fn;
 
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
@@ -17,7 +16,7 @@ public class BeerHandler {
 
 	public Mono<ServerResponse> listBeers(ServerRequest request) {
 		return ServerResponse.ok()
-			.body(beerService.listBeers(), new ParameterizedTypeReference<List<BeerDTO>>() {});
+			.body(beerService.listBeers(), BeerDTO.class);
 	}
 
 }
