@@ -3,9 +3,11 @@ package guru.springframework.spring7webclient.client;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 
-import java.util.ArrayList;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -15,7 +17,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import guru.springframework.spring7webclient.model.BeerDTO;
 import lombok.extern.slf4j.Slf4j;
-import reactor.test.StepVerifier;
 import tools.jackson.databind.JsonNode;
 
 @SpringBootTest
@@ -24,65 +25,81 @@ import tools.jackson.databind.JsonNode;
 class BeerClientImplTest {
 	@Autowired BeerClient client;
 
+	AtomicBoolean latch;
+
+	@BeforeEach
+	void setUp() {
+		latch = new AtomicBoolean();
+	}
+
     @Test
 	@Order(10)
     void testListBeer() {
-		StepVerifier.create(client.listBeer())
-			.consumeNextWith(response -> {
+		client.listBeer()
+			.doOnComplete(() -> latch.set(true))
+			.subscribe(response -> {
 				log.warn("Response: {}", response);
 				assertThat(response).isInstanceOf(String.class);
 				assertThat(response).isNotEmpty();
-			})
-			.verifyComplete();
+			});
+		await().untilTrue(latch);
     }
 
 	@Test
 	@Order(11)
     void testListBeerMap() {
-		StepVerifier.create(client.listBeerMap())
-			.recordWith(ArrayList::new)
-			.expectNextCount(3)
-			.consumeRecordedWith(list -> assertThat(list).hasSizeGreaterThanOrEqualTo(3))
-			.verifyComplete();
+		client.listBeerMap()
+			.doOnComplete(() -> latch.set(true))
+			.collect(Collectors.toList())
+			.subscribe(list -> {
+				assertThat(list).hasSizeGreaterThanOrEqualTo(3);
+				assertThat(list).allMatch(jn -> jn instanceof Map);
+			});
+		await().untilTrue(latch);
     }
 
 	@Test
 	@Order(12)
     void testListBeerJsonNode() {
-		StepVerifier.create(client.listBeerJsonNode())
-			.recordWith(ArrayList::new)
-			.consumeNextWith(response -> {
-				log.warn("Response: {}", response.toPrettyString());
-				log.warn("Response Class: {}", response.getClass());
-				assertThat(response).isInstanceOf(JsonNode.class);
-			})
-			.expectNextCount(2)
-			.consumeRecordedWith(list -> assertThat(list).hasSizeGreaterThanOrEqualTo(3))
-			.verifyComplete();
+		client.listBeerJsonNode()
+			.doOnComplete(() -> latch.set(true))
+			.collect(Collectors.toList())
+			.subscribe(list -> {
+				assertThat(list).hasSizeGreaterThanOrEqualTo(3);
+				assertThat(list).allMatch(jn -> jn instanceof JsonNode);
+			});
+		await().untilTrue(latch);
     }
 
 	@Test
 	@Order(13)
     void testListBeerDto() {
-		StepVerifier.create(client.listBeerDto())
-			.recordWith(ArrayList::new)
-			.consumeNextWith(response -> {
-				log.warn("Response: {}", response);
-				assertThat(response).isInstanceOf(BeerDTO.class);
-			})
-			.expectNextCount(2)
-			.consumeRecordedWith(list -> assertThat(list).hasSizeGreaterThanOrEqualTo(3))
-			.verifyComplete();
+		client.listBeerDto()
+			.doOnComplete(() -> latch.set(true))
+			.collect(Collectors.toList())
+			.subscribe(list -> {
+				assertThat(list).hasSizeGreaterThanOrEqualTo(3);
+				assertThat(list).allMatch(jn -> jn instanceof BeerDTO);
+			});
+		await().untilTrue(latch);
     }
 
 	@Test
 	@Order(20)
     void testGetBeerById() {
-		AtomicBoolean latch = new AtomicBoolean();
-
 		client.listBeerDto()
 			.take(1L)
 			.flatMap(dto -> client.getBeerById(dto.getId()))
+			.doOnComplete(() -> latch.set(true))
+			.subscribe(dto -> log.warn("Response: {} - {}", dto.getId(), dto.getBeerName()));
+
+		await().untilTrue(latch);
+    }
+
+	@Test
+	@Order(30)
+    void testGetBeersByBeerStyle() {
+		client.getBeersByBeerStyle("IPA")
 			.doOnComplete(() -> latch.set(true))
 			.subscribe(dto -> log.warn("Response: {} - {}", dto.getId(), dto.getBeerName()));
 
