@@ -3,6 +3,7 @@ package guru.springframework.spring7webclient.client;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 
+import java.math.BigDecimal;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
@@ -102,6 +103,23 @@ class BeerClientImplTest {
 		client.getBeersByBeerStyle("IPA")
 			.doOnComplete(() -> latch.set(true))
 			.subscribe(dto -> log.warn("Response: {} - {}", dto.getId(), dto.getBeerName()));
+
+		await().untilTrue(latch);
+    }
+
+	@Test
+	@Order(40)
+    void testCreateBeer() {
+		BeerDTO dto = BeerDTO.builder()
+			.beerName("Mongo Bobs - TEST")
+			.beerStyle("WEISS")
+			.quantityOnHand(500)
+			.price(new BigDecimal("9.99"))
+			.upc("123456")
+			.build();
+		client.createBeer(dto)
+			.doOnTerminate(() -> latch.set(true))
+			.subscribe(beer -> log.warn("Response: {}", beer));
 
 		await().untilTrue(latch);
     }
