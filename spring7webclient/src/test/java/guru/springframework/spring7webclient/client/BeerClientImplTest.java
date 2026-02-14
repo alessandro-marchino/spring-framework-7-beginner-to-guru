@@ -135,4 +135,26 @@ class BeerClientImplTest {
 
 		await().untilTrue(latch);
     }
+
+	@Test
+	@Order(60)
+    void testPatchBeerById() {
+		BeerDTO dto = client.getBeersByBeerStyle("WEISS").blockFirst();
+		client.patchBeerById(dto.getId(), BeerDTO.builder().price(new BigDecimal("19.99")).build())
+			.doOnTerminate(() -> latch.set(true))
+			.subscribe(beer -> log.warn("Response: {}", beer));
+
+		await().untilTrue(latch);
+    }
+
+	@Test
+	@Order(70)
+    void testDeleteBeerById() {
+		BeerDTO dto = client.getBeersByBeerStyle("WEISS").blockFirst();
+		client.deleteBeerById(dto.getId())
+			.doOnSuccess(_ -> latch.set(true))
+			.subscribe();
+
+		await().untilTrue(latch);
+    }
 }
