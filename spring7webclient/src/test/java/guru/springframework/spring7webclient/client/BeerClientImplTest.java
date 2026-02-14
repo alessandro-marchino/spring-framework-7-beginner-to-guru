@@ -123,4 +123,16 @@ class BeerClientImplTest {
 
 		await().untilTrue(latch);
     }
+
+	@Test
+	@Order(50)
+    void testUpdateBeerById() {
+		BeerDTO dto = client.getBeersByBeerStyle("WEISS").blockFirst();
+		dto.setBeerName("Mongo Bobs - TEST updated");
+		client.updateBeerById(dto.getId(), dto)
+			.doOnTerminate(() -> latch.set(true))
+			.subscribe(beer -> log.warn("Response: {}", beer));
+
+		await().untilTrue(latch);
+    }
 }

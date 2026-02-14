@@ -75,14 +75,26 @@ public class BeerClientImpl implements BeerClient {
 	}
 
 	@Override
-	public Mono<BeerDTO> createBeer(BeerDTO beerDTO) {
+	public Mono<BeerDTO> createBeer(BeerDTO dto) {
 		return webClient.post()
 			.uri(PATH)
-			.body(Mono.just(beerDTO), BeerDTO.class)
+			.body(Mono.just(dto), BeerDTO.class)
 			.retrieve()
 			.toBodilessEntity()
 			.flatMap(re -> Mono.just(re.getHeaders().getLocation().toString()))
 			.map(path -> path.split("/")[path.split("/").length - 1])
 			.flatMap(this::getBeerById);
+	}
+
+	@Override
+	public Mono<BeerDTO> updateBeerById(String id, BeerDTO dto) {
+		return webClient.put()
+			.uri(uriBuilder -> uriBuilder
+				.path(PATH_ID)
+				.build(id))
+			.body(Mono.just(dto), BeerDTO.class)
+			.retrieve()
+			.toBodilessEntity()
+			.flatMap(_ -> getBeerById(id));
 	}
 }
