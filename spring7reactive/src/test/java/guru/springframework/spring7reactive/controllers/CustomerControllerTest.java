@@ -1,6 +1,7 @@
 package guru.springframework.spring7reactive.controllers;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.security.test.web.reactive.server.SecurityMockServerConfigurers.mockOAuth2Login;
 
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -22,10 +23,61 @@ import reactor.core.publisher.Mono;
 public class CustomerControllerTest {
 	@Autowired WebTestClient webTestClient;
 
+	@Test
+	@Order(5)
+	void testListCustomersUnauthorized() {
+		webTestClient
+			.get()
+			.uri(CustomerController.PATH)
+			.exchange()
+			.expectStatus().isUnauthorized();
+	}
+
+	@Test
+	@Order(10)
+	void testListCustomers() {
+		webTestClient
+			.mutateWith(mockOAuth2Login())
+			.get()
+			.uri(CustomerController.PATH)
+			.exchange()
+			.expectStatus().isOk()
+			.expectHeader().valueEquals(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+			.expectBody().jsonPath("$.size()").isEqualTo(3);
+	}
+
+	@Test
+	@Order(20)
+	void testGetCustomerById() {
+		webTestClient
+			.mutateWith(mockOAuth2Login())
+			.get()
+			.uri(CustomerController.PATH + CustomerController.PATH_ID, 1)
+			.exchange()
+			.expectStatus().isOk()
+			.expectHeader().valueEquals(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+			.expectBody(CustomerDTO.class).value(customerDto -> {
+				assertThat(customerDto.getId()).isEqualTo(1L);
+			});
+	}
+
+	@Test
+	@Order(25)
+	void testGetCustomerByIdNotFound() {
+		webTestClient
+			.mutateWith(mockOAuth2Login())
+			.get()
+			.uri(CustomerController.PATH + CustomerController.PATH_ID, 999)
+			.exchange()
+			.expectStatus().isNotFound();
+	}
+
     @Test
 	@Order(30)
     void testCreateNewCustomer() {
-		webTestClient.post()
+		webTestClient
+			.mutateWith(mockOAuth2Login())
+			.post()
 				.uri(CustomerController.PATH)
 				.body(Mono.just(getTestCustomer()), CustomerDTO.class)
 				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
@@ -39,117 +91,102 @@ public class CustomerControllerTest {
     void testCreateNewCustomerBadRequest() {
 		CustomerDTO customerDTO = getTestCustomer();
 		customerDTO.setCustomerName("");
-		webTestClient.post()
+		webTestClient
+			.mutateWith(mockOAuth2Login())
+			.post()
 				.uri(CustomerController.PATH)
 				.body(Mono.just(customerDTO), CustomerDTO.class)
 				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
 			.exchange()
 			.expectStatus().isBadRequest();
-    }
+		}
+
+	@Test
+	@Order(40)
+	void testUpdateExistingCustomer() {
+		webTestClient
+			.mutateWith(mockOAuth2Login())
+			.put()
+				.uri(CustomerController.PATH + CustomerController.PATH_ID, 1)
+				.body(Mono.just(getTestCustomer()), CustomerDTO.class)
+				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+			.exchange()
+			.expectStatus().isNoContent();
+	}
+
+	@Test
+	@Order(44)
+	void testUpdateExistingCustomerNotFound() {
+		webTestClient
+			.mutateWith(mockOAuth2Login())
+			.put()
+				.uri(CustomerController.PATH + CustomerController.PATH_ID, 999)
+				.body(Mono.just(getTestCustomer()), CustomerDTO.class)
+				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+			.exchange()
+			.expectStatus().isNotFound();
+	}
+
+	@Test
+	@Order(45)
+	void testUpdateExistingCustomerBadRequest() {
+		CustomerDTO	customerDTO = getTestCustomer();
+		customerDTO.setCustomerName("");
+		webTestClient
+			.mutateWith(mockOAuth2Login())
+			.put()
+				.uri(CustomerController.PATH + CustomerController.PATH_ID, 1)
+				.body(Mono.just(customerDTO), CustomerDTO.class)
+				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+			.exchange()
+			.expectStatus().isBadRequest();
+	}
+	@Test
+	@Order(50)
+	void testPatchExistingCustomer() {
+		webTestClient
+			.mutateWith(mockOAuth2Login())
+			.patch()
+				.uri(CustomerController.PATH + CustomerController.PATH_ID, 1)
+				.body(Mono.just(getTestCustomer()), CustomerDTO.class)
+				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+			.exchange()
+			.expectStatus().isNoContent();
+	}
+
+	@Test
+	@Order(55)
+	void testPatchExistingCustomerNotFound() {
+		webTestClient
+			.mutateWith(mockOAuth2Login())
+			.patch()
+				.uri(CustomerController.PATH + CustomerController.PATH_ID, 999)
+				.body(Mono.just(getTestCustomer()), CustomerDTO.class)
+				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+			.exchange()
+			.expectStatus().isNotFound();
+	}
 
     @Test
 	@Order(60)
     void testDeleteCustomer() {
-		webTestClient.delete()
+		webTestClient
+			.mutateWith(mockOAuth2Login())
+			.delete()
 				.uri(CustomerController.PATH + CustomerController.PATH_ID, 1)
 			.exchange()
 			.expectStatus().isNoContent();
     }
 
 	@Test
+	@Order(65)
     void testDeleteCustomerNotFOund() {
-		webTestClient.delete()
+		webTestClient
+			.mutateWith(mockOAuth2Login())
+			.delete()
 				.uri(CustomerController.PATH + CustomerController.PATH_ID, 999)
 			.exchange()
 			.expectStatus().isNotFound();
-    }
-
-    @Test
-	@Order(20)
-    void testGetCustomerById() {
-		webTestClient.get()
-			.uri(CustomerController.PATH + CustomerController.PATH_ID, 1)
-			.exchange()
-			.expectStatus().isOk()
-			.expectHeader().valueEquals(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-			.expectBody(CustomerDTO.class).value(customerDto -> {
-				assertThat(customerDto.getId()).isEqualTo(1L);
-			});
-    }
-
-	@Test
-    void testGetCustomerByIdNotFound() {
-		webTestClient.get()
-			.uri(CustomerController.PATH + CustomerController.PATH_ID, 999)
-			.exchange()
-			.expectStatus().isNotFound();
-    }
-
-    @Test
-	@Order(10)
-    void testListCustomers() {
-		webTestClient.get()
-				.uri(CustomerController.PATH)
-			.exchange()
-			.expectStatus().isOk()
-			.expectHeader().valueEquals(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-			.expectBody().jsonPath("$.size()").isEqualTo(3);
-    }
-
-    @Test
-	@Order(50)
-    void testPatchExistingCustomer() {
-		webTestClient.patch()
-				.uri(CustomerController.PATH + CustomerController.PATH_ID, 1)
-				.body(Mono.just(getTestCustomer()), CustomerDTO.class)
-				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-			.exchange()
-			.expectStatus().isNoContent();
-    }
-
-	@Test
-	@Order(50)
-    void testPatchExistingCustomerNotFound() {
-		webTestClient.patch()
-				.uri(CustomerController.PATH + CustomerController.PATH_ID, 999)
-				.body(Mono.just(getTestCustomer()), CustomerDTO.class)
-				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-			.exchange()
-			.expectStatus().isNotFound();
-    }
-
-    @Test
-	@Order(40)
-    void testUpdateExistingCustomer() {
-		webTestClient.put()
-				.uri(CustomerController.PATH + CustomerController.PATH_ID, 1)
-				.body(Mono.just(getTestCustomer()), CustomerDTO.class)
-				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-			.exchange()
-			.expectStatus().isNoContent();
-    }
-
-	@Test
-    void testUpdateExistingCustomerNotFound() {
-		webTestClient.put()
-				.uri(CustomerController.PATH + CustomerController.PATH_ID, 999)
-				.body(Mono.just(getTestCustomer()), CustomerDTO.class)
-				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-			.exchange()
-			.expectStatus().isNotFound();
-    }
-
-	@Test
-	@Order(45)
-    void testUpdateExistingCustomerBadRequest() {
-		CustomerDTO	customerDTO = getTestCustomer();
-		customerDTO.setCustomerName("");
-		webTestClient.put()
-				.uri(CustomerController.PATH + CustomerController.PATH_ID, 1)
-				.body(Mono.just(customerDTO), CustomerDTO.class)
-				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-			.exchange()
-			.expectStatus().isBadRequest();
     }
 
 	CustomerDTO getTestCustomer() {
