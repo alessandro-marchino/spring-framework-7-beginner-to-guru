@@ -8,6 +8,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
+import tools.jackson.databind.JsonNode;
 
 @Service
 @Slf4j
@@ -35,5 +36,13 @@ public class BeerClientImpl implements BeerClient {
 			.uri(PATH)
 			.retrieve()
 			.bodyToFlux(new ParameterizedTypeReference<Map<String, Object>>() {});
+	}
+
+	@Override
+	public Flux<JsonNode> listBeerJsonNode() {
+		return webClient.get()
+			.uri(PATH)
+			.retrieve()
+			.bodyToFlux(JsonNode.class);
 	}
 }
