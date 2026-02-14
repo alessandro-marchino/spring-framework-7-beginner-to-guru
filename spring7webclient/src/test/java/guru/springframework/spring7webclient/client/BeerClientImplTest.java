@@ -23,4 +23,15 @@ class BeerClientImplTest {
 			})
 			.verifyComplete();
     }
+
+	@Test
+    void testListBeerMap() {
+		StepVerifier.create(client.listBeerMap())
+			.consumeNextWith(response -> {
+				log.warn("Response: {}", response);
+				assertThat(response).isNotEmpty();
+			})
+			.expectNextCount(2)
+			.verifyComplete();
+    }
 }

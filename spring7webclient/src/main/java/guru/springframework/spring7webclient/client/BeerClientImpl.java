@@ -1,5 +1,8 @@
 package guru.springframework.spring7webclient.client;
 
+import java.util.Map;
+
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -9,11 +12,11 @@ import reactor.core.publisher.Flux;
 @Service
 @Slf4j
 public class BeerClientImpl implements BeerClient {
+	public static final String PATH = "/api/v3/beer";
 	private final WebClient webClient;
 
 	public BeerClientImpl() {
 		this.webClient = WebClient.builder()
-			//.baseUrl("http://127.0.0.1:8080")
 			.baseUrl("http://localhost:8080")
 			.build();
 	}
@@ -21,8 +24,16 @@ public class BeerClientImpl implements BeerClient {
 	@Override
 	public Flux<String> listBeer() {
 		return webClient.get()
-			.uri("/api/v3/beer", String.class)
+			.uri(PATH)
 			.retrieve()
 			.bodyToFlux(String.class);
+	}
+
+	@Override
+	public Flux<Map<String, Object>> listBeerMap() {
+		return webClient.get()
+			.uri(PATH)
+			.retrieve()
+			.bodyToFlux(new ParameterizedTypeReference<Map<String, Object>>() {});
 	}
 }
