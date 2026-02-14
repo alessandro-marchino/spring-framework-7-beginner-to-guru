@@ -2,7 +2,7 @@ package guru.springframework.spring7webclient.client;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.Map;
+import java.util.ArrayList;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,35 +32,36 @@ class BeerClientImplTest {
 	@Test
     void testListBeerMap() {
 		StepVerifier.create(client.listBeerMap())
-			.consumeNextWith(response -> {
-				log.warn("Response: {}", response);
-				assertThat(response).isInstanceOf(Map.class);
-				assertThat(response).isNotEmpty();
-			})
-			.expectNextCount(2)
+			.recordWith(ArrayList::new)
+			.expectNextCount(3)
+			.consumeRecordedWith(list -> assertThat(list).hasSizeGreaterThanOrEqualTo(3))
 			.verifyComplete();
     }
 
 	@Test
     void testListBeerJsonNode() {
 		StepVerifier.create(client.listBeerJsonNode())
+			.recordWith(ArrayList::new)
 			.consumeNextWith(response -> {
 				log.warn("Response: {}", response.toPrettyString());
 				log.warn("Response Class: {}", response.getClass());
 				assertThat(response).isInstanceOf(JsonNode.class);
 			})
 			.expectNextCount(2)
+			.consumeRecordedWith(list -> assertThat(list).hasSizeGreaterThanOrEqualTo(3))
 			.verifyComplete();
     }
 
 	@Test
     void testListBeerDto() {
 		StepVerifier.create(client.listBeerDto())
+			.recordWith(ArrayList::new)
 			.consumeNextWith(response -> {
 				log.warn("Response: {}", response);
 				assertThat(response).isInstanceOf(BeerDTO.class);
 			})
 			.expectNextCount(2)
+			.consumeRecordedWith(list -> assertThat(list).hasSizeGreaterThanOrEqualTo(3))
 			.verifyComplete();
     }
 }

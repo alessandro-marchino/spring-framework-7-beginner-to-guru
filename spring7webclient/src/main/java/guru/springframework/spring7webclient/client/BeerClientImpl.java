@@ -7,21 +7,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import guru.springframework.spring7webclient.model.BeerDTO;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
 import tools.jackson.databind.JsonNode;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class BeerClientImpl implements BeerClient {
 	public static final String PATH = "/api/v3/beer";
 	private final WebClient webClient;
-
-	public BeerClientImpl() {
-		this.webClient = WebClient.builder()
-			.baseUrl("http://localhost:8080")
-			.build();
-	}
 
 	@Override
 	public Flux<String> listBeer() {
