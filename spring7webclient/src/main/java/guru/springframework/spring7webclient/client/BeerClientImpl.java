@@ -10,6 +10,7 @@ import guru.springframework.spring7webclient.model.BeerDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import tools.jackson.databind.JsonNode;
 
 @Service
@@ -17,6 +18,7 @@ import tools.jackson.databind.JsonNode;
 @RequiredArgsConstructor
 public class BeerClientImpl implements BeerClient {
 	public static final String PATH = "/api/v3/beer";
+	public static final String PATH_ID = PATH + "/{beerId}";
 	private final WebClient webClient;
 
 	@Override
@@ -49,5 +51,13 @@ public class BeerClientImpl implements BeerClient {
 			.uri(PATH)
 			.retrieve()
 			.bodyToFlux(BeerDTO.class);
+	}
+
+	@Override
+	public Mono<BeerDTO> getBeerById(String id) {
+		return webClient.get()
+			.uri(PATH_ID, id)
+			.retrieve()
+			.bodyToMono(BeerDTO.class);
 	}
 }

@@ -4,6 +4,7 @@ import java.util.Map;
 
 import guru.springframework.spring7webclient.model.BeerDTO;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import tools.jackson.databind.JsonNode;
 
 public interface BeerClient {
@@ -12,4 +13,5 @@ public interface BeerClient {
 	Flux<Map<String, Object>> listBeerMap();
 	Flux<JsonNode> listBeerJsonNode();
 	Flux<BeerDTO> listBeerDto();
+	Mono<BeerDTO> getBeerById(String id);
 }
