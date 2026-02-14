@@ -6,6 +6,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import guru.springframework.spring7webclient.model.BeerDTO;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
 import tools.jackson.databind.JsonNode;
@@ -44,5 +45,13 @@ public class BeerClientImpl implements BeerClient {
 			.uri(PATH)
 			.retrieve()
 			.bodyToFlux(JsonNode.class);
+	}
+
+	@Override
+	public Flux<BeerDTO> listBeerDto() {
+		return webClient.get()
+			.uri(PATH)
+			.retrieve()
+			.bodyToFlux(BeerDTO.class);
 	}
 }

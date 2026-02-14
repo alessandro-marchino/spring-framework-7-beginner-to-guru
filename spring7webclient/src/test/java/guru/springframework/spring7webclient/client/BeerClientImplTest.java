@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import guru.springframework.spring7webclient.model.BeerDTO;
 import lombok.extern.slf4j.Slf4j;
 import reactor.test.StepVerifier;
 import tools.jackson.databind.JsonNode;
@@ -47,6 +48,17 @@ class BeerClientImplTest {
 				log.warn("Response: {}", response.toPrettyString());
 				log.warn("Response Class: {}", response.getClass());
 				assertThat(response).isInstanceOf(JsonNode.class);
+			})
+			.expectNextCount(2)
+			.verifyComplete();
+    }
+
+	@Test
+    void testListBeerDto() {
+		StepVerifier.create(client.listBeerDto())
+			.consumeNextWith(response -> {
+				log.warn("Response: {}", response);
+				assertThat(response).isInstanceOf(BeerDTO.class);
 			})
 			.expectNextCount(2)
 			.verifyComplete();
