@@ -162,9 +162,9 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "{{baseUrl}}/api/v1/beer",
+                  "raw": "{{baseUrlRestmvc}}/api/v1/beer",
                   "host": [
-                    "{{baseUrl}}"
+                    "{{baseUrlRestmvc}}"
                   ],
                   "path": [
                     "api",
@@ -190,9 +190,9 @@
                   }
                 },
                 "url": {
-                  "raw": "{{baseUrl}}/api/v1/beer",
+                  "raw": "{{baseUrlRestmvc}}/api/v1/beer",
                   "host": [
-                    "{{baseUrl}}"
+                    "{{baseUrlRestmvc}}"
                   ],
                   "path": [
                     "api",
@@ -209,9 +209,9 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "{{baseUrl}}/api/v1/beer/:id",
+                  "raw": "{{baseUrlRestmvc}}/api/v1/beer/:id",
                   "host": [
-                    "{{baseUrl}}"
+                    "{{baseUrlRestmvc}}"
                   ],
                   "path": [
                     "api",
@@ -244,9 +244,9 @@
                   }
                 },
                 "url": {
-                  "raw": "{{baseUrl}}/api/v1/beer/:id",
+                  "raw": "{{baseUrlRestmvc}}/api/v1/beer/:id",
                   "host": [
-                    "{{baseUrl}}"
+                    "{{baseUrlRestmvc}}"
                   ],
                   "path": [
                     "api",
@@ -279,9 +279,9 @@
                   }
                 },
                 "url": {
-                  "raw": "{{baseUrl}}/api/v1/beer/:id",
+                  "raw": "{{baseUrlRestmvc}}/api/v1/beer/:id",
                   "host": [
-                    "{{baseUrl}}"
+                    "{{baseUrlRestmvc}}"
                   ],
                   "path": [
                     "api",
@@ -305,9 +305,9 @@
                 "method": "DELETE",
                 "header": [],
                 "url": {
-                  "raw": "{{baseUrl}}/api/v1/beer/:id",
+                  "raw": "{{baseUrlRestmvc}}/api/v1/beer/:id",
                   "host": [
-                    "{{baseUrl}}"
+                    "{{baseUrlRestmvc}}"
                   ],
                   "path": [
                     "api",
@@ -336,9 +336,9 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "{{baseUrl}}/api/v1/customer",
+                  "raw": "{{baseUrlRestmvc}}/api/v1/customer",
                   "host": [
-                    "{{baseUrl}}"
+                    "{{baseUrlRestmvc}}"
                   ],
                   "path": [
                     "api",
@@ -364,9 +364,9 @@
                   }
                 },
                 "url": {
-                  "raw": "{{baseUrl}}/api/v1/customer",
+                  "raw": "{{baseUrlRestmvc}}/api/v1/customer",
                   "host": [
-                    "{{baseUrl}}"
+                    "{{baseUrlRestmvc}}"
                   ],
                   "path": [
                     "api",
@@ -383,9 +383,9 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "{{baseUrl}}/api/v1/customer/:id",
+                  "raw": "{{baseUrlRestmvc}}/api/v1/customer/:id",
                   "host": [
-                    "{{baseUrl}}"
+                    "{{baseUrlRestmvc}}"
                   ],
                   "path": [
                     "api",
@@ -418,9 +418,9 @@
                   }
                 },
                 "url": {
-                  "raw": "{{baseUrl}}/api/v1/customer/:id",
+                  "raw": "{{baseUrlRestmvc}}/api/v1/customer/:id",
                   "host": [
-                    "{{baseUrl}}"
+                    "{{baseUrlRestmvc}}"
                   ],
                   "path": [
                     "api",
@@ -453,9 +453,9 @@
                   }
                 },
                 "url": {
-                  "raw": "{{baseUrl}}/api/v1/customer/:id",
+                  "raw": "{{baseUrlRestmvc}}/api/v1/customer/:id",
                   "host": [
-                    "{{baseUrl}}"
+                    "{{baseUrlRestmvc}}"
                   ],
                   "path": [
                     "api",
@@ -479,9 +479,9 @@
                 "method": "DELETE",
                 "header": [],
                 "url": {
-                  "raw": "{{baseUrl}}/api/v1/customer/:id",
+                  "raw": "{{baseUrlRestmvc}}/api/v1/customer/:id",
                   "host": [
-                    "{{baseUrl}}"
+                    "{{baseUrlRestmvc}}"
                   ],
                   "path": [
                     "api",
@@ -841,9 +841,9 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "{{baseUrl}}/api/v2/beer",
+                  "raw": "{{baseUrlReactive}}/api/v2/beer",
                   "host": [
-                    "{{baseUrl}}"
+                    "{{baseUrlReactive}}"
                   ],
                   "path": [
                     "api",
@@ -869,9 +869,9 @@
                   }
                 },
                 "url": {
-                  "raw": "{{baseUrl}}/api/v2/beer",
+                  "raw": "{{baseUrlReactive}}/api/v2/beer",
                   "host": [
-                    "{{baseUrl}}"
+                    "{{baseUrlReactive}}"
                   ],
                   "path": [
                     "api",
@@ -888,9 +888,9 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "{{baseUrl}}/api/v2/beer/:beerId",
+                  "raw": "{{baseUrlReactive}}/api/v2/beer/:beerId",
                   "host": [
-                    "{{baseUrl}}"
+                    "{{baseUrlReactive}}"
                   ],
                   "path": [
                     "api",
@@ -923,9 +923,9 @@
                   }
                 },
                 "url": {
-                  "raw": "{{baseUrl}}/api/v2/beer/:beerId",
+                  "raw": "{{baseUrlReactive}}/api/v2/beer/:beerId",
                   "host": [
-                    "{{baseUrl}}"
+                    "{{baseUrlReactive}}"
                   ],
                   "path": [
                     "api",
@@ -958,9 +958,9 @@
                   }
                 },
                 "url": {
-                  "raw": "{{baseUrl}}/api/v2/beer/:beerId",
+                  "raw": "{{baseUrlReactive}}/api/v2/beer/:beerId",
                   "host": [
-                    "{{baseUrl}}"
+                    "{{baseUrlReactive}}"
                   ],
                   "path": [
                     "api",
@@ -984,9 +984,9 @@
                 "method": "DELETE",
                 "header": [],
                 "url": {
-                  "raw": "{{baseUrl}}/api/v2/beer/:beerId",
+                  "raw": "{{baseUrlReactive}}/api/v2/beer/:beerId",
                   "host": [
-                    "{{baseUrl}}"
+                    "{{baseUrlReactive}}"
                   ],
                   "path": [
                     "api",
@@ -1015,9 +1015,9 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "{{baseUrl}}/api/v2/customer",
+                  "raw": "{{baseUrlReactive}}/api/v2/customer",
                   "host": [
-                    "{{baseUrl}}"
+                    "{{baseUrlReactive}}"
                   ],
                   "path": [
                     "api",
@@ -1043,9 +1043,9 @@
                   }
                 },
                 "url": {
-                  "raw": "{{baseUrl}}/api/v2/customer",
+                  "raw": "{{baseUrlReactive}}/api/v2/customer",
                   "host": [
-                    "{{baseUrl}}"
+                    "{{baseUrlReactive}}"
                   ],
                   "path": [
                     "api",
@@ -1062,9 +1062,9 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "{{baseUrl}}/api/v2/customer/:customerId",
+                  "raw": "{{baseUrlReactive}}/api/v2/customer/:customerId",
                   "host": [
-                    "{{baseUrl}}"
+                    "{{baseUrlReactive}}"
                   ],
                   "path": [
                     "api",
@@ -1097,9 +1097,9 @@
                   }
                 },
                 "url": {
-                  "raw": "{{baseUrl}}/api/v2/customer/:customerId",
+                  "raw": "{{baseUrlReactive}}/api/v2/customer/:customerId",
                   "host": [
-                    "{{baseUrl}}"
+                    "{{baseUrlReactive}}"
                   ],
                   "path": [
                     "api",
@@ -1132,9 +1132,9 @@
                   }
                 },
                 "url": {
-                  "raw": "{{baseUrl}}/api/v2/customer/:customerd",
+                  "raw": "{{baseUrlReactive}}/api/v2/customer/:customerd",
                   "host": [
-                    "{{baseUrl}}"
+                    "{{baseUrlReactive}}"
                   ],
                   "path": [
                     "api",
@@ -1158,9 +1158,9 @@
                 "method": "DELETE",
                 "header": [],
                 "url": {
-                  "raw": "{{baseUrl}}/api/v2/customer/:customerId",
+                  "raw": "{{baseUrlReactive}}/api/v2/customer/:customerId",
                   "host": [
-                    "{{baseUrl}}"
+                    "{{baseUrlReactive}}"
                   ],
                   "path": [
                     "api",
@@ -1283,9 +1283,9 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "{{baseUrl}}/api/v3/beer",
+                  "raw": "{{baseUrlReactiveMongo}}/api/v3/beer",
                   "host": [
-                    "{{baseUrl}}"
+                    "{{baseUrlReactiveMongo}}"
                   ],
                   "path": [
                     "api",
@@ -1311,9 +1311,9 @@
                   }
                 },
                 "url": {
-                  "raw": "{{baseUrl}}/api/v3/beer",
+                  "raw": "{{baseUrlReactiveMongo}}/api/v3/beer",
                   "host": [
-                    "{{baseUrl}}"
+                    "{{baseUrlReactiveMongo}}"
                   ],
                   "path": [
                     "api",
@@ -1330,9 +1330,9 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "{{baseUrl}}/api/v3/beer/:beerId",
+                  "raw": "{{baseUrlReactiveMongo}}/api/v3/beer/:beerId",
                   "host": [
-                    "{{baseUrl}}"
+                    "{{baseUrlReactiveMongo}}"
                   ],
                   "path": [
                     "api",
@@ -1365,9 +1365,9 @@
                   }
                 },
                 "url": {
-                  "raw": "{{baseUrl}}/api/v3/beer/:beerId",
+                  "raw": "{{baseUrlReactiveMongo}}/api/v3/beer/:beerId",
                   "host": [
-                    "{{baseUrl}}"
+                    "{{baseUrlReactiveMongo}}"
                   ],
                   "path": [
                     "api",
@@ -1400,9 +1400,9 @@
                   }
                 },
                 "url": {
-                  "raw": "{{baseUrl}}/api/v3/beer/:beerId",
+                  "raw": "{{baseUrlReactiveMongo}}/api/v3/beer/:beerId",
                   "host": [
-                    "{{baseUrl}}"
+                    "{{baseUrlReactiveMongo}}"
                   ],
                   "path": [
                     "api",
@@ -1426,9 +1426,9 @@
                 "method": "DELETE",
                 "header": [],
                 "url": {
-                  "raw": "{{baseUrl}}/api/v3/beer/:beerId",
+                  "raw": "{{baseUrlReactiveMongo}}/api/v3/beer/:beerId",
                   "host": [
-                    "{{baseUrl}}"
+                    "{{baseUrlReactiveMongo}}"
                   ],
                   "path": [
                     "api",
@@ -1449,7 +1449,7 @@
           ]
         },
         {
-          "name": "/api/v2/customer",
+          "name": "/api/v3/customer",
           "item": [
             {
               "name": "/",
@@ -1457,13 +1457,13 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "{{baseUrl}}/api/v2/customer",
+                  "raw": "{{baseUrlReactiveMongo}}/api/v3/customer",
                   "host": [
-                    "{{baseUrl}}"
+                    "{{baseUrlReactiveMongo}}"
                   ],
                   "path": [
                     "api",
-                    "v2",
+                    "v3",
                     "customer"
                   ]
                 }
@@ -1485,13 +1485,13 @@
                   }
                 },
                 "url": {
-                  "raw": "{{baseUrl}}/api/v2/customer",
+                  "raw": "{{baseUrlReactiveMongo}}/api/v3/customer",
                   "host": [
-                    "{{baseUrl}}"
+                    "{{baseUrlReactiveMongo}}"
                   ],
                   "path": [
                     "api",
-                    "v2",
+                    "v3",
                     "customer"
                   ]
                 }
@@ -1504,13 +1504,13 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "{{baseUrl}}/api/v2/customer/:customerId",
+                  "raw": "{{baseUrlReactiveMongo}}/api/v3/customer/:customerId",
                   "host": [
-                    "{{baseUrl}}"
+                    "{{baseUrlReactiveMongo}}"
                   ],
                   "path": [
                     "api",
-                    "v2",
+                    "v3",
                     "customer",
                     ":customerId"
                   ],
@@ -1539,13 +1539,13 @@
                   }
                 },
                 "url": {
-                  "raw": "{{baseUrl}}/api/v2/customer/:customerId",
+                  "raw": "{{baseUrlReactiveMongo}}/api/v3/customer/:customerId",
                   "host": [
-                    "{{baseUrl}}"
+                    "{{baseUrlReactiveMongo}}"
                   ],
                   "path": [
                     "api",
-                    "v2",
+                    "v3",
                     "customer",
                     ":customerId"
                   ],
@@ -1574,13 +1574,13 @@
                   }
                 },
                 "url": {
-                  "raw": "{{baseUrl}}/api/v2/customer/:customerd",
+                  "raw": "{{baseUrlReactiveMongo}}/api/v3/customer/:customerd",
                   "host": [
-                    "{{baseUrl}}"
+                    "{{baseUrlReactiveMongo}}"
                   ],
                   "path": [
                     "api",
-                    "v2",
+                    "v3",
                     "customer",
                     ":customerd"
                   ],
@@ -1600,13 +1600,13 @@
                 "method": "DELETE",
                 "header": [],
                 "url": {
-                  "raw": "{{baseUrl}}/api/v2/customer/:customerId",
+                  "raw": "{{baseUrlReactiveMongo}}/api/v3/customer/:customerId",
                   "host": [
-                    "{{baseUrl}}"
+                    "{{baseUrlReactiveMongo}}"
                   ],
                   "path": [
                     "api",
-                    "v2",
+                    "v3",
                     "customer",
                     ":customerId"
                   ],
@@ -1748,6 +1748,15 @@
       "value": ""
     },
     {
+      "key": "baseUrlRestmvc",
+      "value": ""
+    },
+    {
+      "key": "baseUrlReactive",
+      "value": ""
+    },
+    {
+      "key": "baseUrlReactiveMongo",
       "value": "",
       "type": "default"
     }
