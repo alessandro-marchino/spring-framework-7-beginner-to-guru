@@ -49,7 +49,8 @@
             "mainClass": "guru.springframework.spring7authserver.Spring7authserverApplication",
             "projectName": "spring7authserver",
             "args": "",
-            "envFile": "${workspaceFolder}/.env"
+            "envFile": "${workspaceFolder}/.env",
+            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=45941 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=spring7authserver"
         },
         {
             "type": "java",
@@ -68,6 +69,16 @@
             "cwd": "${workspaceFolder}",
             "mainClass": "guru.springframework.spring7reactivemongo.Spring7reactivemongoApplication",
             "projectName": "spring7reactivemongo",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-Spring7gatewayApplication<spring7gateway>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "guru.springframework.spring7gateway.Spring7gatewayApplication",
+            "projectName": "spring7gateway",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
         }

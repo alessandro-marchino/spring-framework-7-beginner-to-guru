@@ -1,0 +1,12 @@
+spring.application.name: spring7gateway
+
+spring:
+  cloud:
+    gateway:
+      server:
+        webmvc:
+          routes:
+            - id: spring7restwebmvc
+              uri: http://localhost:8081
+              predicates:
+                - Path=/api/v1/*
