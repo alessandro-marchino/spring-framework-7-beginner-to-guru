@@ -1,9 +1,13 @@
-spring.application.name: spring7gateway
-
 # logging.level:
 #   '[reactor.netty]': trace
 
 spring:
+  application.name: spring7gateway
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:9000
   cloud:
     gateway:
       server:

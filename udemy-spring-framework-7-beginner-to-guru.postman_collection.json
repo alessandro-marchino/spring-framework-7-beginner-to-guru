@@ -1712,6 +1712,156 @@
           }
         }
       ]
+    },
+    {
+      "name": "spring7gateway",
+      "item": [
+        {
+          "name": "/api/v1",
+          "item": [
+            {
+              "name": "/beer",
+              "item": [
+                {
+                  "name": "/",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrlGateway}}/api/v1/beer",
+                      "host": [
+                        "{{baseUrlGateway}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "beer"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "/customer",
+              "item": [
+                {
+                  "name": "/",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrlGateway}}/api/v1/customer",
+                      "host": [
+                        "{{baseUrlGateway}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "customer"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "/api/v2",
+          "item": [
+            {
+              "name": "/beer",
+              "item": [
+                {
+                  "name": "/",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrlGateway}}/api/v2/beer",
+                      "host": [
+                        "{{baseUrlGateway}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v2",
+                        "beer"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "/api/v3",
+          "item": [
+            {
+              "name": "/beer",
+              "item": [
+                {
+                  "name": "/",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrlGateway}}/api/v3/beer",
+                      "host": [
+                        "{{baseUrlGateway}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v3",
+                        "beer"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "auth": {
+        "type": "oauth2",
+        "oauth2": [
+          {
+            "key": "addTokenTo",
+            "value": "header",
+            "type": "string"
+          }
+        ]
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              ""
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ]
     }
   ],
   "event": [
@@ -1757,6 +1907,10 @@
     },
     {
       "key": "baseUrlReactiveMongo",
+      "value": ""
+    },
+    {
+      "key": "baseUrlGateway",
       "value": "",
       "type": "default"
     }
