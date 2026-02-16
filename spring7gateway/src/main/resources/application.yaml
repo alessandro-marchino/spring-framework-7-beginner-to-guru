@@ -1,10 +1,15 @@
 spring.application.name: spring7gateway
 
+# logging.level:
+#   '[reactor.netty]': trace
+
 spring:
   cloud:
     gateway:
       server:
-        webmvc:
+        webflux:
+          # httpclient.wiretap: true
+          # httpserver.wiretap: true
           routes:
             - id: spring7restwebmvc
               uri: http://localhost:8081
