@@ -12,7 +12,10 @@ public class SpringSecurityConfig {
 	@Bean
 	DefaultSecurityFilterChain filterChain(HttpSecurity http) {
 		return http
-			.authorizeHttpRequests(authoizizeCustomizer -> authoizizeCustomizer.anyRequest().authenticated())
+			.authorizeHttpRequests(spec ->
+				spec
+					.requestMatchers("/v3/api-docs**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+					.anyRequest().authenticated())
 			.csrf(csrfCustomizer -> csrfCustomizer.ignoringRequestMatchers("/api/**"))
 			.oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
 			.build();
