@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import guru.springframework.spring7aiintro.model.Answer;
 import guru.springframework.spring7aiintro.model.GetCapitalRequest;
+import guru.springframework.spring7aiintro.model.GetCapitalResponse;
 import guru.springframework.spring7aiintro.model.Question;
 import guru.springframework.spring7aiintro.services.OllamaAIService;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +24,7 @@ public class QuestionController {
 	}
 
 	@PostMapping("/capital")
-	public Answer getCapital(@RequestBody GetCapitalRequest question) {
+	public GetCapitalResponse getCapital(@RequestBody GetCapitalRequest question) {
 		return service.getCapital(question);
 	}
 
