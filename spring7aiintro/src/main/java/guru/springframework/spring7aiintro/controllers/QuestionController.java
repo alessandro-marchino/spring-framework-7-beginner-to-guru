@@ -27,4 +27,9 @@ public class QuestionController {
 		return service.getCapital(question);
 	}
 
+	@PostMapping("/capital/with-info")
+	public Answer getCapitalWithInfo(@RequestBody GetCapitalRequest question) {
+		return service.getCapitalWithInfo(question);
+	}
+
 }
