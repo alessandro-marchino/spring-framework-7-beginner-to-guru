@@ -81,6 +81,16 @@
             "projectName": "spring7gateway",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-Spring7aiintroApplication<spring7aiintro>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "guru.springframework.spring7aiintro.Spring7aiintroApplication",
+            "projectName": "spring7aiintro",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }
