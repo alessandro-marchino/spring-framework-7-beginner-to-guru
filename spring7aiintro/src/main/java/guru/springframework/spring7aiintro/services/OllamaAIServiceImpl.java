@@ -14,13 +14,19 @@ import guru.springframework.spring7aiintro.model.Answer;
 import guru.springframework.spring7aiintro.model.GetCapitalRequest;
 import guru.springframework.spring7aiintro.model.Question;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.json.JsonMapper;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class OllamaAIServiceImpl implements OllamaAIService {
 
 	private final ChatModel chatModel;
+	private final JsonMapper jsonMapper;
+
 	@Value("classpath:templates/get-capital-prompt.st")
 	private Resource getCapitalPrompt;
 	@Value("classpath:templates/get-capital-with-info.st")
@@ -45,7 +51,11 @@ public class OllamaAIServiceImpl implements OllamaAIService {
 		PromptTemplate promptTemplate = new PromptTemplate(getCapitalPrompt);
 		Prompt prompt = promptTemplate.create(Map.of("stateOrCountry", request.stateOrCountry()));
 		ChatResponse response = chatModel.call(prompt);
-		return new Answer(response.getResult().getOutput().getText());
+		String result = response.getResult().getOutput().getText();
+		log.info("Response: {}", result);
+		JsonNode jsonNode = jsonMapper.readTree(result);
+		String responseString = jsonNode.get("answer").asString();
+		return new Answer(responseString);
 	}
 
 	@Override
