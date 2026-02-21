@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import guru.springframework.spring7aiintro.model.Answer;
 import guru.springframework.spring7aiintro.model.GetCapitalRequest;
 import guru.springframework.spring7aiintro.model.GetCapitalResponse;
+import guru.springframework.spring7aiintro.model.GetCapitalWithInfoResponse;
 import guru.springframework.spring7aiintro.model.Question;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,8 +29,6 @@ public class OllamaAIServiceImpl implements OllamaAIService {
 
 	@Value("classpath:templates/get-capital-prompt.st")
 	private Resource getCapitalPrompt;
-	@Value("classpath:templates/get-capital-with-info.st")
-	private Resource getCapitalWithInfoPrompt;
 
 	@Override
 	public String getAnswer(String question) {
@@ -59,11 +58,16 @@ public class OllamaAIServiceImpl implements OllamaAIService {
 	}
 
 	@Override
-	public Answer getCapitalWithInfo(GetCapitalRequest request) {
-		PromptTemplate promptTemplate = new PromptTemplate(getCapitalWithInfoPrompt);
-		Prompt prompt = promptTemplate.create(Map.of("stateOrCountry", request.stateOrCountry()));
+	public GetCapitalWithInfoResponse getCapitalWithInfo(GetCapitalRequest request) {
+		BeanOutputConverter<GetCapitalWithInfoResponse> parser = new BeanOutputConverter<>(GetCapitalWithInfoResponse.class);
+
+		PromptTemplate promptTemplate = new PromptTemplate(getCapitalPrompt);
+		Prompt prompt = promptTemplate.create(Map.of(
+			"stateOrCountry", request.stateOrCountry(),
+			"format", parser.getFormat()
+		));
 		ChatResponse response = chatModel.call(prompt);
-		return new Answer(response.getResult().getOutput().getText());
+		return parser.convert(response.getResult().getOutput().getText());
 	}
 
 	@Override
