@@ -68,6 +68,10 @@
       <artifactId>springdoc-openapi-starter-common</artifactId>
       <version>3.0.1</version>
     </dependency>
+	  <dependency>
+	    <groupId>org.springframework.boot</groupId>
+	    <artifactId>spring-boot-starter-actuator</artifactId>
+	  </dependency>
 
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -143,6 +147,7 @@
       <artifactId>hibernate-processor</artifactId>
       <scope>provided</scope>
     </dependency>
+
 
 	</dependencies>
 
