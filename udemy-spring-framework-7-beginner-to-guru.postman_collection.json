@@ -10,6 +10,76 @@
       "name": "spring7authserver",
       "item": [
         {
+          "name": "/actuator",
+          "item": [
+            {
+              "name": "/health",
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{authServer}}/actuator/health",
+                  "host": [
+                    "{{authServer}}"
+                  ],
+                  "path": [
+                    "actuator",
+                    "health"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "/health/readiness",
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{authServer}}/actuator/health/readiness",
+                  "host": [
+                    "{{authServer}}"
+                  ],
+                  "path": [
+                    "actuator",
+                    "health",
+                    "readiness"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "/health/liveness",
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{authServer}}/actuator/health/liveness",
+                  "host": [
+                    "{{authServer}}"
+                  ],
+                  "path": [
+                    "actuator",
+                    "health",
+                    "liveness"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
           "name": "/oauth2/token",
           "request": {
             "auth": {
@@ -494,6 +564,76 @@
                       "key": "id",
                       "value": "578ab55e-b1c5-4f0d-8723-723874a071ad"
                     }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "/actuator",
+          "item": [
+            {
+              "name": "/health",
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrlRestmvc}}/actuator/health",
+                  "host": [
+                    "{{baseUrlRestmvc}}"
+                  ],
+                  "path": [
+                    "actuator",
+                    "health"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "/health/readiness",
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrlRestmvc}}/actuator/health/readiness",
+                  "host": [
+                    "{{baseUrlRestmvc}}"
+                  ],
+                  "path": [
+                    "actuator",
+                    "health",
+                    "readiness"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "/health/liveness",
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrlRestmvc}}/actuator/health/liveness",
+                  "host": [
+                    "{{baseUrlRestmvc}}"
+                  ],
+                  "path": [
+                    "actuator",
+                    "health",
+                    "liveness"
                   ]
                 }
               },
@@ -1179,6 +1319,76 @@
               "response": []
             }
           ]
+        },
+        {
+          "name": "/actuator",
+          "item": [
+            {
+              "name": "/health",
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrlReactive}}/actuator/health",
+                  "host": [
+                    "{{baseUrlReactive}}"
+                  ],
+                  "path": [
+                    "actuator",
+                    "health"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "/health/readiness",
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrlReactive}}/actuator/health/readiness",
+                  "host": [
+                    "{{baseUrlReactive}}"
+                  ],
+                  "path": [
+                    "actuator",
+                    "health",
+                    "readiness"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "/health/liveness",
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrlReactive}}/actuator/health/liveness",
+                  "host": [
+                    "{{baseUrlReactive}}"
+                  ],
+                  "path": [
+                    "actuator",
+                    "health",
+                    "liveness"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
         }
       ],
       "auth": {
@@ -1621,6 +1831,76 @@
               "response": []
             }
           ]
+        },
+        {
+          "name": "/actuator",
+          "item": [
+            {
+              "name": "/health",
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrlReactiveMongo}}/actuator/health",
+                  "host": [
+                    "{{baseUrlReactiveMongo}}"
+                  ],
+                  "path": [
+                    "actuator",
+                    "health"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "/health/readiness",
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrlReactiveMongo}}/actuator/health/readiness",
+                  "host": [
+                    "{{baseUrlReactiveMongo}}"
+                  ],
+                  "path": [
+                    "actuator",
+                    "health",
+                    "readiness"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "/health/liveness",
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrlReactiveMongo}}/actuator/health/liveness",
+                  "host": [
+                    "{{baseUrlReactiveMongo}}"
+                  ],
+                  "path": [
+                    "actuator",
+                    "health",
+                    "liveness"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
         }
       ],
       "auth": {
@@ -1740,6 +2020,14 @@
                     }
                   },
                   "response": []
+                },
+                {
+                  "name": "/:beerId",
+                  "request": {
+                    "method": "GET",
+                    "header": []
+                  },
+                  "response": []
                 }
               ]
             },
@@ -1824,6 +2112,76 @@
                   "response": []
                 }
               ]
+            }
+          ]
+        },
+        {
+          "name": "/actuator",
+          "item": [
+            {
+              "name": "/health",
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrlGateway}}/actuator/health",
+                  "host": [
+                    "{{baseUrlGateway}}"
+                  ],
+                  "path": [
+                    "actuator",
+                    "health"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "/health/readiness",
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrlGateway}}/actuator/health/readiness",
+                  "host": [
+                    "{{baseUrlGateway}}"
+                  ],
+                  "path": [
+                    "actuator",
+                    "health",
+                    "readiness"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "/health/liveness",
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrlGateway}}/actuator/health/liveness",
+                  "host": [
+                    "{{baseUrlGateway}}"
+                  ],
+                  "path": [
+                    "actuator",
+                    "health",
+                    "liveness"
+                  ]
+                }
+              },
+              "response": []
             }
           ]
         }

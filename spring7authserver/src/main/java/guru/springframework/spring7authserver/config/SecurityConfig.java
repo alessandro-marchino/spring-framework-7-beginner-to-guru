@@ -6,6 +6,7 @@ import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.util.UUID;
 
+import org.springframework.boot.security.autoconfigure.actuate.web.servlet.EndpointRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -65,6 +66,15 @@ public class SecurityConfig {
 
 	@Bean
 	@Order(2)
+	DefaultSecurityFilterChain actuatorFilterChain(HttpSecurity http) {
+		return http
+			.securityMatchers(spec -> spec.requestMatchers(EndpointRequest.toAnyEndpoint()))
+			.authorizeHttpRequests(spec -> spec.anyRequest().permitAll())
+			.build();
+	}
+
+	@Bean
+	@Order(3)
 	DefaultSecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
 		return http
 			.authorizeHttpRequests(authorize -> authorize
