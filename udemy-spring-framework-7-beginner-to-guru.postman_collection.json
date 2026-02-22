@@ -1862,6 +1862,90 @@
           }
         }
       ]
+    },
+    {
+      "name": "spring7aiintro",
+      "item": [
+        {
+          "name": "/ask",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"question\": \"Why is the sky blue?\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrlAi}}/ask",
+              "host": [
+                "{{baseUrlAi}}"
+              ],
+              "path": [
+                "ask"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/capital",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"stateOrCountry\": \"France\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrlAi}}/capital",
+              "host": [
+                "{{baseUrlAi}}"
+              ],
+              "path": [
+                "capital"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/capital/with-info",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"stateOrCountry\": \"Japan\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrlAi}}/capital/with-info",
+              "host": [
+                "{{baseUrlAi}}"
+              ],
+              "path": [
+                "capital",
+                "with-info"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
     }
   ],
   "event": [
@@ -1911,8 +1995,11 @@
     },
     {
       "key": "baseUrlGateway",
-      "value": "",
-      "type": "default"
+      "value": ""
+    },
+    {
+      "key": "baseUrlAi",
+      "value": ""
     }
   ]
 }

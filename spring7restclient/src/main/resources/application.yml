@@ -1,0 +1,19 @@
+spring:
+  application.name: spring7restclient
+  security:
+    oauth2:
+      client:
+        registration:
+          springauth:
+            client-id: oidc-client
+            client-secret: secret
+            scope: [ openid, profile ]
+            authorization-grant-type: client_credentials
+            provider: springauthprovider
+        provider:
+          springauthprovider:
+            issuer-uri: http://localhost:9000
+
+rest:
+  template:
+    root-url: http://localhost:8080

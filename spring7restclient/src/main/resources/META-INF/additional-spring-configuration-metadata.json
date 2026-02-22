@@ -1,0 +1,5 @@
+{"properties": [{
+  "name": "rest.template.root-url",
+  "type": "java.lang.String",
+  "description": "The root URL to invoke"
+}]}
