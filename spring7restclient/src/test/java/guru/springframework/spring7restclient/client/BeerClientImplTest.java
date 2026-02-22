@@ -1,5 +1,6 @@
 package guru.springframework.spring7restclient.client;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -83,11 +84,13 @@ class BeerClientImplTest {
 
 	@Test
 	void listBeersNoBeerName() {
-		beerClient.listBeers(null, null, null, null, null);
+		Page<BeerDTO> beers = beerClient.listBeers(null, null, null, null, null);
+		assertThat(beers).isNotEmpty();
 	}
 
 	@Test
 	void listBeers() {
-		beerClient.listBeers("ALE", null, null, null, null);
+		Page<BeerDTO> beers = beerClient.listBeers("ALE", null, null, null, null);
+		assertThat(beers).isNotEmpty();
 	}
 }
