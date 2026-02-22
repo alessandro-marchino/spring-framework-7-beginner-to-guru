@@ -31,7 +31,7 @@ public class SpringSecurityConfig {
 	DefaultSecurityFilterChain actuatorFilterChain(HttpSecurity http) {
 		return http
 			.securityMatchers(spec -> spec.requestMatchers(EndpointRequest.toAnyEndpoint()))
-			.authorizeHttpRequests(spec -> spec.requestMatchers(EndpointRequest.toAnyEndpoint()).permitAll())
+			.authorizeHttpRequests(spec -> spec.anyRequest().permitAll())
 			.build();
 	}
 }
