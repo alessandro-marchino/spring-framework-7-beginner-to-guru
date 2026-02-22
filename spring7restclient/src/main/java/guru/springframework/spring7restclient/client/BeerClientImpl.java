@@ -1,5 +1,6 @@
 package guru.springframework.spring7restclient.client;
 
+import java.net.URI;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -38,7 +39,20 @@ public class BeerClientImpl implements BeerClient {
 
 	@Override
 	public BeerDTO createBeer(BeerDTO beerDTO) {
-		return null;
+		RestClient restClient = restClientBuilder.build();
+
+		URI location = restClient.post()
+			.uri(uriBuilder -> uriBuilder.path(GET_BEER_PATH).build())
+			.body(beerDTO)
+			.retrieve()
+			.toBodilessEntity()
+			.getHeaders()
+			.getLocation();
+
+		return restClient.get()
+			.uri(location.getPath())
+			.retrieve()
+			.body(BeerDTO.class);
 	}
 
 	@Override

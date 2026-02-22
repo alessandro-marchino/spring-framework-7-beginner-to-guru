@@ -13,6 +13,7 @@ import org.springframework.security.oauth2.client.OAuth2AuthorizedClientProvider
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientProviderBuilder;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.web.client.RestClient;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 
 @Configuration
@@ -41,5 +42,10 @@ public class RestTemplateBuilderConfig {
 			.connectTimeout(Duration.ofSeconds(10))
 			.readTimeout(Duration.ofSeconds(20))
 			.additionalInterceptors(interceptor);
+	}
+
+	@Bean
+	RestClient.Builder restClientBuilder(RestTemplateBuilder restTemplateBuilder) {
+		return RestClient.builder(restTemplateBuilder.build());
 	}
 }
