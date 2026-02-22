@@ -118,7 +118,7 @@ public class BeerClientMockTest {
 	@Test
 	void testListBeersWithQueryParam() {
 		String response = jsonMapper.writeValueAsString(getPage());
-		URI uri = UriComponentsBuilder.fromPath(URL + BeerClientImpl.GET_BEER_PATH)
+		URI uri = UriComponentsBuilder.fromUriString(URL + BeerClientImpl.GET_BEER_PATH)
 			.queryParam("beerName", "ALE")
 			.build()
 			.toUri();

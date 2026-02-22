@@ -1,6 +1,7 @@
 package guru.springframework.spring7restclient.client;
 
 import java.net.URI;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
 import guru.springframework.spring7restclient.model.BeerDTO;
+import guru.springframework.spring7restclient.model.BeerDTOPageImpl;
 import guru.springframework.spring7restclient.model.BeerStyle;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,12 +26,27 @@ public class BeerClientImpl implements BeerClient {
 
 	@Override
 	public Page<BeerDTO> listBeers(String beerName, BeerStyle beerStyle, Boolean showInventory, Integer pageNumber, Integer pageSize) {
-		return null;
+		RestClient restClient = restClientBuilder.build();
+		return restClient.get()
+			.uri(uriBuilder -> uriBuilder
+				.path(GET_BEER_PATH)
+				.queryParamIfPresent("beerName", Optional.ofNullable(beerName))
+				.queryParamIfPresent("beerStyle", Optional.ofNullable(beerStyle))
+				.queryParamIfPresent("showInventory", Optional.ofNullable(showInventory))
+				.queryParamIfPresent("pageNumber", Optional.ofNullable(pageNumber))
+				.queryParamIfPresent("pageSize", Optional.ofNullable(pageSize))
+				.build())
+			.retrieve()
+			.body(BeerDTOPageImpl.class);
 	}
 
 	@Override
 	public Page<BeerDTO> listBeers() {
-		return null;
+		RestClient restClient = restClientBuilder.build();
+		return restClient.get()
+			.uri(uriBuilder -> uriBuilder.path(GET_BEER_PATH).build())
+			.retrieve()
+			.body(BeerDTOPageImpl.class);
 	}
 
 	@Override
