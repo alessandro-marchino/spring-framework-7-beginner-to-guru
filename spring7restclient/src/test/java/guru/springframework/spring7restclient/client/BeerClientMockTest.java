@@ -58,7 +58,7 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 @Import({ RestTemplateBuilderConfig.class, BeerClientMockTest.TestConfig.class })
 public class BeerClientMockTest {
 
-	private static final String URL = "http://localhost:8080";
+	private static final String URL = "http://localhost:8081";
 	private static final String BEARER = "Bearer test";
 
 	@Autowired JsonMapper jsonMapper;
@@ -128,7 +128,6 @@ public class BeerClientMockTest {
 			.andExpect(header("Authorization", BEARER))
 			.andExpect(queryParam("beerName", "ALE"))
 			.andRespond(withSuccess(response, MediaType.APPLICATION_JSON));
-		System.out.println(response);
 
 		Page<BeerDTO> responsePage = beerClient.listBeers("ALE", null, null, null, null);
 		assertThat(responsePage.getContent().size()).isEqualTo(1);
