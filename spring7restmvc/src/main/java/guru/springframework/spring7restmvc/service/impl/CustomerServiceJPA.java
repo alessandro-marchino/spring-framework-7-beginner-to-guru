@@ -6,6 +6,8 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 public class CustomerServiceJPA implements CustomerService {
 	private final CustomerRepository customerRepository;
 	private final CustomerMapper customerMapper;
+	private final CacheManager cacheManager;
 
 	@Override
 	@Cacheable(cacheNames = "customerCache")
@@ -48,6 +51,7 @@ public class CustomerServiceJPA implements CustomerService {
 		LocalDateTime now = LocalDateTime.now();
 		customer.setCreatedDate(now);
 		customer.setUpdatedDate(now);
+		clearCache(null);
 		return customerMapper.customerToCustomerDto(customerRepository.save(customerMapper.customerDtoToCustomer(customer)));
 	}
 
@@ -60,6 +64,7 @@ public class CustomerServiceJPA implements CustomerService {
 			customer.setUpdatedDate(LocalDateTime.now());
 			reference.set(Optional.of(customerMapper.customerToCustomerDto(customerRepository.save(customer))));
 		}, () -> reference.set(Optional.empty()));
+		clearCache(customerId);
 		return reference.get();
 	}
 
@@ -69,6 +74,7 @@ public class CustomerServiceJPA implements CustomerService {
 			return false;
 		}
 		customerRepository.deleteById(customerId);
+		clearCache(customerId);
 		return true;
 	}
 
@@ -83,7 +89,21 @@ public class CustomerServiceJPA implements CustomerService {
 			customer.setUpdatedDate(LocalDateTime.now());
 			reference.set(Optional.of(customerMapper.customerToCustomerDto(customerRepository.save(customer))));
 		}, () -> reference.set(Optional.empty()));
+		clearCache(customerId);
 		return reference.get();
+	}
+
+	private void clearCache(Object key) {
+		Cache customerListCache = cacheManager.getCache("customerListCache");
+		if(customerListCache != null) {
+			customerListCache.clear();
+		}
+		if(key != null) {
+			Cache customerCache = cacheManager.getCache("customerCache");
+			if(customerCache != null) {
+				customerCache.evict(key);
+			}
+		}
 	}
 
 }

@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
+import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Primary;
@@ -70,7 +71,7 @@ public class BeerServiceJPA implements BeerService {
 		LocalDateTime now = LocalDateTime.now();
 		beer.setCreatedDate(now);
 		beer.setCreatedDate(now);
-		cacheManager.getCache("beerListCache").clear();
+		clearCache(null);
 		return beerMapper.beerToBeerDto(beerRepository.save(beerMapper.beerDtoToBeer(beer)));
 	}
 
@@ -87,8 +88,7 @@ public class BeerServiceJPA implements BeerService {
 			beer.setVersion(dto.getVersion());
 			reference.set(Optional.of(beerMapper.beerToBeerDto(beerRepository.save(beer))));
 		}, () -> reference.set(Optional.empty()));
-		cacheManager.getCache("beerCache").evict(beerId);
-		cacheManager.getCache("beerListCache").clear();
+		clearCache(beerId);
 		return reference.get();
 	}
 
@@ -98,8 +98,7 @@ public class BeerServiceJPA implements BeerService {
 			return false;
 		}
 		beerRepository.deleteById(beerId);
-		cacheManager.getCache("beerCache").evict(beerId);
-		cacheManager.getCache("beerListCache").clear();
+		clearCache(beerId);
 		return true;
 	}
 
@@ -126,9 +125,21 @@ public class BeerServiceJPA implements BeerService {
 			beer.setUpdatedDate(LocalDateTime.now());
 			reference.set(Optional.of(beerMapper.beerToBeerDto(beerRepository.saveAndFlush(beer))));
 		}, () -> reference.set(Optional.empty()));
-		cacheManager.getCache("beerCache").evict(beerId);
-		cacheManager.getCache("beerListCache").clear();
+		clearCache(beerId);
 		return reference.get();
+	}
+
+	private void clearCache(Object key) {
+		Cache beerListCache = cacheManager.getCache("beerListCache");
+		if(beerListCache != null) {
+			beerListCache.clear();
+		}
+		if(key != null) {
+			Cache beerCache = cacheManager.getCache("beerCache");
+			if(beerCache != null) {
+				beerCache.evict(key);
+			}
+		}
 	}
 
 }
