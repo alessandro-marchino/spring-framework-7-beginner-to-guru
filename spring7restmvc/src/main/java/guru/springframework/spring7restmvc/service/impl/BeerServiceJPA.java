@@ -40,7 +40,11 @@ public class BeerServiceJPA implements BeerService {
 	}
 
 	@Override
+	@Cacheable(cacheNames = "beerListCache")
 	public Page<BeerDTO> listBeers(String beerName, BeerStyle beerStyle, boolean showInventory, Integer pageNumber, Integer pageSize) {
+		log.info("List Beers - in service. beerName: {} - beerStyle: {} - showInventory: {} - pageNumber: {} - pageSize: {}",
+			beerName, beerStyle, showInventory, pageNumber, pageSize);
+
 		Beer beerProbe = Beer.builder()
 			.beerName(beerName)
 			.beerStyle(beerStyle)
