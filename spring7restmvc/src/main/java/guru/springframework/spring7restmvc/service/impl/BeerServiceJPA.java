@@ -5,9 +5,8 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.Caching;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -32,6 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 public class BeerServiceJPA implements BeerService {
 	private final BeerRepository beerRepository;
 	private final BeerMapper beerMapper;
+	private final CacheManager cacheManager;
 
 	@Override
 	@Cacheable(cacheNames = "beerCache", key = "#beerId")
@@ -66,16 +66,15 @@ public class BeerServiceJPA implements BeerService {
 	}
 
 	@Override
-	@Caching(evict = { @CacheEvict(cacheNames = "beerListCache") })
 	public BeerDTO saveNewBeer(BeerDTO beer) {
 		LocalDateTime now = LocalDateTime.now();
 		beer.setCreatedDate(now);
 		beer.setCreatedDate(now);
+		cacheManager.getCache("beerListCache").clear();
 		return beerMapper.beerToBeerDto(beerRepository.save(beerMapper.beerDtoToBeer(beer)));
 	}
 
 	@Override
-	@Caching(evict = { @CacheEvict(cacheNames = "beerCache", key = "#beerId"), @CacheEvict(cacheNames = "beerListCache") })
 	public Optional<BeerDTO> updateBeerById(UUID beerId, BeerDTO dto) {
 		AtomicReference<Optional<BeerDTO>> reference = new AtomicReference<>();
 		beerRepository.findById(beerId).ifPresentOrElse(beer -> {
@@ -88,21 +87,23 @@ public class BeerServiceJPA implements BeerService {
 			beer.setVersion(dto.getVersion());
 			reference.set(Optional.of(beerMapper.beerToBeerDto(beerRepository.save(beer))));
 		}, () -> reference.set(Optional.empty()));
+		cacheManager.getCache("beerCache").evict(beerId);
+		cacheManager.getCache("beerListCache").clear();
 		return reference.get();
 	}
 
 	@Override
-	@Caching(evict = { @CacheEvict(cacheNames = "beerCache", key = "#beerId"), @CacheEvict(cacheNames = "beerListCache") })
 	public boolean deleteById(UUID beerId) {
 		if(!beerRepository.existsById(beerId)) {
 			return false;
 		}
 		beerRepository.deleteById(beerId);
+		cacheManager.getCache("beerCache").evict(beerId);
+		cacheManager.getCache("beerListCache").clear();
 		return true;
 	}
 
 	@Override
-	@Caching(evict = { @CacheEvict(cacheNames = "beerCache", key = "#beerId"), @CacheEvict(cacheNames = "beerListCache") })
 	public Optional<BeerDTO> patchBeerById(UUID beerId, BeerDTO dto) {
 		dto.setUpdatedDate(LocalDateTime.now());
 		AtomicReference<Optional<BeerDTO>> reference = new AtomicReference<>();
@@ -125,6 +126,8 @@ public class BeerServiceJPA implements BeerService {
 			beer.setUpdatedDate(LocalDateTime.now());
 			reference.set(Optional.of(beerMapper.beerToBeerDto(beerRepository.saveAndFlush(beer))));
 		}, () -> reference.set(Optional.empty()));
+		cacheManager.getCache("beerCache").evict(beerId);
+		cacheManager.getCache("beerListCache").clear();
 		return reference.get();
 	}
 
