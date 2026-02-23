@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
@@ -25,13 +26,17 @@ public class CustomerServiceJPA implements CustomerService {
 	private final CustomerMapper customerMapper;
 
 	@Override
+	@Cacheable(cacheNames = "customerCache")
 	public Optional<CustomerDTO> getCustomerById(UUID customerId) {
+		log.info("Get customer by Id - in service - {}", customerId);
 		return customerRepository.findById(customerId)
 			.map(customerMapper::customerToCustomerDto);
 	}
 
 	@Override
+	@Cacheable(cacheNames = "customerListCache")
 	public List<CustomerDTO> listCustomers() {
+		log.info("List Customers - in service");
 		return customerRepository.findAll()
 			.stream()
 			.map(customerMapper::customerToCustomerDto)
