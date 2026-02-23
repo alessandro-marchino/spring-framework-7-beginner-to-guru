@@ -63,11 +63,6 @@
 		</dependency>
     <dependency>
       <groupId>org.zalando</groupId>
-      <artifactId>logbook-spring-webflux</artifactId>
-      <version>4.0.2</version>
-    </dependency>
-    <dependency>
-      <groupId>org.zalando</groupId>
       <artifactId>logbook-logstash</artifactId>
       <version>4.0.2</version>
     </dependency>
