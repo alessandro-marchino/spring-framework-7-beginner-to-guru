@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -31,7 +32,9 @@ public class BeerServiceJPA implements BeerService {
 	private final BeerMapper beerMapper;
 
 	@Override
+	@Cacheable(cacheNames = "beerCache", key = "#beerId")
 	public Optional<BeerDTO> getBeerById(UUID beerId) {
+		log.info("Get beer by Id - in service - {}", beerId);
 		return beerRepository.findById(beerId)
 			.map(beerMapper::beerToBeerDto);
 	}
