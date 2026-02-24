@@ -7,12 +7,14 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -257,6 +259,25 @@ public class BeerControllerIT {
 		assertThat(beer).isNotNull();
 		assertThat(beer.getBeerName()).isEqualTo("New Beer");
 		assertThat(beer.getVersion()).isEqualTo(0);
+    }
+
+	@Test
+    void testSaveBeerMvc() throws Exception {
+		BeerDTO dto = BeerDTO.builder()
+			.beerName("New Beer")
+			.beerStyle(BeerStyle.IPA)
+			.upc("123456")
+			.price(BigDecimal.TEN)
+			.quantityOnHand(5)
+			.build();
+
+		mockMvc.perform(post(BeerController.PATH)
+				.with(TestUtils.JWT_REQUEST_POST_PROCESSOR)
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON)
+				.content(jsonMapper.writeValueAsString(dto)))
+			.andExpect(status().isCreated())
+			.andReturn();
     }
 
 	@Test

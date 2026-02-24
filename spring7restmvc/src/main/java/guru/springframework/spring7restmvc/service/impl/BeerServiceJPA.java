@@ -8,15 +8,19 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import guru.springframework.spring7restmvc.entities.Beer;
 import guru.springframework.spring7restmvc.entities.Beer_;
+import guru.springframework.spring7restmvc.events.BeerCreatedEvent;
 import guru.springframework.spring7restmvc.mappers.BeerMapper;
 import guru.springframework.spring7restmvc.model.BeerDTO;
 import guru.springframework.spring7restmvc.model.BeerStyle;
@@ -33,6 +37,7 @@ public class BeerServiceJPA implements BeerService {
 	private final BeerRepository beerRepository;
 	private final BeerMapper beerMapper;
 	private final CacheManager cacheManager;
+	private final ApplicationEventPublisher applicationEventPublisher;
 
 	@Override
 	@Cacheable(cacheNames = "beerCache", key = "#beerId")
@@ -72,7 +77,16 @@ public class BeerServiceJPA implements BeerService {
 		beer.setCreatedDate(now);
 		beer.setCreatedDate(now);
 		clearCache(null);
-		return beerMapper.beerToBeerDto(beerRepository.save(beerMapper.beerDtoToBeer(beer)));
+
+		Beer savedBeer = beerRepository.save(beerMapper.beerDtoToBeer(beer));;
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		applicationEventPublisher.publishEvent(BeerCreatedEvent.builder()
+			.beer(savedBeer)
+			.authentication(auth)
+			.build());
+
+
+		return beerMapper.beerToBeerDto(savedBeer);
 	}
 
 	@Override
