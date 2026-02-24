@@ -31,6 +31,8 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.event.ApplicationEvents;
+import org.springframework.test.context.event.RecordApplicationEvents;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -39,6 +41,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import guru.springframework.spring7restmvc.TestUtils;
 import guru.springframework.spring7restmvc.entities.Beer;
+import guru.springframework.spring7restmvc.events.BeerCreatedEvent;
 import guru.springframework.spring7restmvc.mappers.BeerMapper;
 import guru.springframework.spring7restmvc.model.BeerDTO;
 import guru.springframework.spring7restmvc.model.BeerStyle;
@@ -48,12 +51,15 @@ import tools.jackson.databind.json.JsonMapper;
 
 @SpringBootTest
 @Slf4j
+@RecordApplicationEvents
 public class BeerControllerIT {
 	@Autowired BeerController controller;
 	@Autowired BeerRepository repository;
 	@Autowired BeerMapper mapper;
 	@Autowired WebApplicationContext wac;
 	@Autowired JsonMapper jsonMapper;
+	@Autowired ApplicationEvents applicationEvents;
+
 	MockMvc mockMvc;
 
 	@BeforeEach
@@ -278,6 +284,8 @@ public class BeerControllerIT {
 				.content(jsonMapper.writeValueAsString(dto)))
 			.andExpect(status().isCreated())
 			.andReturn();
+
+		assertThat(applicationEvents.stream(BeerCreatedEvent.class).count()).isEqualTo(1);
     }
 
 	@Test
