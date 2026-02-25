@@ -12,12 +12,12 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class BeerCreatedEvent implements BeerEvent {
+public class BeerPatchedEvent implements BeerEvent {
 	private Beer beer;
 	private Authentication authentication;
 
 	@Override
 	public String getEventType() {
-		return "BEER_CREATED";
+		return "BEER_PATCHED";
 	}
 }

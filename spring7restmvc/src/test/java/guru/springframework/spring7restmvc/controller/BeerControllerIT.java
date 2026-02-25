@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -20,6 +21,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +44,9 @@ import org.springframework.web.context.WebApplicationContext;
 import guru.springframework.spring7restmvc.TestUtils;
 import guru.springframework.spring7restmvc.entities.Beer;
 import guru.springframework.spring7restmvc.events.BeerCreatedEvent;
+import guru.springframework.spring7restmvc.events.BeerDeletedEvent;
+import guru.springframework.spring7restmvc.events.BeerPatchedEvent;
+import guru.springframework.spring7restmvc.events.BeerUpdatedEvent;
 import guru.springframework.spring7restmvc.mappers.BeerMapper;
 import guru.springframework.spring7restmvc.model.BeerDTO;
 import guru.springframework.spring7restmvc.model.BeerStyle;
@@ -67,6 +72,11 @@ public class BeerControllerIT {
 		mockMvc = MockMvcBuilders.webAppContextSetup(wac)
 			.apply(springSecurity())
 			.build();
+	}
+
+	@AfterEach
+	void tearDown() {
+		applicationEvents.clear();
 	}
 
 	@Test
@@ -178,6 +188,16 @@ public class BeerControllerIT {
     }
 
 	@Test
+    void testDeleteBeerMvc() throws Exception {
+		Beer beer = repository.findAll(Pageable.ofSize(1)).getContent().getFirst();
+
+		mockMvc.perform(delete(BeerController.PATH_ID, beer.getId())
+				.with(TestUtils.JWT_REQUEST_POST_PROCESSOR))
+			.andExpect(status().isNoContent());
+		assertThat(applicationEvents.stream(BeerDeletedEvent.class).count()).isEqualTo(1);
+    }
+
+	@Test
     void testDeleteBeerNotFound() {
 		assertThrows(NotFoundException.class, () -> controller.deleteBeer(UUID.randomUUID()));
     }
@@ -219,7 +239,7 @@ public class BeerControllerIT {
 	@Transactional
 	@Rollback
     void testPatchBeer() {
-		Beer beer = repository.findAll(Pageable.ofSize(1)).getContent().getFirst();
+		Beer beer = repository.findAll(Pageable.ofSize(1).withPage(2)).getContent().getFirst();
 		BeerDTO dto = mapper.beerToBeerDto(beer);
 		final String beerName = "UPDATED";
 		dto.setBeerName(beerName);
@@ -232,6 +252,20 @@ public class BeerControllerIT {
 		assertThat(updatedBeer).isNotNull();
 		assertThat(updatedBeer.getBeerName()).isEqualTo(beerName);
 		assertThat(updatedBeer.getVersion()).isEqualTo(1);
+    }
+
+	@Test
+    void testPatchBeerMvc() throws Exception {
+		Beer beer = repository.findAll(Pageable.ofSize(1)).getContent().getFirst();
+		Map<String, Object> beerMap = new HashMap<>();
+		beerMap.put("beerName", "New Name 2");
+
+		mockMvc.perform(patch(BeerController.PATH_ID, beer.getId())
+				.with(TestUtils.JWT_REQUEST_POST_PROCESSOR)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(jsonMapper.writeValueAsString(beerMap)))
+			.andExpect(status().isNoContent());
+		assertThat(applicationEvents.stream(BeerPatchedEvent.class).count()).isEqualTo(1);
     }
 
 	@Test
@@ -297,7 +331,7 @@ public class BeerControllerIT {
 	@Transactional
 	@Rollback
     void testUpdateBeer() {
-		Beer beer = repository.findAll(Pageable.ofSize(1)).getContent().getFirst();
+		Beer beer = repository.findAll(Pageable.ofSize(1).withPage(2)).getContent().getFirst();
 		BeerDTO dto = mapper.beerToBeerDto(beer);
 		final String beerName = "UPDATED";
 		dto.setBeerName(beerName);
@@ -311,6 +345,22 @@ public class BeerControllerIT {
 		assertThat(updatedBeer.getBeerName()).isEqualTo(beerName);
 		assertThat(updatedBeer.getVersion()).isEqualTo(1);
     }
+
+	@Test
+	void testUpdateBeerMvc() throws Exception {
+		Beer beer = repository.findAll(Pageable.ofSize(1)).getContent().getFirst();
+		BeerDTO beerDTO = mapper.beerToBeerDto(beer);
+		beerDTO.setBeerName("Updated Name");
+		mockMvc.perform(put(BeerController.PATH_ID, beer.getId())
+				.with(TestUtils.JWT_REQUEST_POST_PROCESSOR)
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON)
+				.content(jsonMapper.writeValueAsString(beerDTO)))
+			.andExpect(status().isNoContent())
+			.andReturn();
+		assertThat(applicationEvents.stream(BeerCreatedEvent.class).count()).isEqualTo(0);
+		assertThat(applicationEvents.stream(BeerUpdatedEvent.class).count()).isEqualTo(1);
+	}
 
 	@Test
 	void testUpdateBeerBadVersion() throws Exception {
