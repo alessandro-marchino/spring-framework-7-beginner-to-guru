@@ -80,11 +80,13 @@ public class BeerServiceJPA implements BeerService {
 
 		Beer savedBeer = beerRepository.save(beerMapper.beerDtoToBeer(beer));;
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+		log.info("Current thread: name: {} - id: {}", Thread.currentThread().getName(), Thread.currentThread().threadId());
+
 		applicationEventPublisher.publishEvent(BeerCreatedEvent.builder()
 			.beer(savedBeer)
 			.authentication(auth)
 			.build());
-
 
 		return beerMapper.beerToBeerDto(savedBeer);
 	}
