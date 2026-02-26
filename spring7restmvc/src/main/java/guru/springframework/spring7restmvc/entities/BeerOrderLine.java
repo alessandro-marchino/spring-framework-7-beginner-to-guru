@@ -15,6 +15,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Version;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -40,8 +41,11 @@ public class BeerOrderLine {
 	private Beer beer;
 	@ManyToOne
 	private BeerOrder beerOrder;
-	private Integer orderQuantity;
-	private Integer quantityAllocated;
+	@Positive(message = "Quantity on hand must be greater than zero")
+	@Builder.Default
+	private Integer orderQuantity = 1;
+	@Builder.Default
+	private Integer quantityAllocated = 0;
 
 	@CreationTimestamp
 	@Column(updatable = false)

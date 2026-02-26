@@ -8,10 +8,10 @@ import lombok.Builder;
 import lombok.Data;
 import tools.jackson.databind.annotation.JsonDeserialize;
 
-@JsonDeserialize(builder = BeerOdrerDTO.BeerOdrerDTOBuilder.class)
+@JsonDeserialize(builder = BeerOrderDTO.BeerOrderDTOBuilder.class)
 @Data
 @Builder
-public class BeerOdrerDTO {
+public class BeerOrderDTO {
 	private UUID id;
 	private Integer version;
 	private CustomerDTO customer;
