@@ -48,7 +48,7 @@ public class BeerOrder {
 		this.customerRef = customerRef;
 		this.createdDate = createdDate;
 		this.lastModifiedDate = lastModifiedDate;
-		this.beerOrderLines = beerOrderLines;
+		this.setBeerOrderLines(beerOrderLines);
 		this.setCustomer(customer);
 		this.setBeerOrderShipment(beerOrderShipment);
 	}
@@ -73,15 +73,28 @@ public class BeerOrder {
 	@UpdateTimestamp
 	private LocalDateTime lastModifiedDate;
 
-	@OneToMany(mappedBy = BeerOrderLine_.BEER_ORDER)
+	@OneToMany(mappedBy = BeerOrderLine_.BEER_ORDER, cascade = CascadeType.ALL)
 	private Set<BeerOrderLine> beerOrderLines;
 
 	public void setCustomer(Customer customer) {
+		if(customer == null) {
+			return;
+		}
 		this.customer = customer;
 		customer.getBeerOrders().add(this);
 	}
 	public void setBeerOrderShipment(BeerOrderShipment beerOrderShipment) {
+		if(beerOrderShipment == null) {
+			return;
+		}
 		this.beerOrderShipment = beerOrderShipment;
 		beerOrderShipment.setBeerOrder(this);
+	}
+	public void setBeerOrderLines(Set<BeerOrderLine> beerOrderLines) {
+		if(beerOrderLines == null) {
+			return;
+		}
+		this.beerOrderLines = beerOrderLines;
+		beerOrderLines.forEach(bol -> bol.setBeerOrder(this));
 	}
 }

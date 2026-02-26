@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
+import guru.springframework.spring7restmvc.repositories.BeerOrderRepository;
 import guru.springframework.spring7restmvc.repositories.BeerRepository;
 import guru.springframework.spring7restmvc.repositories.CustomerRepository;
 import guru.springframework.spring7restmvc.service.BeerCsvService;
@@ -18,12 +19,13 @@ import guru.springframework.spring7restmvc.service.impl.BeerCsvServiceImpl;
 public class BootstrapDataTest {
 	@Autowired BeerRepository beerRepository;
 	@Autowired CustomerRepository customerRepository;
+	@Autowired BeerOrderRepository beerOrderRepository;
 	@Autowired BeerCsvService beerCsvService;
 	BootstrapData bootstrapData;
 
 	@BeforeEach
 	void setUp() {
-		bootstrapData = new BootstrapData(beerRepository, customerRepository, beerCsvService);
+		bootstrapData = new BootstrapData(beerRepository, customerRepository, beerOrderRepository, beerCsvService);
 	}
 
 	@Test

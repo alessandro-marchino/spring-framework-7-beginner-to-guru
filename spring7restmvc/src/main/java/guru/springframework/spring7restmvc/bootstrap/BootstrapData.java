@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.CommandLineRunner;
@@ -13,9 +15,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ResourceUtils;
 
 import guru.springframework.spring7restmvc.entities.Beer;
+import guru.springframework.spring7restmvc.entities.BeerOrder;
+import guru.springframework.spring7restmvc.entities.BeerOrderLine;
 import guru.springframework.spring7restmvc.entities.Customer;
 import guru.springframework.spring7restmvc.model.BeerCsvRecord;
 import guru.springframework.spring7restmvc.model.BeerStyle;
+import guru.springframework.spring7restmvc.repositories.BeerOrderRepository;
 import guru.springframework.spring7restmvc.repositories.BeerRepository;
 import guru.springframework.spring7restmvc.repositories.CustomerRepository;
 import guru.springframework.spring7restmvc.service.BeerCsvService;
@@ -28,6 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 public class BootstrapData implements CommandLineRunner {
 	private final BeerRepository beerRepository;
 	private final CustomerRepository customerRepository;
+	private final BeerOrderRepository beerOrderRepository;
 
 	private final BeerCsvService beerCsvService;
 
@@ -37,6 +43,7 @@ public class BootstrapData implements CommandLineRunner {
 		loadBeerData();
 		loadCsvData();
 		loadCustomerData();
+		loadOrderData();
 		log.info("Data loaded - application ready");
 	}
 
@@ -120,5 +127,29 @@ public class BootstrapData implements CommandLineRunner {
 			.updatedDate(LocalDateTime.now())
 			.build());
 		customerRepository.flush();
+	}
+
+	private void loadOrderData() {
+		if(beerOrderRepository.count() > 0) {
+			log.info("ORder data already loaded");
+			return;
+		}
+		List<Customer> customers = customerRepository.findAll();
+		List<Beer> beers = beerRepository.findAll();
+
+		Iterator<Beer> beerIterator = beers.iterator();
+
+		customers.forEach(customer -> {
+			Beer beer1 = beerIterator.next();
+			Beer beer2 = beerIterator.next();
+			BeerOrder beerOrder = BeerOrder.builder()
+				.customer(customer)
+				.beerOrderLines(Set.of(
+					BeerOrderLine.builder().beer(beer1).quantityAllocated(1).build(),
+					BeerOrderLine.builder().beer(beer2).quantityAllocated(2).build()
+				))
+				.build();
+			beerOrderRepository.save(beerOrder);
+		});
 	}
 }
