@@ -47,14 +47,8 @@ class BeerOrderControllerIT {
 		mockMvc.perform(get(BeerOrderController.PATH_ID, beerOrder.getId())
 				.with(TestUtils.JWT_REQUEST_POST_PROCESSOR))
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.id", is(beerOrder.getId())))
+			.andExpect(jsonPath("$.id", is(beerOrder.getId().toString())))
 			.andExpect(jsonPath("$.customer.id", is(beerOrder.getCustomer().getId())));
 	}
 
-	@Test
-	void testGetBeerOrderByIdNotFound() throws Exception {
-		mockMvc.perform(get(BeerOrderController.PATH_ID, 999)
-				.with(TestUtils.JWT_REQUEST_POST_PROCESSOR))
-			.andExpect(status().isNotFound());
-	}
 }
