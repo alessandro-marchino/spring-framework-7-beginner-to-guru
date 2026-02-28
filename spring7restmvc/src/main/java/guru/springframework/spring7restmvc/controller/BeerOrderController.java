@@ -5,6 +5,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import guru.springframework.spring7restmvc.model.BeerOrderCreateDTO;
 import guru.springframework.spring7restmvc.model.BeerOrderDTO;
+import guru.springframework.spring7restmvc.model.BeerOrderUpdateDTO;
 import guru.springframework.spring7restmvc.service.BeerOrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
+
 
 
 @RestController
@@ -53,5 +56,9 @@ public class BeerOrderController {
 			.build();
 	}
 
+	@PutMapping(PATH_ID)
+	public ResponseEntity<BeerOrderDTO> putMethodName(@PathVariable("beerOrderId") UUID id, @RequestBody BeerOrderUpdateDTO dto) {
+		return ResponseEntity.ok(beerOrderService.updateBeerOrder(id, dto));
+	}
 
 }

@@ -22,6 +22,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 import guru.springframework.spring7restmvc.TestUtils;
@@ -189,6 +190,7 @@ class BeerOrderControllerIT {
 	}
 
 	@Test
+	@Transactional
 	void testUpdateBeerOrder() throws Exception {
 		BeerOrder beerOrder = repository.findAll(Pageable.ofSize(1).withPage(1)).getContent().getFirst();
 
@@ -210,7 +212,8 @@ class BeerOrderControllerIT {
 				.build())
 			.build();
 
-		mockMvc.perform(put(BeerOrderController.PATH)
+
+		mockMvc.perform(put(BeerOrderController.PATH_ID, beerOrder.getId())
 				.with(TestUtils.JWT_REQUEST_POST_PROCESSOR)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(jsonMapper.writeValueAsString(dto)))
