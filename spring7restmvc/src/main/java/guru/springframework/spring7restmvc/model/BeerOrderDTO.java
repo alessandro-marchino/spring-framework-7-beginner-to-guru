@@ -19,5 +19,5 @@ public class BeerOrderDTO {
 	private BeerOrderShipmentDTO beerOrderShipment;
 	private LocalDateTime createdDate;
 	private LocalDateTime lastModifiedDate;
-	private Set<BeerOrderLineDTO> beerORderLines;
+	private Set<BeerOrderLineDTO> beerOrderLines;
 }
