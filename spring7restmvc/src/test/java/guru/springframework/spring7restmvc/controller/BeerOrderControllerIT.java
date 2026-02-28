@@ -4,26 +4,41 @@ import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import guru.springframework.spring7restmvc.TestUtils;
+import guru.springframework.spring7restmvc.entities.Beer;
 import guru.springframework.spring7restmvc.entities.BeerOrder;
+import guru.springframework.spring7restmvc.entities.Customer;
+import guru.springframework.spring7restmvc.model.BeerOrderCreateDTO;
+import guru.springframework.spring7restmvc.model.BeerOrderLineCreateDTO;
 import guru.springframework.spring7restmvc.repositories.BeerOrderRepository;
+import guru.springframework.spring7restmvc.repositories.BeerRepository;
+import guru.springframework.spring7restmvc.repositories.CustomerRepository;
+import tools.jackson.databind.json.JsonMapper;
 
 @SpringBootTest
 class BeerOrderControllerIT {
 	@Autowired WebApplicationContext wac;
 	@Autowired BeerOrderRepository repository;
+	@Autowired CustomerRepository customerRepository;
+	@Autowired BeerRepository beerRepository;
+	@Autowired JsonMapper jsonMapper;
 	MockMvc mockMvc;
 
 	@BeforeEach
@@ -48,7 +63,86 @@ class BeerOrderControllerIT {
 				.with(TestUtils.JWT_REQUEST_POST_PROCESSOR))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.id", is(beerOrder.getId().toString())))
-			.andExpect(jsonPath("$.customer.id", is(beerOrder.getCustomer().getId())));
+			.andExpect(jsonPath("$.customer.id", is(beerOrder.getCustomer().getId().toString())));
+	}
+
+	@Test
+	void testCreateBeerOrder() throws Exception {
+		Beer beer = beerRepository.findAll(Pageable.ofSize(1).withPage(1)).getContent().getFirst();
+		Customer customer = customerRepository.findAll(Pageable.ofSize(1).withPage(1)).getContent().getFirst();
+
+		BeerOrderCreateDTO dto = BeerOrderCreateDTO.builder()
+			.customerId(customer.getId())
+			.beerOrderLines(Set.of(
+				BeerOrderLineCreateDTO.builder()
+					.beerId(beer.getId())
+					.orderQuantity(1)
+					.build()
+			))
+			.build();
+		mockMvc.perform(post(BeerOrderController.PATH)
+				.with(TestUtils.JWT_REQUEST_POST_PROCESSOR)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(jsonMapper.writeValueAsString(dto)))
+			.andExpect(status().isCreated())
+			.andExpect(header().exists("Location"));
+	}
+
+	@Test
+	void testCreateBeerOrderNoCustomer() throws Exception {
+		Beer beer = beerRepository.findAll(Pageable.ofSize(1).withPage(1)).getContent().getFirst();
+
+		BeerOrderCreateDTO dto = BeerOrderCreateDTO.builder()
+			.beerOrderLines(Set.of(
+				BeerOrderLineCreateDTO.builder()
+					.beerId(beer.getId())
+					.orderQuantity(1)
+					.build()
+			))
+			.build();
+		mockMvc.perform(post(BeerOrderController.PATH)
+				.with(TestUtils.JWT_REQUEST_POST_PROCESSOR)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(jsonMapper.writeValueAsString(dto)))
+			.andExpect(status().isBadRequest());
+	}
+	@Test
+	void testCreateBeerOrderNoBeer() throws Exception {
+		Customer customer = customerRepository.findAll(Pageable.ofSize(1).withPage(1)).getContent().getFirst();
+
+		BeerOrderCreateDTO dto = BeerOrderCreateDTO.builder()
+			.customerId(customer.getId())
+			.beerOrderLines(Set.of(
+				BeerOrderLineCreateDTO.builder()
+					.orderQuantity(1)
+					.build()
+			))
+			.build();
+		mockMvc.perform(post(BeerOrderController.PATH)
+				.with(TestUtils.JWT_REQUEST_POST_PROCESSOR)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(jsonMapper.writeValueAsString(dto)))
+			.andExpect(status().isBadRequest());
+	}
+	@Test
+	void testCreateBeerOrderWrongOrderQuantity() throws Exception {
+		Customer customer = customerRepository.findAll(Pageable.ofSize(1).withPage(1)).getContent().getFirst();
+		Beer beer = beerRepository.findAll(Pageable.ofSize(1).withPage(1)).getContent().getFirst();
+
+		BeerOrderCreateDTO dto = BeerOrderCreateDTO.builder()
+			.customerId(customer.getId())
+			.beerOrderLines(Set.of(
+				BeerOrderLineCreateDTO.builder()
+					.beerId(beer.getId())
+					.orderQuantity(-12)
+					.build()
+			))
+			.build();
+		mockMvc.perform(post(BeerOrderController.PATH)
+				.with(TestUtils.JWT_REQUEST_POST_PROCESSOR)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(jsonMapper.writeValueAsString(dto)))
+			.andExpect(status().isBadRequest());
 	}
 
 }
