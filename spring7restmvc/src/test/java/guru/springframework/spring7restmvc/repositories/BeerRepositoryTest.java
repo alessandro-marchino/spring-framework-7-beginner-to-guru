@@ -16,10 +16,11 @@ import guru.springframework.spring7restmvc.bootstrap.BootstrapData;
 import guru.springframework.spring7restmvc.entities.Beer;
 import guru.springframework.spring7restmvc.model.BeerStyle;
 import guru.springframework.spring7restmvc.service.impl.BeerCsvServiceImpl;
+import guru.springframework.spring7restmvc.testutil.TestUtils;
 import jakarta.validation.ConstraintViolationException;
 
 @DataJpaTest
-@Import({ BootstrapData.class, BeerCsvServiceImpl.class })
+@Import({ BootstrapData.class, BeerCsvServiceImpl.class, TestUtils.CacheConfig.class })
 class BeerRepositoryTest {
 	@Autowired BeerRepository repository;
 

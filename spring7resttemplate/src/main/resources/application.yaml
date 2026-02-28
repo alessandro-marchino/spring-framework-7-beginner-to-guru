@@ -22,7 +22,7 @@ spring:
 
 rest:
   template:
-    root-url: http://localhost:8080
+    root-url: http://localhost:8081
 
 logging.level:
   '[org.zalando.logbook]': trace

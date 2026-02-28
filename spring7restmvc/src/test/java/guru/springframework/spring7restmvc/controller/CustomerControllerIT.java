@@ -10,6 +10,7 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -19,13 +20,18 @@ import org.springframework.transaction.annotation.Transactional;
 import guru.springframework.spring7restmvc.entities.Customer;
 import guru.springframework.spring7restmvc.mappers.CustomerMapper;
 import guru.springframework.spring7restmvc.model.CustomerDTO;
+import guru.springframework.spring7restmvc.repositories.BeerOrderRepository;
 import guru.springframework.spring7restmvc.repositories.CustomerRepository;
+import guru.springframework.spring7restmvc.testutil.TestUtils;
 
 @SpringBootTest
+@Import({ TestUtils.CacheConfig.class })
 public class CustomerControllerIT {
 	@Autowired CustomerController controller;
 	@Autowired CustomerRepository repository;
 	@Autowired CustomerMapper mapper;
+
+	@Autowired BeerOrderRepository beerOrderRepository;
 
 	@Test
 	@Transactional
@@ -67,6 +73,7 @@ public class CustomerControllerIT {
 	@Transactional
 	@Rollback
     void testListCustomersEmpty() {
+		beerOrderRepository.deleteAll();
 		repository.deleteAll();
 		List<CustomerDTO> dtos = controller.listCustomers();
 		assertThat(dtos).hasSize(0);

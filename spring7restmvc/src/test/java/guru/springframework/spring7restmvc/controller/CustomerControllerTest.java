@@ -33,15 +33,15 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import guru.springframework.spring7restmvc.TestUtils;
 import guru.springframework.spring7restmvc.config.SpringSecurityConfig;
 import guru.springframework.spring7restmvc.model.CustomerDTO;
 import guru.springframework.spring7restmvc.service.CustomerService;
+import guru.springframework.spring7restmvc.testutil.TestUtils;
 import tools.jackson.databind.json.JsonMapper;
 
 @WebMvcTest(CustomerController.class)
 @ExtendWith(MockitoExtension.class)
-@Import(SpringSecurityConfig.class)
+@Import({SpringSecurityConfig.class, TestUtils.CacheConfig.class })
 class CustomerControllerTest {
 	@Autowired MockMvc mockMvc;
 	@Autowired JsonMapper jsonMapper;

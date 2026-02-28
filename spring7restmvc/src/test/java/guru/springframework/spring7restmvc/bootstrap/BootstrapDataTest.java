@@ -13,9 +13,10 @@ import guru.springframework.spring7restmvc.repositories.BeerRepository;
 import guru.springframework.spring7restmvc.repositories.CustomerRepository;
 import guru.springframework.spring7restmvc.service.BeerCsvService;
 import guru.springframework.spring7restmvc.service.impl.BeerCsvServiceImpl;
+import guru.springframework.spring7restmvc.testutil.TestUtils;
 
 @DataJpaTest
-@Import(BeerCsvServiceImpl.class)
+@Import({ BeerCsvServiceImpl.class, TestUtils.CacheConfig.class })
 public class BootstrapDataTest {
 	@Autowired BeerRepository beerRepository;
 	@Autowired CustomerRepository customerRepository;

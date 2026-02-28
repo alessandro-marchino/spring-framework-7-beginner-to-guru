@@ -26,6 +26,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -41,7 +42,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
-import guru.springframework.spring7restmvc.TestUtils;
 import guru.springframework.spring7restmvc.entities.Beer;
 import guru.springframework.spring7restmvc.events.BeerCreatedEvent;
 import guru.springframework.spring7restmvc.events.BeerDeletedEvent;
@@ -50,12 +50,15 @@ import guru.springframework.spring7restmvc.events.BeerUpdatedEvent;
 import guru.springframework.spring7restmvc.mappers.BeerMapper;
 import guru.springframework.spring7restmvc.model.BeerDTO;
 import guru.springframework.spring7restmvc.model.BeerStyle;
+import guru.springframework.spring7restmvc.repositories.BeerOrderRepository;
 import guru.springframework.spring7restmvc.repositories.BeerRepository;
+import guru.springframework.spring7restmvc.testutil.TestUtils;
 import lombok.extern.slf4j.Slf4j;
 import tools.jackson.databind.json.JsonMapper;
 
 @SpringBootTest
 @Slf4j
+@Import({ TestUtils.CacheConfig.class })
 @RecordApplicationEvents
 public class BeerControllerIT {
 	@Autowired BeerController controller;
@@ -64,6 +67,7 @@ public class BeerControllerIT {
 	@Autowired WebApplicationContext wac;
 	@Autowired JsonMapper jsonMapper;
 	@Autowired ApplicationEvents applicationEvents;
+	@Autowired BeerOrderRepository beerOrderRepository;
 
 	MockMvc mockMvc;
 
@@ -189,7 +193,13 @@ public class BeerControllerIT {
 
 	@Test
     void testDeleteBeerMvc() throws Exception {
-		Beer beer = repository.findAll(Pageable.ofSize(1)).getContent().getFirst();
+		Beer beer = repository.save(Beer.builder()
+			.beerName("New Beer")
+			.beerStyle(BeerStyle.GOSE)
+			.upc("123")
+			.quantityOnHand(1)
+			.price(BigDecimal.TEN)
+			.build());
 
 		mockMvc.perform(delete(BeerController.PATH_ID, beer.getId())
 				.with(TestUtils.JWT_REQUEST_POST_PROCESSOR))
@@ -225,6 +235,7 @@ public class BeerControllerIT {
 	@Transactional
 	@Rollback
     void testListBeersEmpty() {
+		beerOrderRepository.deleteAll();
 		repository.deleteAll();
 		Page<BeerDTO> dtos = controller.listBeers(null, null, false, 1, 25);
 		assertThat(dtos).hasSize(0);

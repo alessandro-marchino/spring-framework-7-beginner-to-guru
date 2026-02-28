@@ -38,16 +38,16 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import guru.springframework.spring7restmvc.TestUtils;
 import guru.springframework.spring7restmvc.config.SpringSecurityConfig;
 import guru.springframework.spring7restmvc.model.BeerDTO;
 import guru.springframework.spring7restmvc.service.BeerService;
 import guru.springframework.spring7restmvc.service.impl.BeerServiceImpl;
+import guru.springframework.spring7restmvc.testutil.TestUtils;
 import tools.jackson.databind.json.JsonMapper;
 
 @WebMvcTest(BeerController.class)
 @ExtendWith(MockitoExtension.class)
-@Import(SpringSecurityConfig.class)
+@Import({ SpringSecurityConfig.class, TestUtils.CacheConfig.class })
 class BeerControllerTest {
 
 	@Autowired MockMvc mockMvc;
@@ -93,7 +93,7 @@ class BeerControllerTest {
 		Page<BeerDTO> beers = beerServiceImpl.listBeers(null, null, false, null, null);
 		given(beerService.listBeers(null, null, false, null, null)).willReturn(beers);
 
-		mockMvc.perform(get(BeerController.PATH)
+		mockMvc.perform(get("/api/v1/beer")//BeerController.PATH)
 				.with(TestUtils.JWT_REQUEST_POST_PROCESSOR)
 				.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())

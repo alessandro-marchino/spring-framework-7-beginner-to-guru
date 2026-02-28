@@ -45,7 +45,7 @@ public class BeerOrderRepositoryTest {
 				.build())
 			.build();
 		BeerOrder savedBeerOrder = beerOrderRepository.save(beerOrder);
-		assertThat(savedBeerOrder.getCustomer().getBeerOrders()).hasSize(1);
+		assertThat(savedBeerOrder.getCustomer().getBeerOrders()).hasSize(2);
 		assertThat(savedBeerOrder.getBeerOrderShipment().getId()).isNotNull();
 		assertThat(savedBeerOrder.getBeerOrderShipment().getBeerOrder()).isNotNull();
 		assertThat(savedBeerOrder.getBeerOrderShipment().getBeerOrder().getId()).isEqualTo(savedBeerOrder.getId());
