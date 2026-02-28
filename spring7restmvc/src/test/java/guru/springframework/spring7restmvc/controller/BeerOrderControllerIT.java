@@ -1,8 +1,10 @@
 package guru.springframework.spring7restmvc.controller;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -10,6 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -219,5 +222,23 @@ class BeerOrderControllerIT {
 				.content(jsonMapper.writeValueAsString(dto)))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.customerRef", is("TestRef")));
+	}
+
+	@Test
+	void testDeleteBeerOrder() throws Exception {
+		BeerOrder beerOrder = repository.findAll(Pageable.ofSize(1).withPage(1)).getContent().getFirst();
+
+		mockMvc.perform(delete(BeerOrderController.PATH_ID, beerOrder.getId())
+				.with(TestUtils.JWT_REQUEST_POST_PROCESSOR))
+			.andExpect(status().isNoContent());
+		Optional<BeerOrder> searchedOrder = repository.findById(beerOrder.getId());
+		assertThat(searchedOrder).isEmpty();
+	}
+
+	@Test
+	void testDeleteBeerOrderNotFound() throws Exception {
+		mockMvc.perform(delete(BeerOrderController.PATH_ID, UUID.randomUUID())
+				.with(TestUtils.JWT_REQUEST_POST_PROCESSOR))
+			.andExpect(status().isNotFound());
 	}
 }
