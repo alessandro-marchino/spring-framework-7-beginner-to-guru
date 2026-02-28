@@ -15,6 +15,7 @@ import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -57,8 +58,17 @@ public class BeerOrderController {
 	}
 
 	@PutMapping(PATH_ID)
-	public ResponseEntity<BeerOrderDTO> putMethodName(@PathVariable("beerOrderId") UUID id, @RequestBody BeerOrderUpdateDTO dto) {
+	public ResponseEntity<BeerOrderDTO> updateBeerOrder(@PathVariable("beerOrderId") UUID id, @RequestBody BeerOrderUpdateDTO dto) {
 		return ResponseEntity.ok(beerOrderService.updateBeerOrder(id, dto));
 	}
+
+	@DeleteMapping(PATH_ID)
+	public ResponseEntity<Void> deleteBeerOrder(@PathVariable("beerOrderId") UUID id) {
+		if(!beerOrderService.deleteById(id)) {
+			throw new NotFoundException();
+		}
+		return ResponseEntity.noContent().build();
+	}
+
 
 }

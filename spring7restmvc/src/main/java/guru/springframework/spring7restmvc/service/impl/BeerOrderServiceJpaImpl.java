@@ -109,4 +109,14 @@ public class BeerOrderServiceJpaImpl implements BeerOrderService {
 
 		return beerOrderMapper.beerOrderToBeerOrderDto(beerOrderRepository.save(beerOrder));
 	}
+
+	@Override
+	public boolean deleteById(UUID id) {
+		if(!beerOrderRepository.existsById(id)) {
+			return false;
+		}
+
+		beerOrderRepository.deleteById(id);
+		return true;
+	}
 }

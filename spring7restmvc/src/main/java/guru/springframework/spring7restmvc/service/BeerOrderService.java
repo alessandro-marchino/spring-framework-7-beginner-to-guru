@@ -19,4 +19,6 @@ public interface BeerOrderService {
 
 	BeerOrderDTO updateBeerOrder(UUID id, BeerOrderUpdateDTO dto);
 
+	boolean deleteById(UUID id);
+
 }
