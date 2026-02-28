@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.Set;
+import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -143,6 +144,43 @@ class BeerOrderControllerIT {
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(jsonMapper.writeValueAsString(dto)))
 			.andExpect(status().isBadRequest());
+	}
+
+	@Test
+	void testCreateBeerOrderCustomerNotFound() throws Exception {
+		BeerOrderCreateDTO dto = BeerOrderCreateDTO.builder()
+			.customerId(UUID.randomUUID())
+			.beerOrderLines(Set.of(
+				BeerOrderLineCreateDTO.builder()
+					.beerId(UUID.randomUUID())
+					.orderQuantity(1)
+					.build()
+			))
+			.build();
+		mockMvc.perform(post(BeerOrderController.PATH)
+				.with(TestUtils.JWT_REQUEST_POST_PROCESSOR)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(jsonMapper.writeValueAsString(dto)))
+			.andExpect(status().isNotFound());
+	}
+	@Test
+	void testCreateBeerOrderBeerNotFound() throws Exception {
+		Customer customer = customerRepository.findAll(Pageable.ofSize(1).withPage(1)).getContent().getFirst();
+
+		BeerOrderCreateDTO dto = BeerOrderCreateDTO.builder()
+			.customerId(customer.getId())
+			.beerOrderLines(Set.of(
+				BeerOrderLineCreateDTO.builder()
+					.beerId(UUID.randomUUID())
+					.orderQuantity(1)
+					.build()
+			))
+			.build();
+		mockMvc.perform(post(BeerOrderController.PATH)
+				.with(TestUtils.JWT_REQUEST_POST_PROCESSOR)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(jsonMapper.writeValueAsString(dto)))
+			.andExpect(status().isNotFound());
 	}
 
 }
