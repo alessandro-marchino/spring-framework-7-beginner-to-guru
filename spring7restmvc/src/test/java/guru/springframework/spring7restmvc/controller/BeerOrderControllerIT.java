@@ -5,12 +5,14 @@ import static org.hamcrest.Matchers.is;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,6 +30,9 @@ import guru.springframework.spring7restmvc.entities.BeerOrder;
 import guru.springframework.spring7restmvc.entities.Customer;
 import guru.springframework.spring7restmvc.model.BeerOrderCreateDTO;
 import guru.springframework.spring7restmvc.model.BeerOrderLineCreateDTO;
+import guru.springframework.spring7restmvc.model.BeerOrderLineUpdateDTO;
+import guru.springframework.spring7restmvc.model.BeerOrderShipmentUpdateDTO;
+import guru.springframework.spring7restmvc.model.BeerOrderUpdateDTO;
 import guru.springframework.spring7restmvc.repositories.BeerOrderRepository;
 import guru.springframework.spring7restmvc.repositories.BeerRepository;
 import guru.springframework.spring7restmvc.repositories.CustomerRepository;
@@ -183,4 +188,33 @@ class BeerOrderControllerIT {
 			.andExpect(status().isNotFound());
 	}
 
+	@Test
+	void testUpdateBeerOrder() throws Exception {
+		BeerOrder beerOrder = repository.findAll(Pageable.ofSize(1).withPage(1)).getContent().getFirst();
+
+		Set<BeerOrderLineUpdateDTO> lines = beerOrder.getBeerOrderLines()
+			.stream()
+			.map(bol -> BeerOrderLineUpdateDTO.builder()
+				.id(bol.getId())
+				.beerId(bol.getBeer().getId())
+				.orderQuantity(bol.getOrderQuantity())
+				.quantityAllocated(bol.getQuantityAllocated())
+				.build())
+			.collect(Collectors.toSet());
+		BeerOrderUpdateDTO dto = BeerOrderUpdateDTO.builder()
+			.customerId(beerOrder.getCustomer().getId())
+			.customerRef("TestRef")
+			.beerOrderLines(lines)
+			.beerOrderShipment(BeerOrderShipmentUpdateDTO.builder()
+				.trackingNumber("1234567890")
+				.build())
+			.build();
+
+		mockMvc.perform(put(BeerOrderController.PATH)
+				.with(TestUtils.JWT_REQUEST_POST_PROCESSOR)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(jsonMapper.writeValueAsString(dto)))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.customerRef", is("TestRef")));
+	}
 }
