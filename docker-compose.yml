@@ -1,4 +1,12 @@
 services:
+  gateway:
+    image: spring7gateway:0.0.1-SNAPSHOT
+    ports:
+    - "8080:8080"
+  auth-server:
+    image: spring7authserver:0.0.1-SNAPSHOT
+    ports:
+    - "9000:9000"
   mysql:
     image: mysql:9.5.0
     environment:
