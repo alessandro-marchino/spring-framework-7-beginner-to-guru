@@ -11,6 +11,8 @@ import guru.springframework.spring7reactivemongo.repositories.BeerRepository;
 import guru.springframework.spring7reactivemongo.repositories.CustomerRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Component
 @RequiredArgsConstructor
@@ -22,61 +24,71 @@ public class BootstrapData implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		beerRepository.deleteAll().doOnSuccess(_ -> loadBeerData()).subscribe();
-		customerRepository.deleteAll().doOnSuccess(_ -> loadCustomerData()).subscribe();
+		beerRepository.deleteAll().block();
+		customerRepository.deleteAll().block();
+		loadBeerData().block();
+		loadCustomerData().block();
+
+		beerRepository.count().doOnSuccess(count -> log.info("Saved {} beers", count)).block();
+		customerRepository.count().doOnSuccess(count -> log.info("Saved {} customers", count)).block();
+		log.info("Data loaded");
 	}
 
-	private void loadBeerData() {
-		beerRepository.count()
-			.subscribe(count -> {
+	private Mono<Void> loadBeerData() {
+		return beerRepository.count()
+			.flatMapMany(count -> {
 				if(count > 0) {
 					log.info("Beer data already loaded");
-					return;
+					return Flux.empty();
 				}
-
 				log.info("Loading Beer data...");
-				beerRepository.save(Beer.builder()
-					.beerName("Galaxy Cat")
-					.beerStyle("Pale Ale")
-					.upc("123456")
-					.price(new BigDecimal("12.99"))
-					.quantityOnHand(122)
-					.build()).subscribe();
-				beerRepository.save(Beer.builder()
-					.beerName("Crank")
-					.beerStyle("Pale Ale")
-					.upc("123456222")
-					.price(new BigDecimal("11.99"))
-					.quantityOnHand(392)
-					.build()).subscribe();
-				beerRepository.save(Beer.builder()
-					.beerName("Sunshine City")
-					.beerStyle("IPA")
-					.upc("12356")
-					.price(new BigDecimal("13.99"))
-					.quantityOnHand(144)
-					.build()).subscribe();
-			});
+				return Flux.just(
+					Beer.builder()
+						.beerName("Galaxy Cat")
+						.beerStyle("Pale Ale")
+						.upc("123456")
+						.price(new BigDecimal("12.99"))
+						.quantityOnHand(122)
+						.build(),
+					Beer.builder()
+						.beerName("Crank")
+						.beerStyle("Pale Ale")
+						.upc("123456222")
+						.price(new BigDecimal("11.99"))
+						.quantityOnHand(392)
+						.build(),
+					Beer.builder()
+						.beerName("Sunshine City")
+						.beerStyle("IPA")
+						.upc("12356")
+						.price(new BigDecimal("13.99"))
+						.quantityOnHand(144)
+						.build())
+					.flatMap(beerRepository::save);
+			})
+			.then();
 	}
 
-	private void loadCustomerData() {
-		customerRepository.count()
-			.subscribe(count -> {
+	private Mono<Void> loadCustomerData() {
+		return customerRepository.count()
+			.flatMapMany(count -> {
 				if(count > 0) {
 					log.info("Customer data already loaded");
-					return;
+					return Flux.empty();
 				}
-
 				log.info("Loading Customer data...");
-				customerRepository.save(Customer.builder()
-					.customerName("Mike")
-					.build()).subscribe();
-				customerRepository.save(Customer.builder()
-					.customerName("Louise")
-					.build()).subscribe();
-				customerRepository.save(Customer.builder()
-					.customerName("Bob")
-					.build()).subscribe();
-			});
+				return Flux.just(
+					Customer.builder()
+						.customerName("Sam")
+						.build(),
+					Customer.builder()
+						.customerName("Mike")
+						.build(),
+					Customer.builder()
+						.customerName("Roger")
+						.build())
+				.flatMap(customerRepository::save);
+			})
+			.then();
 	}
 }

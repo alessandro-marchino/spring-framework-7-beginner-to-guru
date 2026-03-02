@@ -24,11 +24,13 @@ import org.testcontainers.mongodb.MongoDBContainer;
 import guru.springframework.spring7reactivemongo.mapper.BeerMapper;
 import guru.springframework.spring7reactivemongo.model.BeerDTO;
 import guru.springframework.spring7reactivemongo.repositories.BeerRepository;
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
 @Testcontainers
 @SpringBootTest
 @AutoConfigureWebTestClient
+@Slf4j
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class BeerEndpointTest {
 

@@ -3,6 +3,8 @@ services:
     image: spring7gateway:0.0.1-SNAPSHOT
     ports:
     - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
   auth-server:
     image: spring7authserver:0.0.1-SNAPSHOT
     ports:

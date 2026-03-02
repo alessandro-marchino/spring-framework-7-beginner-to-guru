@@ -8,21 +8,29 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.r2dbc.test.autoconfigure.DataR2dbcTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.transaction.ReactiveTransactionManager;
+import org.springframework.transaction.reactive.TransactionalOperator;
 
+import guru.springframework.spring7reactive.bootstrap.BootstrapData;
 import guru.springframework.spring7reactive.config.DatabaseConfig;
 import guru.springframework.spring7reactive.domain.Beer;
 import reactor.test.StepVerifier;
 
 @DataR2dbcTest
-@Import(DatabaseConfig.class)
+@Import({ DatabaseConfig.class, BootstrapData.class })
 class BeerRepositoryTest {
 
-	@Autowired
-	BeerRepository repository;
+	@Autowired BeerRepository repository;
+	@Autowired ReactiveTransactionManager reactiveTransactionManager;
 
 	@Test
 	void saveNewBeer() {
-		StepVerifier.create(repository.save(getTestBeer()))
+		StepVerifier.create(
+			TransactionalOperator.create(reactiveTransactionManager)
+			.execute(status -> {
+				status.setRollbackOnly();
+				return repository.save(getTestBeer());
+			}))
 			.assertNext(beer -> {
 				assertThat(beer.getId()).isNotNull();
 				assertThat(beer.getCreatedDate()).isNotNull();

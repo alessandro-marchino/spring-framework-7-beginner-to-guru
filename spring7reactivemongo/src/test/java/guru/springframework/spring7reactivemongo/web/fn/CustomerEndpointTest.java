@@ -69,7 +69,7 @@ public class CustomerEndpointTest {
 			.get()
 			.uri(UriComponentsBuilder
 				.fromPath(CustomerRouterConfig.PATH)
-				.queryParam("customerName", "Bob")
+				.queryParam("customerName", "Sam")
 				.build()
 				.toUri())
 			.exchange()
