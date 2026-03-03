@@ -23,6 +23,12 @@ services:
     environment:
       SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI: http://auth-server:9000
       SERVER_PORT: "8080"
+  reactive-mongo:
+    image: spring7reactivemongo:0.0.1-SNAPSHOT
+    environment:
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI: http://auth-server:9000
+      SERVER_PORT: "8080"
+      SPRING_MONGODB_HOST: mongo
   mysql:
     image: mysql:9.5.0
     environment:
