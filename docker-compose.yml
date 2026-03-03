@@ -5,6 +5,11 @@ services:
     - "8080:8080"
     environment:
       SPRING_PROFILES_ACTIVE: docker
+    depends_on:
+      - auth-server
+      - rest-mvc
+      - reactive
+      - reactive-mongo
   auth-server:
     image: spring7authserver:0.0.1-SNAPSHOT
     ports:
@@ -18,17 +23,23 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/restdb?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
     depends_on:
       - mysql
+      - auth-server
   reactive:
     image: spring7reactive:0.0.1-SNAPSHOT
     environment:
       SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI: http://auth-server:9000
       SERVER_PORT: "8080"
+    depends_on:
+      - auth-server
   reactive-mongo:
     image: spring7reactivemongo:0.0.1-SNAPSHOT
     environment:
       SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI: http://auth-server:9000
       SERVER_PORT: "8080"
       SPRING_MONGODB_HOST: mongo
+    depends_on:
+      - mongo
+      - auth-server
   mysql:
     image: mysql:9.5.0
     environment:
@@ -59,6 +70,8 @@ services:
       ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
       ME_CONFIG_BASICAUTH_USERNAME: admin
       ME_CONFIG_BASICAUTH_PASSWORD: pass
+    depends_on:
+      - mongo
 
 volumes:
   mysql_data:
