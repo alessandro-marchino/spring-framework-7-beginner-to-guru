@@ -93,6 +93,42 @@ spec:
             memory: 50M
             cpu: 50m
 ---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: rest-mvc
+  name: rest-mvc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rest-mvc
+  template:
+    metadata:
+      labels:
+        app: rest-mvc
+    spec:
+      containers:
+      - image: spring7restmvc:0.0.1-SNAPSHOT
+        name: rest-mvc
+        env:
+        - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI
+          value: http://auth-server:9000
+        - name: SPRING_PROFILES_ACTIVE
+          value: localmysql
+        - name: SERVER_PORT
+          value: "8080"
+        - name: SPRING_DATASOURCE_URL
+          value: jdbc:mysql://mysql:3306/restdb?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+        resources:
+          limits:
+            memory: 1000M
+            cpu: 1000m
+          requests:
+            memory: 50M
+            cpu: 50m
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -143,6 +179,24 @@ spec:
     targetPort: 9000
   selector:
     app: auth-server
+  type: ClusterIP
+status:
+  loadBalancer: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: rest-mvc
+  name: rest-mvc
+spec:
+  ports:
+  - name: rest-mvc
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: rest-mvc
   type: ClusterIP
 status:
   loadBalancer: {}
