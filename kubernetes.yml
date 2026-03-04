@@ -66,6 +66,33 @@ spec:
             memory: 50M
             cpu: 50m
 ---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: auth-server
+  name: auth-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth-server
+  template:
+    metadata:
+      labels:
+        app: auth-server
+    spec:
+      containers:
+      - image: spring7authserver:0.0.1-SNAPSHOT
+        name: auth-server
+        resources:
+          limits:
+            memory: 1000M
+            cpu: 1000m
+          requests:
+            memory: 50M
+            cpu: 50m
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -98,6 +125,24 @@ spec:
     targetPort: 3306
   selector:
     app: mysql
+  type: ClusterIP
+status:
+  loadBalancer: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: auth-server
+  name: auth-server
+spec:
+  ports:
+  - name: auth-server
+    port: 9000
+    protocol: TCP
+    targetPort: 9000
+  selector:
+    app: auth-server
   type: ClusterIP
 status:
   loadBalancer: {}
