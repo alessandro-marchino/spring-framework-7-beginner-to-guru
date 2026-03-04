@@ -9,7 +9,6 @@ spec:
   selector:
     matchLabels:
       app: mongo
-  strategy: {}
   template:
     metadata:
       labels:
@@ -18,6 +17,11 @@ spec:
       containers:
       - image: mongo
         name: mongo
+        env:
+        - name: MONGO_INITDB_ROOT_USERNAME
+          value: root
+        - name: MONGO_INITDB_ROOT_PASSWORD
+          value: example
         resources:
           limits:
             memory: 1000M
@@ -25,7 +29,6 @@ spec:
           requests:
             memory: 50M
             cpu: 50m
-status: {}
 
 ---
 
