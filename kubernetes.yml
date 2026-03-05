@@ -161,6 +161,40 @@ spec:
             memory: 50M
             cpu: 50m
 ---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: reactive-mongo
+  name: reactive-mongo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: reactive-mongo
+  template:
+    metadata:
+      labels:
+        app: reactive-mongo
+    spec:
+      containers:
+      - image: spring7reactivemongo:0.0.1-SNAPSHOT
+        name: reactive-mongo
+        env:
+        - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI
+          value: http://auth-server:9000
+        - name: SERVER_PORT
+          value: "8080"
+        - name: SPRING_MONGODB_HOST
+          value: mongo
+        resources:
+          limits:
+            memory: 1000M
+            cpu: 1000m
+          requests:
+            memory: 50M
+            cpu: 50m
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -247,6 +281,24 @@ spec:
     targetPort: 8080
   selector:
     app: reactive
+  type: ClusterIP
+status:
+  loadBalancer: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: reactive-mongo
+  name: reactive-mongo
+spec:
+  ports:
+  - name: reactive-mongo
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: reactive-mongo
   type: ClusterIP
 status:
   loadBalancer: {}
