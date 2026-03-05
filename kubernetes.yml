@@ -195,6 +195,36 @@ spec:
             memory: 50M
             cpu: 50m
 ---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: gateway
+  name: gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gateway
+  template:
+    metadata:
+      labels:
+        app: gateway
+    spec:
+      containers:
+      - image: spring7gateway:0.0.1-SNAPSHOT
+        name: gateway
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: docker
+        resources:
+          limits:
+            memory: 1000M
+            cpu: 1000m
+          requests:
+            memory: 50M
+            cpu: 50m
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -299,6 +329,24 @@ spec:
     targetPort: 8080
   selector:
     app: reactive-mongo
+  type: ClusterIP
+status:
+  loadBalancer: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: gateway
+  name: gateway
+spec:
+  ports:
+  - name: gateway
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: gateway
   type: ClusterIP
 status:
   loadBalancer: {}
