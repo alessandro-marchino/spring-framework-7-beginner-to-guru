@@ -129,6 +129,38 @@ spec:
             memory: 50M
             cpu: 50m
 ---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: reactive
+  name: reactive
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: reactive
+  template:
+    metadata:
+      labels:
+        app: reactive
+    spec:
+      containers:
+      - image: spring7reactive:0.0.1-SNAPSHOT
+        name: reactive
+        env:
+        - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI
+          value: http://auth-server:9000
+        - name: SERVER_PORT
+          value: "8080"
+        resources:
+          limits:
+            memory: 1000M
+            cpu: 1000m
+          requests:
+            memory: 50M
+            cpu: 50m
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -197,6 +229,24 @@ spec:
     targetPort: 8080
   selector:
     app: rest-mvc
+  type: ClusterIP
+status:
+  loadBalancer: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: reactive
+  name: reactive
+spec:
+  ports:
+  - name: reactive
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: reactive
   type: ClusterIP
 status:
   loadBalancer: {}
