@@ -292,7 +292,7 @@
                   "variable": [
                     {
                       "key": "id",
-                      "value": "c9f1331e-1c8c-416e-a918-2720a2ba4e2b"
+                      "value": "3927f67c-fc17-4f52-acb7-7bc71796f8b6"
                     }
                   ]
                 }
@@ -2184,13 +2184,123 @@
               "response": []
             }
           ]
+        },
+        {
+          "name": "/oauth2",
+          "item": [
+            {
+              "name": "/token",
+              "request": {
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "password",
+                      "value": "secret",
+                      "type": "string"
+                    },
+                    {
+                      "key": "username",
+                      "value": "oidc-client",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "urlencoded",
+                  "urlencoded": [
+                    {
+                      "key": "grant_type",
+                      "value": "client_credentials",
+                      "type": "text",
+                      "uuid": "069640ce-961c-4479-b9f3-f2063025ef5e"
+                    },
+                    {
+                      "key": "scope",
+                      "value": "openid profile",
+                      "type": "text",
+                      "uuid": "d408f1d9-04b6-43ab-8d7c-f6570213ac45"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{baseUrlGateway}}/oauth2/token",
+                  "host": [
+                    "{{baseUrlGateway}}"
+                  ],
+                  "path": [
+                    "oauth2",
+                    "token"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
         }
       ],
       "auth": {
         "type": "oauth2",
         "oauth2": [
           {
+            "key": "accessTokenUrl",
+            "value": "{{baseUrlGateway}}/oauth2/token",
+            "type": "string"
+          },
+          {
+            "key": "refreshRequestParams",
+            "value": [],
+            "type": "any"
+          },
+          {
+            "key": "tokenRequestParams",
+            "value": [],
+            "type": "any"
+          },
+          {
+            "key": "authRequestParams",
+            "value": [],
+            "type": "any"
+          },
+          {
+            "key": "tokenName",
+            "value": "spring-framework-7-beginner-to-guru",
+            "type": "string"
+          },
+          {
+            "key": "challengeAlgorithm",
+            "value": "S256",
+            "type": "string"
+          },
+          {
+            "key": "scope",
+            "value": "openid profile",
+            "type": "string"
+          },
+          {
+            "key": "grant_type",
+            "value": "client_credentials",
+            "type": "string"
+          },
+          {
+            "key": "clientSecret",
+            "value": "secret",
+            "type": "string"
+          },
+          {
+            "key": "clientId",
+            "value": "oidc-client",
+            "type": "string"
+          },
+          {
             "key": "addTokenTo",
+            "value": "header",
+            "type": "string"
+          },
+          {
+            "key": "client_authentication",
             "value": "header",
             "type": "string"
           }
