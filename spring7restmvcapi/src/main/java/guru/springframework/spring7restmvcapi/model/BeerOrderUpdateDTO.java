@@ -1,5 +1,6 @@
 package guru.springframework.spring7restmvcapi.model;
 
+import java.math.BigDecimal;
 import java.util.Set;
 import java.util.UUID;
 
@@ -21,4 +22,5 @@ public class BeerOrderUpdateDTO {
 	private Set<@Valid BeerOrderLineUpdateDTO> beerOrderLines;
 	@Valid
 	private BeerOrderShipmentUpdateDTO beerOrderShipment;
+	private BigDecimal paymentAmount;
 }

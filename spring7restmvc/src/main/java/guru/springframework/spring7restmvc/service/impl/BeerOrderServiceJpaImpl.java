@@ -6,6 +6,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ import guru.springframework.spring7restmvc.repositories.BeerOrderRepository;
 import guru.springframework.spring7restmvc.repositories.BeerRepository;
 import guru.springframework.spring7restmvc.repositories.CustomerRepository;
 import guru.springframework.spring7restmvc.service.BeerOrderService;
+import guru.springframework.spring7restmvcapi.events.OrderPlacedEvent;
 import guru.springframework.spring7restmvcapi.model.BeerOrderCreateDTO;
 import guru.springframework.spring7restmvcapi.model.BeerOrderDTO;
 import guru.springframework.spring7restmvcapi.model.BeerOrderUpdateDTO;
@@ -33,6 +35,7 @@ public class BeerOrderServiceJpaImpl implements BeerOrderService {
 	private final BeerRepository beerRepository;
 	private final CustomerRepository customerRepository;
 	private final BeerOrderMapper beerOrderMapper;
+	private final ApplicationEventPublisher applicationEventPublisher;
 
 	@Override
 	public Page<BeerOrderDTO> listBeerOrders(Integer pageNumber, Integer pageSize) {
@@ -106,8 +109,14 @@ public class BeerOrderServiceJpaImpl implements BeerOrderService {
 				beerOrder.getBeerOrderShipment().setTrackingNumber(dto.getBeerOrderShipment().getTrackingNumber());
 			}
 		}
+		BeerOrderDTO beerOrderDTO = beerOrderMapper.beerOrderToBeerOrderDto(beerOrderRepository.save(beerOrder));
+		if(beerOrderDTO.getPaymentAmount() != null) {
+			applicationEventPublisher.publishEvent(OrderPlacedEvent.builder()
+				.beerOrderDTO(beerOrderDTO)
+				.build());
+		}
 
-		return beerOrderMapper.beerOrderToBeerOrderDto(beerOrderRepository.save(beerOrder));
+		return beerOrderDTO;
 	}
 
 	@Override
