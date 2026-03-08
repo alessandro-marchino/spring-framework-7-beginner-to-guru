@@ -3,10 +3,10 @@ package guru.springframework.spring7restmvc.controller;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import guru.springframework.spring7restmvc.model.BeerOrderCreateDTO;
-import guru.springframework.spring7restmvc.model.BeerOrderDTO;
-import guru.springframework.spring7restmvc.model.BeerOrderUpdateDTO;
 import guru.springframework.spring7restmvc.service.BeerOrderService;
+import guru.springframework.spring7restmvcapi.model.BeerOrderCreateDTO;
+import guru.springframework.spring7restmvcapi.model.BeerOrderDTO;
+import guru.springframework.spring7restmvcapi.model.BeerOrderUpdateDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

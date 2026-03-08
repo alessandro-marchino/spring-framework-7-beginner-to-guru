@@ -14,9 +14,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import guru.springframework.spring7restmvc.model.BeerDTO;
-import guru.springframework.spring7restmvc.model.BeerStyle;
 import guru.springframework.spring7restmvc.service.BeerService;
+import guru.springframework.spring7restmvcapi.model.BeerDTO;
+import guru.springframework.spring7restmvcapi.model.BeerStyle;
 import lombok.extern.slf4j.Slf4j;
 
 @Service

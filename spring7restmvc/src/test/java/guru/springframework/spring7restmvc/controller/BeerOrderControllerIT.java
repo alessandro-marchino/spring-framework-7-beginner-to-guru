@@ -31,15 +31,15 @@ import org.springframework.web.context.WebApplicationContext;
 import guru.springframework.spring7restmvc.entities.Beer;
 import guru.springframework.spring7restmvc.entities.BeerOrder;
 import guru.springframework.spring7restmvc.entities.Customer;
-import guru.springframework.spring7restmvc.model.BeerOrderCreateDTO;
-import guru.springframework.spring7restmvc.model.BeerOrderLineCreateDTO;
-import guru.springframework.spring7restmvc.model.BeerOrderLineUpdateDTO;
-import guru.springframework.spring7restmvc.model.BeerOrderShipmentUpdateDTO;
-import guru.springframework.spring7restmvc.model.BeerOrderUpdateDTO;
 import guru.springframework.spring7restmvc.repositories.BeerOrderRepository;
 import guru.springframework.spring7restmvc.repositories.BeerRepository;
 import guru.springframework.spring7restmvc.repositories.CustomerRepository;
 import guru.springframework.spring7restmvc.testutil.TestUtils;
+import guru.springframework.spring7restmvcapi.model.BeerOrderCreateDTO;
+import guru.springframework.spring7restmvcapi.model.BeerOrderLineCreateDTO;
+import guru.springframework.spring7restmvcapi.model.BeerOrderLineUpdateDTO;
+import guru.springframework.spring7restmvcapi.model.BeerOrderShipmentUpdateDTO;
+import guru.springframework.spring7restmvcapi.model.BeerOrderUpdateDTO;
 import tools.jackson.databind.json.JsonMapper;
 
 @SpringBootTest

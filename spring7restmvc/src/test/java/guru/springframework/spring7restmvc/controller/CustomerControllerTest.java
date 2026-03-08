@@ -34,9 +34,9 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import guru.springframework.spring7restmvc.config.SpringSecurityConfig;
-import guru.springframework.spring7restmvc.model.CustomerDTO;
 import guru.springframework.spring7restmvc.service.CustomerService;
 import guru.springframework.spring7restmvc.testutil.TestUtils;
+import guru.springframework.spring7restmvcapi.model.CustomerDTO;
 import tools.jackson.databind.json.JsonMapper;
 
 @WebMvcTest(CustomerController.class)

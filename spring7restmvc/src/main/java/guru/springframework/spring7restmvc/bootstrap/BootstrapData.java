@@ -19,7 +19,7 @@ import guru.springframework.spring7restmvc.entities.BeerOrder;
 import guru.springframework.spring7restmvc.entities.BeerOrderLine;
 import guru.springframework.spring7restmvc.entities.Customer;
 import guru.springframework.spring7restmvc.model.BeerCsvRecord;
-import guru.springframework.spring7restmvc.model.BeerStyle;
+import guru.springframework.spring7restmvcapi.model.BeerStyle;
 import guru.springframework.spring7restmvc.repositories.BeerOrderRepository;
 import guru.springframework.spring7restmvc.repositories.BeerRepository;
 import guru.springframework.spring7restmvc.repositories.CustomerRepository;

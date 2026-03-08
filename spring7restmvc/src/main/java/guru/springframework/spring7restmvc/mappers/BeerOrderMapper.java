@@ -5,7 +5,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 import guru.springframework.spring7restmvc.entities.BeerOrder;
-import guru.springframework.spring7restmvc.model.BeerOrderDTO;
+import guru.springframework.spring7restmvcapi.model.BeerOrderDTO;
 
 @Mapper
 public interface BeerOrderMapper {

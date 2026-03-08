@@ -39,10 +39,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import guru.springframework.spring7restmvc.config.SpringSecurityConfig;
-import guru.springframework.spring7restmvc.model.BeerDTO;
 import guru.springframework.spring7restmvc.service.BeerService;
 import guru.springframework.spring7restmvc.service.impl.BeerServiceImpl;
 import guru.springframework.spring7restmvc.testutil.TestUtils;
+import guru.springframework.spring7restmvcapi.model.BeerDTO;
 import tools.jackson.databind.json.JsonMapper;
 
 @WebMvcTest(BeerController.class)

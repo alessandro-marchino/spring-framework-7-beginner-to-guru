@@ -7,7 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import guru.springframework.spring7restmvc.entities.Beer;
-import guru.springframework.spring7restmvc.model.BeerStyle;
+import guru.springframework.spring7restmvcapi.model.BeerStyle;
 
 public interface BeerRepository extends JpaRepository<Beer, UUID> {
 

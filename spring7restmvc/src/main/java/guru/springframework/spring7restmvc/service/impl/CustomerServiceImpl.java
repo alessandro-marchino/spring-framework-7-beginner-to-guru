@@ -9,8 +9,8 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
-import guru.springframework.spring7restmvc.model.CustomerDTO;
 import guru.springframework.spring7restmvc.service.CustomerService;
+import guru.springframework.spring7restmvcapi.model.CustomerDTO;
 import lombok.extern.slf4j.Slf4j;
 
 @Service

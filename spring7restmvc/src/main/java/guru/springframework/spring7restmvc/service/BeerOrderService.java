@@ -5,9 +5,9 @@ import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 
-import guru.springframework.spring7restmvc.model.BeerOrderCreateDTO;
-import guru.springframework.spring7restmvc.model.BeerOrderDTO;
-import guru.springframework.spring7restmvc.model.BeerOrderUpdateDTO;
+import guru.springframework.spring7restmvcapi.model.BeerOrderCreateDTO;
+import guru.springframework.spring7restmvcapi.model.BeerOrderDTO;
+import guru.springframework.spring7restmvcapi.model.BeerOrderUpdateDTO;
 
 public interface BeerOrderService {
 

@@ -4,7 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 import guru.springframework.spring7restmvc.entities.Customer;
-import guru.springframework.spring7restmvc.model.CustomerDTO;
+import guru.springframework.spring7restmvcapi.model.CustomerDTO;
 
 @Mapper
 public interface CustomerMapper {

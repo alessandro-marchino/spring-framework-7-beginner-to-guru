@@ -19,10 +19,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import guru.springframework.spring7restmvc.entities.Customer;
 import guru.springframework.spring7restmvc.mappers.CustomerMapper;
-import guru.springframework.spring7restmvc.model.CustomerDTO;
 import guru.springframework.spring7restmvc.repositories.BeerOrderRepository;
 import guru.springframework.spring7restmvc.repositories.CustomerRepository;
 import guru.springframework.spring7restmvc.testutil.TestUtils;
+import guru.springframework.spring7restmvcapi.model.CustomerDTO;
 
 @SpringBootTest
 @Import({ TestUtils.CacheConfig.class })

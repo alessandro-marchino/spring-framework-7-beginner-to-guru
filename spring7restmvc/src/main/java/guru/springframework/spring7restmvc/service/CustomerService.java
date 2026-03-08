@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import guru.springframework.spring7restmvc.model.CustomerDTO;
+import guru.springframework.spring7restmvcapi.model.CustomerDTO;
 
 public interface CustomerService {
 

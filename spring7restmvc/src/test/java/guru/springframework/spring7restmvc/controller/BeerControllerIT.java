@@ -48,11 +48,11 @@ import guru.springframework.spring7restmvc.events.BeerDeletedEvent;
 import guru.springframework.spring7restmvc.events.BeerPatchedEvent;
 import guru.springframework.spring7restmvc.events.BeerUpdatedEvent;
 import guru.springframework.spring7restmvc.mappers.BeerMapper;
-import guru.springframework.spring7restmvc.model.BeerDTO;
-import guru.springframework.spring7restmvc.model.BeerStyle;
 import guru.springframework.spring7restmvc.repositories.BeerOrderRepository;
 import guru.springframework.spring7restmvc.repositories.BeerRepository;
 import guru.springframework.spring7restmvc.testutil.TestUtils;
+import guru.springframework.spring7restmvcapi.model.BeerDTO;
+import guru.springframework.spring7restmvcapi.model.BeerStyle;
 import lombok.extern.slf4j.Slf4j;
 import tools.jackson.databind.json.JsonMapper;
 

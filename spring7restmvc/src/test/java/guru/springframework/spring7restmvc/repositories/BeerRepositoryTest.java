@@ -14,7 +14,7 @@ import org.springframework.data.domain.PageRequest;
 
 import guru.springframework.spring7restmvc.bootstrap.BootstrapData;
 import guru.springframework.spring7restmvc.entities.Beer;
-import guru.springframework.spring7restmvc.model.BeerStyle;
+import guru.springframework.spring7restmvcapi.model.BeerStyle;
 import guru.springframework.spring7restmvc.service.impl.BeerCsvServiceImpl;
 import guru.springframework.spring7restmvc.testutil.TestUtils;
 import jakarta.validation.ConstraintViolationException;
