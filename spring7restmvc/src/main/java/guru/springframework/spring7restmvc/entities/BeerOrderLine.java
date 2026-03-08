@@ -8,8 +8,11 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.type.SqlTypes;
 
+import guru.springframework.spring7restmvc.model.BeerOrderLineStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -46,6 +49,9 @@ public class BeerOrderLine {
 	private Integer orderQuantity = 1;
 	@Builder.Default
 	private Integer quantityAllocated = 0;
+	@Builder.Default
+	@Enumerated(EnumType.STRING)
+	private BeerOrderLineStatus orderLineStatus = BeerOrderLineStatus.NEW;
 
 	@CreationTimestamp
 	@Column(updatable = false)

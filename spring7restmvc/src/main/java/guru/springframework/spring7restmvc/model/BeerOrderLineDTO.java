@@ -18,6 +18,7 @@ public class BeerOrderLineDTO {
 	@Positive(message = "Quantity on hand must be greater than zero")
 	private Integer orderQuantity;
 	private Integer quantityAllocated;
+	private BeerOrderLineStatus orderLineStatus;
 	private LocalDateTime createdDate;
 	private LocalDateTime lastModifiedDate;
 
