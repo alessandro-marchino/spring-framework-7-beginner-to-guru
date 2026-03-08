@@ -1,5 +1,6 @@
 package guru.springframework.spring7restmvc.entities;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
@@ -41,11 +42,12 @@ public class BeerOrder {
 	 * @param lastModifiedDate
 	 * @param beerOrderLines
 	 */
-	public BeerOrder(UUID id, Integer version, Customer customer, String customerRef, BeerOrderShipment beerOrderShipment, LocalDateTime createdDate,
+	public BeerOrder(UUID id, Integer version, Customer customer, String customerRef, BigDecimal paymentAmount, BeerOrderShipment beerOrderShipment, LocalDateTime createdDate,
 			LocalDateTime lastModifiedDate, Set<BeerOrderLine> beerOrderLines) {
 		this.id = id;
 		this.version = version;
 		this.customerRef = customerRef;
+		this.paymentAmount = paymentAmount;
 		this.createdDate = createdDate;
 		this.lastModifiedDate = lastModifiedDate;
 		this.setBeerOrderLines(beerOrderLines);
@@ -63,6 +65,7 @@ public class BeerOrder {
 	@ManyToOne
 	private Customer customer;
 	private String customerRef;
+	private BigDecimal paymentAmount;
 
 	@OneToOne(cascade = CascadeType.PERSIST)
 	private BeerOrderShipment beerOrderShipment;

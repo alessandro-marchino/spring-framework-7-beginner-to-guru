@@ -1,5 +1,6 @@
 package guru.springframework.spring7restmvc.model;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
@@ -16,6 +17,7 @@ public class BeerOrderDTO {
 	private Integer version;
 	private CustomerDTO customer;
 	private String customerRef;
+	private BigDecimal paymentAmount;
 	private BeerOrderShipmentDTO beerOrderShipment;
 	private LocalDateTime createdDate;
 	private LocalDateTime lastModifiedDate;
