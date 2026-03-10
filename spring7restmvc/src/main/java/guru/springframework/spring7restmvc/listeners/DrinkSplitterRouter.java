@@ -29,6 +29,7 @@ public class DrinkSplitterRouter {
 			log.debug("Splitting {} order", beerOrderLine.getBeer().getBeerStyle());
 			switch(beerOrderLine.getBeer().getBeerStyle()) {
 				case LAGER -> sendIceColdBeer(beerOrderLine);
+				case PILSNER -> sendIceColdBeer(beerOrderLine);
 				case STOUT -> sendCoolBeer(beerOrderLine);
 				case GOSE -> sendColdBeer(beerOrderLine);
 				case PORTER -> sendCoolBeer(beerOrderLine);

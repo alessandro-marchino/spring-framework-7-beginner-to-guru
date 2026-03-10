@@ -25,7 +25,7 @@ public class DrinkPreparedListener {
 
 		repository.findById(event.getBerrOrderLine().getId()).ifPresentOrElse(bol -> {
 			bol.setOrderLineStatus(BeerOrderLineStatus.COMPLETE);
-			repository.save(bol);
+			repository.saveAndFlush(bol);
 		}, () -> log.error("Beer order line not found for id {}", event.getBerrOrderLine().getId()));
 	}
 }

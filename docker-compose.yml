@@ -16,8 +16,6 @@ services:
         condition: service_started
   auth-server:
     image: spring7authserver:0.0.1-SNAPSHOT
-    ports:
-    - "9000:9000"
   rest-mvc:
     image: spring7restmvc:0.0.1-SNAPSHOT
     environment:

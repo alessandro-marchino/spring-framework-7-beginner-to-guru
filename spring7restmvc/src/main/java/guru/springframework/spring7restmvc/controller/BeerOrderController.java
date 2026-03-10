@@ -37,7 +37,7 @@ public class BeerOrderController {
 	@GetMapping(PATH)
 	public Page<BeerOrderDTO> listBeerOrders(
 			@RequestParam(required = false, defaultValue = "0") Integer pageNumber,
-			@RequestParam(required = false, defaultValue = "1") Integer pageSize) {
+			@RequestParam(required = false, defaultValue = "10") Integer pageSize) {
 		return beerOrderService.listBeerOrders(pageNumber, pageSize);
 	}
 

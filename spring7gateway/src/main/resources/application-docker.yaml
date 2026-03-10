@@ -18,15 +18,15 @@ spring:
             - id: spring7restwebmvc
               uri: http://rest-mvc:8080
               predicates:
-                - Path=/api/v1/*
+                - Path=/api/v1/**
             - id: spring7reactive
               uri: http://reactive:8080
               predicates:
-                - Path=/api/v2/*
+                - Path=/api/v2/**
             - id: spring7reactivemongo
               uri: http://reactive-mongo:8080
               predicates:
-                - Path=/api/v3/*
+                - Path=/api/v3/**
             - id: spring7authserver
               uri: http://auth-server:9000
               predicates:
