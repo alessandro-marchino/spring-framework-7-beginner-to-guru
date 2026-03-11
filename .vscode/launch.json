@@ -91,6 +91,16 @@
             "projectName": "spring7aiintro",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-Spring7structuredloggingApplication<spring7structuredlogging>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "guru.springframework.spring7structuredlogging.Spring7structuredloggingApplication",
+            "projectName": "spring7structuredlogging",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }
