@@ -101,6 +101,26 @@
             "projectName": "spring7structuredlogging",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-KberestbreweryApplication<kberestbrewery>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "guru.springframework.kbe.kberestbrewery.KberestbreweryApplication",
+            "projectName": "kberestbrewery",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-KbeRestBreweryApplication<kberestbrewery>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "guru.springframework.kbe.kberestbrewery.KbeRestBreweryApplication",
+            "projectName": "kberestbrewery",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }
