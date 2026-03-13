@@ -15,5 +15,6 @@ public interface BeerMapper {
 	BeerDto beerToBeerDtoWithInventory(Beer beer);
 
 	@Mapping(target = "lastModifiedDate", source = "lastUpdatedDate")
+	@Mapping(target = "version", ignore = true)
 	Beer beerDtoToBeer(BeerDto dto);
 }
