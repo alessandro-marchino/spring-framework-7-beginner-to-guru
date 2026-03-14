@@ -1,6 +1,6 @@
 FROM eclipse-temurin:25-jre-alpine AS builder
 WORKDIR /application
-ADD target/kberestbrewery-*.jar /application/kberestbrewery.jar
+ADD target/kberestbrewery-${project.version}.jar /application/kberestbrewery.jar
 RUN java -Djarmode=layertools -jar /application/kberestbrewery.jar extract
 
 FROM eclipse-temurin:25-jre-alpine

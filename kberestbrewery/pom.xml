@@ -124,6 +124,30 @@
           </layers>
 				</configuration>
 			</plugin>
+      <plugin>
+        <groupId>io.fabric8</groupId>
+        <artifactId>docker-maven-plugin</artifactId>
+        <version>0.48.1</version>
+        <configuration>
+          <verbose>true</verbose>
+          <images>
+            <image>
+              <name>amarchino/${project.artifactId}</name>
+              <build>
+                <assembly>
+                  <descriptorRef>artifact</descriptorRef>
+                </assembly>
+                <dockerFile>src/main/docker/Dockerfile</dockerFile>
+                <contextDir>${project.basedir}</contextDir>
+                <tags>
+                  <tag>latest</tag>
+                  <tag>${project.version}</tag>
+                </tags>
+              </build>
+            </image>
+          </images>
+        </configuration>
+      </plugin>
 		</plugins>
 	</build>
 
