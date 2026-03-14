@@ -1,7 +1,7 @@
 FROM eclipse-temurin:25-jre-alpine AS builder
 WORKDIR /application
-ADD maven/kberestbrewery-${project.version}.jar /application/kberestbrewery.jar
-RUN java -Djarmode=layertools -jar /application/kberestbrewery.jar extract
+ADD maven/${project.build.finalName}.jar /application/
+RUN java -Djarmode=layertools -jar /application/${project.build.finalName}.jar extract
 
 FROM eclipse-temurin:25-jre-alpine
 WORKDIR /application
